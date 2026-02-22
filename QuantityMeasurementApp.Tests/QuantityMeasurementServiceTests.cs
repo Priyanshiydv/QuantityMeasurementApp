@@ -90,6 +90,7 @@ namespace QuantityMeasurementApp.Tests
             Assert.IsFalse(result);
         }
 
+//====================UC2===========================
 
         // UC2: testEquality_SameValue for Inches
         [TestMethod]
@@ -145,6 +146,114 @@ namespace QuantityMeasurementApp.Tests
 
             // Act
             bool result = service.AreEqual(inch1, inch1);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+
+
+//======================UC3=============================
+
+        // UC3: Same Unit Equality (Feet to Feet)
+        [TestMethod]
+        public void GivenSameQuantityFeetValues_ShouldReturnTrue()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(1.0, LengthUnit.Feet);
+            Quantity q2 = new Quantity(1.0, LengthUnit.Feet);
+
+            // Act
+            bool result = service.AreEqual(q1, q2);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        // UC3: Same Unit Equality (Inch to Inch)
+        [TestMethod]
+        public void GivenSameQuantityInchValues_ShouldReturnTrue()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(12.0, LengthUnit.Inch);
+            Quantity q2 = new Quantity(12.0, LengthUnit.Inch);
+
+            // Act
+            bool result = service.AreEqual(q1, q2);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        // UC3: Cross Unit Equality (1 Feet == 12 Inch)
+        [TestMethod]
+        public void GivenEquivalentFeetAndInch_ShouldReturnTrue()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(1.0, LengthUnit.Feet);
+            Quantity q2 = new Quantity(12.0, LengthUnit.Inch);
+
+            // Act
+            bool result = service.AreEqual(q1, q2);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        // UC3: Cross Unit Equality (12 Inch == 1 Feet) – Symmetry
+        [TestMethod]
+        public void GivenEquivalentInchAndFeet_ShouldReturnTrue()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(12.0, LengthUnit.Inch);
+            Quantity q2 = new Quantity(1.0, LengthUnit.Feet);
+
+            // Act
+            bool result = service.AreEqual(q1, q2);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        // UC3: Different Values Should Return False
+        [TestMethod]
+        public void GivenDifferentQuantityValues_ShouldReturnFalse()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(1.0, LengthUnit.Feet);
+            Quantity q2 = new Quantity(2.0, LengthUnit.Feet);
+
+            // Act
+            bool result = service.AreEqual(q1, q2);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        // UC3: Null Comparison
+        [TestMethod]
+        public void GivenNullQuantity_ShouldReturnFalse()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(1.0, LengthUnit.Feet);
+            Quantity? q2 = null;
+
+            // Act
+            bool result = service.AreEqual(q1, q2!);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        // UC3: Same Reference (Reflexive Property)
+        [TestMethod]
+        public void GivenSameQuantityReference_ShouldReturnTrue()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(5.0, LengthUnit.Feet);
+
+            // Act
+            bool result = service.AreEqual(q1, q1);
 
             // Assert
             Assert.IsTrue(result);
