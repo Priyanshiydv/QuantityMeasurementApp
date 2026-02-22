@@ -10,6 +10,9 @@ namespace QuantityMeasurementApp.Services
         /// <summary>
         /// Compares two Feet objects.
         /// </summary>
+        /// <param name="value1">First Feet measurement.</param>
+        /// <param name="value2">Second Feet measurement.</param>
+        /// <returns>True if both values are equal; otherwise false.</returns>
         public bool AreEqual(Feet? value1, Feet? value2)
         {
             if (value1 == null || value2 == null)
@@ -19,13 +22,11 @@ namespace QuantityMeasurementApp.Services
         }
 
         /// <summary>
-        /// Checks whether two Feet values are equal.
+        /// Compares two Inches objects.
         /// </summary>
-        /// <param name="value1">The first Feet measurement.</param>
-        /// <param name="value2">The second Feet measurement.</param>
-        /// <returns>
-        /// True if both values are equal; otherwise false.
-        /// </returns>
+        /// <param name="value1">First Inches measurement.</param>
+        /// <param name="value2">Second Inches measurement.</param>
+        /// <returns>True if both values are equal; otherwise false.</returns>
         public bool AreEqual(Inches? value1, Inches? value2)
         {
             if (value1 == null || value2 == null)
@@ -34,14 +35,9 @@ namespace QuantityMeasurementApp.Services
             return value1.Equals(value2);
         }
 
-       /// <summary>
-        /// Checks whether two Inches values are equal.
+        /// <summary>
+        /// Compares two Feet values using double input (used in Menu).
         /// </summary>
-        /// <param name="value1">The first Inches measurement.</param>
-        /// <param name="value2">The second Inches measurement.</param>
-        /// <returns>
-        /// True if both values are equal; otherwise false.
-        /// </returns>
         public static bool CompareFeet(double value1, double value2)
         {
             Feet feet1 = new Feet(value1);
@@ -51,7 +47,7 @@ namespace QuantityMeasurementApp.Services
         }
 
         /// <summary>
-        /// Compares two Inches values using double.
+        /// Compares two Inches values using double input
         /// </summary>
         public static bool CompareInches(double value1, double value2)
         {
