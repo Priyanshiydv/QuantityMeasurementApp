@@ -1,93 +1,181 @@
 # Quantity Measurement App
 
-# Description
-Quantity Measurement App is a C# console application used to compare different length measurements like Feet and Inches.  
-The project is designed using OOP concepts, Service Layer, and MSTest unit testing as per UC requirements.
+## Description
 
-# UC1 – Feet Measurement Equality
+Quantity Measurement App is a C# Console Application used to compare different length measurements like Feet and Inches.
+The project is implemented using Object-Oriented Programming (OOP), Service Layer Architecture, and MSTest Unit Testing following UC-wise development.
 
-## Objective
-Ability to compare two lengths in Feet and check whether they are equal.
+Each User Case (UC) is implemented in separate feature branches as per requirement.
 
-## Implementation Details (UC1)
-- Created Feet model class
-- Stored value using private readonly variable
-- Overrode Equals() method for value-based comparison
-- Overrode GetHashCode() method
-- Created QuantityMeasurementService for comparison logic
-- Added MSTest unit test cases for Feet equality
+---
 
-## Test Cases Covered (UC1)
-1. Same values should return True  
-2. Different values should return False  
-3. Null comparison should return False  
-4. Same reference should return True  
-5. Different object type should return False  
+## UC1 – Feet Measurement Equality
+
+### Objective
+
+Ability to compare two length values in Feet and check whether they are equal.
+
+### Implementation Details (UC1)
+
+* Created `Feet` model class
+* Stored value using private readonly variable (Encapsulation)
+* Overrode `Equals()` method for value-based comparison
+* Overrode `GetHashCode()` method
+* Created `QuantityMeasurementService` for comparison logic
+* Added MSTest unit test cases for Feet equality
+
+### Test Cases Covered (UC1)
+
+* Same values should return True
+* Different values should return False
+* Null comparison should return False
+* Same reference should return True
+* Different object type should return False
 
 All UC1 test cases are passing successfully.
 
-# UC2 – Inches Measurement Equality
+---
 
-## Objective
-Ability to compare two lengths in Inches and check whether they are equal.
+## UC2 – Inches Measurement Equality
 
-## Implementation Details (UC2)
-- Created Inches model class
-- Implemented Equals() method for Inches comparison
-- Added comparison methods in QuantityMeasurementService
-- Followed service layer architecture
-- Added MSTest unit test cases for Inches equality
+### Objective
 
-## Test Cases Covered (UC2)
-1. Same inch values should return True  
-2. Different inch values should return False  
-3. Null inch comparison should return False  
-4. Same reference should return True  
+Ability to compare two length values in Inches and check whether they are equal.
+
+### Implementation Details (UC2)
+
+* Created `Inches` model class
+* Implemented `Equals()` method for Inches comparison
+* Extended `QuantityMeasurementService` for Inches equality logic
+* Followed Service Layer Architecture (Separation of Concerns)
+* Added MSTest unit test cases for Inches equality
+
+### Test Cases Covered (UC2)
+
+* Same inch values should return True
+* Different inch values should return False
+* Null inch comparison should return False
+* Same reference should return True
+* Different object type should return False
 
 All UC2 test cases are passing successfully.
 
-# Project Structure
-QuantityMeasurementApp  
- ├── QuantityMeasurementApp (Main Project)  
- │    ├── Models  
- │    │     ├── Feet.cs  
- │    │     └── Inches.cs  
- │    ├── Services  
- │    │     └── QuantityMeasurementService.cs  
- │    ├── Menu  
- │    │     └── AppMenu.cs  
- │    └── Program.cs  
- │  
- └── QuantityMeasurementApp.Tests (Test Project)  
-      └── QuantityMeasurementServiceTests.cs  
+---
 
-# Features
-- Compare Feet values
-- Compare Inches values
-- Console-based menu system
-- Clean folder structure (Models, Services, Menu)
-- Unit Testing using MSTest
-- OOP concepts (Encapsulation, Equality, Service Layer)
+## UC3 – Generic Quantity Length Equality (Feet & Inches)
 
-# How to Run the Application
-Open terminal inside main project folder and run:
+### Objective
+
+Ability to compare two length measurements with different units (Feet and Inches) using a generic Quantity model with unit conversion.
+
+### Implementation Details (UC3)
+
+* Created `Quantity` model class with Value and LengthUnit
+* Created `LengthUnit` enum (Feet, Inch)
+* Implemented generic equality using overridden `Equals()` method
+* Added internal unit conversion logic (Feet ↔ Inches)
+* Refactored service to use DRY principle (single comparison method)
+* Updated Console Menu to support Generic Quantity comparison
+* Reused existing Service Layer instead of duplicating logic
+* Added MSTest unit test cases for generic quantity comparison
+
+### Test Cases Covered (UC3)
+
+* 1 Feet == 12 Inches should return True
+* Different unit unequal values should return False
+* Same unit same value should return True
+* Null quantity comparison should return False
+* Cross-unit comparison using conversion should work correctly
+
+All UC3 test cases are passing successfully.
+
+---
+
+## Project Structure
+
+```
+QuantityMeasurementApp
+│
+├── QuantityMeasurementApp (Main Console Project)
+│   ├── Models
+│   │   ├── Feet.cs
+│   │   ├── Inches.cs
+│   │   ├── Quantity.cs
+│   │   └── LengthUnit.cs
+│   │
+│   ├── Services
+│   │   └── QuantityMeasurementService.cs
+│   │
+│   ├── Menu
+│   │   └── AppMenu.cs
+│   │
+│   └── Program.cs
+│
+└── QuantityMeasurementApp.Tests (MSTest Project)
+    └── QuantityMeasurementServiceTests.cs
+```
+
+---
+
+## Features
+
+* Compare Feet values (UC1)
+* Compare Inches values (UC2)
+* Compare Generic Quantity (Feet & Inches) with Unit Conversion (UC3)
+* Console-based interactive menu using Switch Case
+* Clean layered architecture (Models, Services, Menu)
+* Unit Testing using MSTest Framework
+* OOP Concepts:
+
+  * Encapsulation
+  * Equality Comparison
+  * Service Layer Pattern
+  * DRY Principle
+  * Enum Usage for Units
+
+---
+
+## How to Run the Application
+
+Open terminal inside the main project folder and run:
+
+```
 dotnet run
+```
 
-# How to Run Unit Tests
-Run tests from solution root folder:
+---
+
+## How to Run Unit Tests
+
+Run tests from the solution root folder:
+
+```
 dotnet test
+```
 
-# Technologies Used
-- C#
-- .NET Console Application
-- MSTest Framework
-- Object Oriented Programming (OOP)
-- Git & GitHub Branching (UC wise)
+---
 
-# Branch Naming Convention
-- feature/UC1-FeetMeasurementEquality
-- feature/UC2-InchMeasurementEquality
-- feature/UC3-GenericQuantityLength
+## Technologies Used
 
-# Author
+* C#
+* .NET Console Application
+* MSTest Framework
+* Object-Oriented Programming (OOP)
+* Service Layer Architecture
+* Git & GitHub (UC-wise Branching)
+
+---
+
+## Branch Naming Convention
+
+* `feature/UC1-FeetMeasurementEquality`
+* `feature/UC2-InchMeasurementEquality`
+* `feature/UC3-GenericQuantityLength`
+
+Each UC is developed in a separate feature branch and pushed independently as per project guidelines.
+
+---
+
+## Author
+
 Priyanshi Yadav
