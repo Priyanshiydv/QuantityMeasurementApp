@@ -3,32 +3,32 @@ using System;
 namespace QuantityMeasurementApp.Models
 {
     /// <summary>
-    /// Represents measurement in Feet.
+    /// Represents measurement in Inches.
     /// </summary>
-    public class Feet
+    public class Inches
     {
         private readonly double value;
 
         /// <summary>
-        /// Initializes Feet object.
+        /// Initializes Inches object.
         /// </summary>
-        public Feet(double value)
+        public Inches(double value)
         {
             this.value = value;
         }
 
         /// <summary>
-        /// Checks equality between two Feet objects.
+        /// Checks equality between two Inches objects.
         /// </summary>
         public override bool Equals(object? obj)
         {
             if (obj == null)
                 return false;
 
-            if (!(obj is Feet))
+            if (!(obj is Inches))
                 return false;
 
-            Feet other = (Feet)obj;
+            Inches other = (Inches)obj;
 
             return Math.Abs(this.value - other.value) < 0.0001;
         }

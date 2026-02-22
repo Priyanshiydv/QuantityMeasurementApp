@@ -89,5 +89,65 @@ namespace QuantityMeasurementApp.Tests
             // Assert
             Assert.IsFalse(result);
         }
+
+
+        // UC2: testEquality_SameValue for Inches
+        [TestMethod]
+        public void GivenSameInchValues_ShouldReturnTrue()
+        {
+            // Arrange
+            Inches inch1 = new Inches(5.0);
+            Inches inch2 = new Inches(5.0);
+
+            // Act
+            bool result = service.AreEqual(inch1, inch2);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        // UC2: testEquality_DifferentValue for Inches
+        [TestMethod]
+        public void GivenDifferentInchValues_ShouldReturnFalse()
+        {
+            // Arrange
+            Inches inch1 = new Inches(5.0);
+            Inches inch2 = new Inches(10.0);
+
+            // Act
+            bool result = service.AreEqual(inch1, inch2);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        // UC2: testEquality_NullComparison for Inches
+        [TestMethod]
+        public void GivenNullInchValue_ShouldReturnFalse()
+        {
+            // Arrange
+            Inches inch1 = new Inches(5.0);
+            Inches? inch2 = null;
+
+            // Act
+            bool result = service.AreEqual(inch1, inch2!);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        // UC2: testEquality_SameReference for Inches
+        [TestMethod]
+        public void GivenSameInchReference_ShouldReturnTrue()
+        {
+            // Arrange
+            Inches inch1 = new Inches(5.0);
+
+            // Act
+            bool result = service.AreEqual(inch1, inch1);
+
+            // Assert
+            Assert.IsTrue(result);
+        }
     }
 }
