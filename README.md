@@ -90,6 +90,45 @@ Ability to compare two length measurements with different units (Feet and Inches
 All UC3 test cases are passing successfully.
 
 ---
+## UC4 – Extended Length Equality (Yards & Centimeters)
+
+###Objective
+
+Ability to compare length measurements across multiple units including Feet, Inches, Yards, and Centimeters using a generic Quantity model with full unit conversion support.
+
+###Implementation Details (UC4)
+
+* Extended LengthUnit enum to include:
+  *YARDS
+  *CENTIMETERS
+* Updated Quantity model to support additional conversion factors
+* Implemented conversion logic:
+  *1 Yard = 3 Feet
+  *1 Yard = 36 Inches
+  *1 Inch = 2.54 Centimeters
+* Ensured equality works across all unit combinations
+* Maintained DRY principle by keeping conversion logic centralized
+* No duplication in service layer
+* Added comprehensive MSTest unit test cases for new units
+* Ensured Reflexive, Symmetric, and Transitive properties are validated
+
+###Test Cases Covered (UC4)
+
+* Same Yard values should return True
+* Different Yard values should return False
+   *1 Yard == 3 Feet should return True
+   *1 Yard == 36 Inches should return True
+   *1 Centimeter == 0.393701 Inches should return True
+* Non-equivalent cross-unit values should return False
+* Transitive property validation across Yards, Feet, and Inches
+* Null unit handling validation
+* Same reference should return True
+* Comparison with null should return False
+* Complex multi-unit equality scenarios
+
+All UC4 test cases are passing successfully.
+
+---
 
 ## Project Structure
 
@@ -122,6 +161,7 @@ QuantityMeasurementApp
 * Compare Feet values (UC1)
 * Compare Inches values (UC2)
 * Compare Generic Quantity (Feet & Inches) with Unit Conversion (UC3)
+* Extended Generic Quantity comparison with Yards & Centimeters (UC4)
 * Console-based interactive menu using Switch Case
 * Clean layered architecture (Models, Services, Menu)
 * Unit Testing using MSTest Framework
@@ -171,6 +211,7 @@ dotnet test
 * `feature/UC1-FeetMeasurementEquality`
 * `feature/UC2-InchMeasurementEquality`
 * `feature/UC3-GenericQuantityLength`
+* `feature/UC4-ExtendedUnitSupport`
 
 Each UC is developed in a separate feature branch and pushed independently as per project guidelines.
 
