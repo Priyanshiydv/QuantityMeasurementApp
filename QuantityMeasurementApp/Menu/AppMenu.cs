@@ -24,7 +24,8 @@ namespace QuantityMeasurementApp.Menu
                 Console.WriteLine("---- Quantity Measurement App ----");
                 Console.WriteLine("1. Compare Feet"); //UC1
                 Console.WriteLine("2. Compare Inches"); //UC2
-                Console.WriteLine("3. Compare Generic Quantity"); //UC3
+                Console.WriteLine("3. Compare Generic Quantity"); //UC3 //UC4
+                Console.WriteLine("4. Convert Length "); //UC5
                 Console.WriteLine("0. Exit");
                 Console.Write("Enter your choice: ");
 
@@ -42,6 +43,10 @@ namespace QuantityMeasurementApp.Menu
 
                     case "3":
                         CompareGenericQuantity();
+                        break;
+                    
+                    case "4":
+                        ConvertLength();
                         break;
 
                     case "0":
@@ -103,7 +108,7 @@ namespace QuantityMeasurementApp.Menu
             Console.Write("Enter first value: ");
             double value1 = Convert.ToDouble(Console.ReadLine());
 
-            Console.Write("Select unit for first value:");
+            Console.WriteLine("Select unit for first value:");
             Console.WriteLine("1 = Feet");
             Console.WriteLine("2 = Inches");
             Console.WriteLine("3 = Yards");
@@ -123,7 +128,7 @@ namespace QuantityMeasurementApp.Menu
             Console.Write("Enter second value: ");
             double value2 = Convert.ToDouble(Console.ReadLine());
 
-            Console.Write("Select unit for second value");
+            Console.WriteLine("Select unit for second value");
             Console.WriteLine("1 = Feet");
             Console.WriteLine("2 = Inches");
             Console.WriteLine("3 = Yards");
@@ -147,5 +152,51 @@ namespace QuantityMeasurementApp.Menu
 
             Console.WriteLine("Generic Quantity Equality Result: " + result);
         }
+
+        /// <summary>
+        /// UC5: Convert length from one unit to another.
+        /// </summary>
+        private static void ConvertLength()
+        {
+            Console.Write("Enter value to convert: ");
+            double value = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select source unit:");
+            Console.WriteLine("1 = Feet");
+            Console.WriteLine("2 = Inches");
+            Console.WriteLine("3 = Yards");
+            Console.WriteLine("4 = Centimeters");
+            int sourceChoice = Convert.ToInt32(Console.ReadLine());
+
+            LengthUnit sourceUnit = sourceChoice switch
+            {
+                1 => LengthUnit.FEET,
+                2 => LengthUnit.INCHES,
+                3 => LengthUnit.YARDS,
+                4 => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Source Unit")
+            };
+
+            Console.WriteLine("Select target unit:");
+            Console.WriteLine("1 = Feet");
+            Console.WriteLine("2 = Inches");
+            Console.WriteLine("3 = Yards");
+            Console.WriteLine("4 = Centimeters");
+            int targetChoice = Convert.ToInt32(Console.ReadLine());
+
+            LengthUnit targetUnit = targetChoice switch
+            {
+                1 => LengthUnit.FEET,
+                2 => LengthUnit.INCHES,
+                3 => LengthUnit.YARDS,
+                4 => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Target Unit")
+            };
+
+            double result = Quantity.Convert(value, sourceUnit, targetUnit);
+
+            Console.WriteLine($"Converted Value: {result:F1}");
+        }
+
     }
 }

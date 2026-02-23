@@ -1,3 +1,4 @@
+using QuantityMeasurementApp.Interfaces;
 using QuantityMeasurementApp.Models;
 
 namespace QuantityMeasurementApp.Services
@@ -5,7 +6,7 @@ namespace QuantityMeasurementApp.Services
     /// <summary>
     /// Provides measurement comparison methods.
     /// </summary>
-    public class QuantityMeasurementService
+    public class QuantityMeasurementService : IQuantityMeasurementService
     {
         /// <summary>
         /// Compares two Feet objects.

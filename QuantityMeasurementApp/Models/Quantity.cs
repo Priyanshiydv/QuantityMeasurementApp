@@ -44,7 +44,7 @@ namespace QuantityMeasurementApp.Models
                 default:
                     throw new ArgumentException("Invalid Unit");
             }
-}
+        }
 
         /// <summary>
         /// Checks equality between two Quantity objects using unit conversion.
@@ -68,6 +68,74 @@ namespace QuantityMeasurementApp.Models
         public override int GetHashCode()
         {
             return ConvertToFeet().GetHashCode();
+        }
+
+        /// <summary>
+        /// Converts a numeric value from source unit to target unit.
+        /// </summary>
+        /// <param name="value">Numeric measurement value.</param>
+        /// <param name="source">Source measurement unit.</param>
+        /// <param name="target">Target measurement unit.</param>
+        /// <returns>Converted value in target unit.</returns>
+        /// static convert
+        public static double Convert(double value, LengthUnit source, LengthUnit target)
+        {
+            // ===================== Input Validation =====================
+            if (double.IsNaN(value) || double.IsInfinity(value))
+            {
+                throw new ArgumentException("Value must be a finite number.");
+            }
+
+            if (!Enum.IsDefined(typeof(LengthUnit), source))
+            {
+                throw new ArgumentException("Invalid Source Unit");
+            }
+
+            if (!Enum.IsDefined(typeof(LengthUnit), target))
+            {
+                throw new ArgumentException("Invalid Target Unit");
+            }
+
+            // ===================== Step 1: Convert source to Feet =====================
+            double valueInFeet = source switch
+            {
+                LengthUnit.FEET => value,
+                LengthUnit.INCHES => value / 12,
+                LengthUnit.YARDS => value * 3,
+                LengthUnit.CENTIMETERS => value / 30.48,
+                _ => throw new ArgumentException("Invalid Source Unit") // safety
+            };
+
+            // ===================== Step 2: Convert Feet to target unit =====================
+            return target switch
+            {
+                LengthUnit.FEET => valueInFeet,
+                LengthUnit.INCHES => valueInFeet * 12,
+                LengthUnit.YARDS => valueInFeet / 3,
+                LengthUnit.CENTIMETERS => valueInFeet * 30.48,
+                _ => throw new ArgumentException("Invalid Target Unit") // safety
+            };
+        }
+
+        /// <summary>
+        /// Converts current Quantity to a specified target unit.
+        /// </summary>
+        /// <param name="targetUnit">Unit to convert into.</param>
+        /// <returns>New Quantity object with converted value.</returns>
+        /// Instance ConvertTo API Usability
+        public Quantity ConvertTo(LengthUnit targetUnit)
+        {
+            double convertedValue = Convert(this.value, this.unit, targetUnit);
+            return new Quantity(convertedValue, targetUnit);
+        }
+
+        /// <summary>
+        /// Returns readable string representation of Quantity.
+        /// </summary>
+        /// <returns>Formatted value with unit.</returns>
+        public override string ToString()
+        {
+            return $"{value} {unit}";
         }
     }
 }
