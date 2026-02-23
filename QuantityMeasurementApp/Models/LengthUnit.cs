@@ -3,9 +3,11 @@ namespace QuantityMeasurementApp.Models
     /// <summary>
     /// Enum representing supported length units.
     /// </summary>
-    public enum LengthUnit
+    public enum LengthUnit //UC3
     {
-        Feet,
-        Inch
+        FEET,
+        INCHES,
+        YARDS,           //UC4
+        CENTIMETERS      //UC4
     }
 }

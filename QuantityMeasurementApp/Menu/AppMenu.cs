@@ -103,18 +103,42 @@ namespace QuantityMeasurementApp.Menu
             Console.Write("Enter first value: ");
             double value1 = Convert.ToDouble(Console.ReadLine());
 
-            Console.Write("Select unit for first value (1 = Feet, 2 = Inch): ");
+            Console.Write("Select unit for first value:");
+            Console.WriteLine("1 = Feet");
+            Console.WriteLine("2 = Inches");
+            Console.WriteLine("3 = Yards");
+            Console.WriteLine("4 = Centimeters");
             int unitChoice1 = Convert.ToInt32(Console.ReadLine());
 
-            LengthUnit unit1 = unitChoice1 == 1 ? LengthUnit.Feet : LengthUnit.Inch;
+            LengthUnit unit1 = unitChoice1 switch
+            {
+                1 => LengthUnit.FEET,
+                2 => LengthUnit.INCHES,
+                3 => LengthUnit.YARDS,
+                4 => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+                
+            };
 
             Console.Write("Enter second value: ");
             double value2 = Convert.ToDouble(Console.ReadLine());
 
-            Console.Write("Select unit for second value (1 = Feet, 2 = Inch): ");
+            Console.Write("Select unit for second value");
+            Console.WriteLine("1 = Feet");
+            Console.WriteLine("2 = Inches");
+            Console.WriteLine("3 = Yards");
+            Console.WriteLine("4 = Centimeters");
             int unitChoice2 = Convert.ToInt32(Console.ReadLine());
 
-            LengthUnit unit2 = unitChoice2 == 1 ? LengthUnit.Feet : LengthUnit.Inch;
+            LengthUnit unit2 = unitChoice2 switch
+            {
+                1 => LengthUnit.FEET,
+                2 => LengthUnit.INCHES,
+                3 => LengthUnit.YARDS,
+                4 => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+                
+            };
 
             Quantity q1 = new Quantity(value1, unit1);
             Quantity q2 = new Quantity(value2, unit2);
