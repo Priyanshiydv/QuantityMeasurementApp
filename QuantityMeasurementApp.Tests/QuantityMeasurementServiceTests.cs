@@ -587,5 +587,167 @@ namespace QuantityMeasurementApp.Tests
 
             Assert.AreEqual(original, backToYard, EPSILON);
         }
+
+//===================================UC6===============================================
+
+        // TC1: Same Unit Addition (Feet + Feet)
+        [TestMethod]
+        public void GivenFeetPlusFeet_WhenAdded_ShouldReturnSumInFeet()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(2.0, LengthUnit.FEET);
+
+            // Act
+            Quantity result = service.Add(q1, q2);
+
+            // Assert
+            Quantity expected = new Quantity(3.0, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC2: Same Unit Addition (Inches + Inches)
+        [TestMethod]
+        public void GivenInchPlusInch_WhenAdded_ShouldReturnSumInInches()
+        {
+            Quantity q1 = new Quantity(6.0, LengthUnit.INCHES);
+            Quantity q2 = new Quantity(6.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(12.0, LengthUnit.INCHES);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC3: Cross Unit (Feet + Inches) → Result in Feet (first operand unit)
+        [TestMethod]
+        public void GivenFeetAndInches_WhenAdded_ShouldReturnResultInFeet()
+        {
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(2.0, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC4: Cross Unit (Inches + Feet) → Result in Inches
+        [TestMethod]
+        public void GivenInchesAndFeet_WhenAdded_ShouldReturnResultInInches()
+        {
+            Quantity q1 = new Quantity(12.0, LengthUnit.INCHES);
+            Quantity q2 = new Quantity(1.0, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(24.0, LengthUnit.INCHES);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC5: Yard + Feet (1 Yard + 3 Feet = 2 Yards)
+        [TestMethod]
+        public void GivenYardAndFeet_WhenAdded_ShouldReturnCorrectYardValue()
+        {
+            Quantity q1 = new Quantity(1.0, LengthUnit.YARDS);
+            Quantity q2 = new Quantity(3.0, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(2.0, LengthUnit.YARDS);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC6: Centimeter + Inch (Precision Test)
+        [TestMethod]
+        public void GivenCentimeterAndInch_WhenAdded_ShouldReturnAccurateCentimeter()
+        {
+            Quantity q1 = new Quantity(2.54, LengthUnit.CENTIMETERS);
+            Quantity q2 = new Quantity(1.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(5.08, LengthUnit.CENTIMETERS);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC7: Commutativity (A + B == B + A)
+        [TestMethod]
+        public void GivenTwoQuantities_WhenOrderChanged_ShouldStillBeEqual()
+        {
+            Quantity feet = new Quantity(1.0, LengthUnit.FEET);
+            Quantity inches = new Quantity(12.0, LengthUnit.INCHES);
+
+            Quantity result1 = service.Add(feet, inches);
+            Quantity result2 = service.Add(inches, feet);
+
+            // Convert both to feet for fair comparison
+            Assert.IsTrue(result1.Equals(result2));
+        }
+
+        // TC8: Identity Element (Adding Zero)
+        [TestMethod]
+        public void GivenValueAndZero_WhenAdded_ShouldReturnSameValue()
+        {
+            Quantity q1 = new Quantity(5.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(0.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(5.0, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC9: Negative Values Addition
+        [TestMethod]
+        public void GivenNegativeValue_WhenAdded_ShouldReturnCorrectResult()
+        {
+            Quantity q1 = new Quantity(5.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(-2.0, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(3.0, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC10: Null Second Operand Should Throw Exception
+        [TestMethod]
+        public void testAddition_NullSecondOperand()
+        {
+            // Arrange
+            Quantity first = new Quantity(1.0, LengthUnit.FEET);
+
+            // Act + Assert (MSTest v4 compatible)
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                service.Add(first, null);
+            });
+        }
+        // TC11: Large Values Addition
+        [TestMethod]
+        public void GivenLargeValues_WhenAdded_ShouldMaintainPrecision()
+        {
+            Quantity q1 = new Quantity(1e6, LengthUnit.FEET);
+            Quantity q2 = new Quantity(1e6, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(2e6, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC12: Small Values Addition
+        [TestMethod]
+        public void GivenSmallValues_WhenAdded_ShouldMaintainPrecision()
+        {
+            Quantity q1 = new Quantity(0.001, LengthUnit.FEET);
+            Quantity q2 = new Quantity(0.002, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2);
+
+            Quantity expected = new Quantity(0.003, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
     }
 }

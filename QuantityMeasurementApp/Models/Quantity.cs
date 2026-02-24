@@ -137,5 +137,37 @@ namespace QuantityMeasurementApp.Models
         {
             return $"{value} {unit}";
         }
+
+        /// <summary>
+        /// UC6: Adds another Quantity to current Quantity.
+        /// Result is returned in the unit of the first operand (this.unit).
+        /// </summary>
+        /// <param name="other">Second quantity to add.</param>
+        /// <returns>New Quantity object with summed value in first operand unit.</returns>
+        public Quantity Add(Quantity other)
+        {
+            // ===================== Validation =====================
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (double.IsNaN(this.value) || double.IsInfinity(this.value) ||
+                double.IsNaN(other.value) || double.IsInfinity(other.value))
+            {
+                throw new ArgumentException("Values must be finite numbers.");
+            }
+
+            // ===================== Step 1: Convert both to Base Unit (Feet) =====================
+            double firstInFeet = Convert(this.value, this.unit, LengthUnit.FEET);
+            double secondInFeet = Convert(other.value, other.unit, LengthUnit.FEET);
+
+            // ===================== Step 2: Add in Base Unit =====================
+            double sumInFeet = firstInFeet + secondInFeet;
+
+            // ===================== Step 3: Convert back to First Operand Unit =====================
+            double resultValue = Convert(sumInFeet, LengthUnit.FEET, this.unit);
+
+            // ===================== Step 4: Return New Immutable Object =====================
+            return new Quantity(resultValue, this.unit);
+        }
     }
 }

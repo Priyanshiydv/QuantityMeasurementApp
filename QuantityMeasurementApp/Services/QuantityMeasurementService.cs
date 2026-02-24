@@ -43,5 +43,19 @@ namespace QuantityMeasurementApp.Services
 
             return value1.Equals(value2);
         }
+
+        /// <summary>
+        /// UC6: Adds two length quantities (same category - Length).
+        /// Result is returned in the unit of the first operand.
+        /// </summary>
+        public Quantity Add(Quantity? first, Quantity? second)
+        {
+            // ===================== Validation =====================
+            if (first == null || second == null)
+                throw new ArgumentNullException("Quantity cannot be null.");
+
+            // Delegating addition logic to Quantity model (DRY + OOP)
+            return first.Add(second);
+}
     }
 }

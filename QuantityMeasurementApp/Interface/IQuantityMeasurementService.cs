@@ -30,5 +30,14 @@ namespace QuantityMeasurementApp.Interfaces
         /// <param name="second">Second Quantity.</param>
         /// <returns>True if equal; otherwise false.</returns>
         bool AreEqual(Quantity first, Quantity second);
+
+        /// <summary>
+        /// UC6: Adds two length quantities and returns result 
+        /// in the unit of the first operand.
+        /// </summary>
+        /// <param name="first">First quantity.</param>
+        /// <param name="second">Second quantity.</param>
+        /// <returns>New Quantity with summed value in first operand unit.</returns>
+        Quantity Add(Quantity first, Quantity second);
     }
 }
