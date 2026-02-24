@@ -10,6 +10,16 @@ namespace QuantityMeasurementApp.Models
         private readonly double value;
         private readonly LengthUnit unit;
 
+        public double Value
+        {
+            get { return value; }
+        }
+
+        public LengthUnit Unit
+        {
+            get { return unit; }
+        }
+
         /// <summary>
         /// Initializes Quantity object with value and unit.
         /// </summary>
@@ -135,7 +145,7 @@ namespace QuantityMeasurementApp.Models
         /// <returns>Formatted value with unit.</returns>
         public override string ToString()
         {
-            return $"{value} {unit}";
+            return $"{value:F2} {unit}";
         }
 
         /// <summary>
@@ -168,6 +178,42 @@ namespace QuantityMeasurementApp.Models
 
             // ===================== Step 4: Return New Immutable Object =====================
             return new Quantity(resultValue, this.unit);
+        }
+
+        /// <summary>
+        /// UC7: Adds two quantities and returns result in EXPLICIT target unit.
+        /// Method Overloading 
+        /// </summary>
+        /// <param name="other">Second quantity to add.</param>
+        /// <param name="targetUnit">Explicit target unit for result.</param>
+        /// <returns>New Quantity in target unit.</returns>
+        public Quantity Add(Quantity other, LengthUnit targetUnit)
+        {
+            // ===================== Validation =====================
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit))
+                throw new ArgumentException("Invalid Target Unit");
+
+            if (double.IsNaN(this.value) || double.IsInfinity(this.value) ||
+                double.IsNaN(other.value) || double.IsInfinity(other.value))
+            {
+                throw new ArgumentException("Values must be finite numbers.");
+            }
+
+            // ===================== Step 1: Convert both to Base Unit (Feet) =====================
+            double firstInFeet = Convert(this.value, this.unit, LengthUnit.FEET);
+            double secondInFeet = Convert(other.value, other.unit, LengthUnit.FEET);
+
+            // ===================== Step 2: Add in Base Unit =====================
+            double sumInFeet = firstInFeet + secondInFeet;
+
+            // ===================== Step 3: Convert to EXPLICIT Target Unit =====================
+            double resultValue = Convert(sumInFeet, LengthUnit.FEET, targetUnit);
+
+            // ===================== Step 4: Return New Immutable Object =====================
+            return new Quantity(resultValue, targetUnit);
         }
     }
 }

@@ -54,8 +54,24 @@ namespace QuantityMeasurementApp.Services
             if (first == null || second == null)
                 throw new ArgumentNullException("Quantity cannot be null.");
 
-            // Delegating addition logic to Quantity model (DRY + OOP)
-            return first.Add(second);
-}
+            // Delegating addition logic to Quantity model 
+            return first.Add(second); //result in first operand unit
+        }
+
+        /// <summary>
+        /// UC7: Adds two length quantities and returns result in EXPLICIT target unit.
+        /// </summary>
+        public Quantity Add(Quantity? first, Quantity? second, LengthUnit targetUnit)
+        {
+            // ===================== Validation =====================
+            if (first == null || second == null)
+                throw new ArgumentNullException("Quantity cannot be null.");
+
+            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit))
+                throw new ArgumentException("Invalid Target Unit");
+
+            // Delegates to Model (OOP + DRY)
+            return first.Add(second, targetUnit); //result in target unit
+        }
     }
 }

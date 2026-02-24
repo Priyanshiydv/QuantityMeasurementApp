@@ -39,5 +39,14 @@ namespace QuantityMeasurementApp.Interfaces
         /// <param name="second">Second quantity.</param>
         /// <returns>New Quantity with summed value in first operand unit.</returns>
         Quantity Add(Quantity first, Quantity second);
+
+        /// <summary>
+        /// UC7: Adds two quantities and returns result in explicit target unit.
+        /// </summary>
+        /// <param name="first">First quantity</param>
+        /// <param name="second">Second quantity</param>
+        /// <param name="targetUnit">Explicit target unit for result</param>
+        /// <returns>New Quantity in target unit</returns>
+        Quantity Add(Quantity first, Quantity second, LengthUnit targetUnit);
     }
 }

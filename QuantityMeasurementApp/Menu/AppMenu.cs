@@ -27,6 +27,7 @@ namespace QuantityMeasurementApp.Menu
                 Console.WriteLine("3. Compare Generic Quantity"); //UC3 //UC4
                 Console.WriteLine("4. Convert Length "); //UC5
                 Console.WriteLine("5. Add Two Length Units"); // UC6
+                Console.WriteLine("6. Add Two Length Units with Target Unit"); // UC7
                 Console.WriteLine("0. Exit");
                 Console.Write("Enter your choice: ");
 
@@ -51,6 +52,9 @@ namespace QuantityMeasurementApp.Menu
                         break;
                     case "5":
                         AddLengths();
+                        break;
+                    case "6":
+                        AddLengthsWithTargetUnit();
                         break;
 
                     case "0":
@@ -199,7 +203,7 @@ namespace QuantityMeasurementApp.Menu
 
             double result = Quantity.Convert(value, sourceUnit, targetUnit);
 
-            Console.WriteLine($"Converted Value: {result:F1}");
+            Console.WriteLine($"Converted Value: {result:F1} {targetUnit}");
         }
 
         /// <summary>
@@ -251,6 +255,74 @@ namespace QuantityMeasurementApp.Menu
             Quantity result = service.Add(q1, q2);
 
             Console.WriteLine($"Addition Result: {result}");
+        }
+
+        /// <summary>
+        /// UC7: Add two length quantities and return result in a specified target unit.
+        /// </summary>
+        private static void AddLengthsWithTargetUnit()
+        {
+            Console.Write("Enter first value: ");
+            double value1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for first value:");
+            Console.WriteLine("1 = Feet");
+            Console.WriteLine("2 = Inches");
+            Console.WriteLine("3 = Yards");
+            Console.WriteLine("4 = Centimeters");
+            int unitChoice1 = Convert.ToInt32(Console.ReadLine());
+
+            LengthUnit unit1 = unitChoice1 switch
+            {
+                1 => LengthUnit.FEET,
+                2 => LengthUnit.INCHES,
+                3 => LengthUnit.YARDS,
+                4 => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            Console.Write("Enter second value: ");
+            double value2 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for second value:");
+            Console.WriteLine("1 = Feet");
+            Console.WriteLine("2 = Inches");
+            Console.WriteLine("3 = Yards");
+            Console.WriteLine("4 = Centimeters");
+            int unitChoice2 = Convert.ToInt32(Console.ReadLine());
+
+            LengthUnit unit2 = unitChoice2 switch
+            {
+                1 => LengthUnit.FEET,
+                2 => LengthUnit.INCHES,
+                3 => LengthUnit.YARDS,
+                4 => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            Console.WriteLine("Select TARGET unit for result:");
+            Console.WriteLine("1 = Feet");
+            Console.WriteLine("2 = Inches");
+            Console.WriteLine("3 = Yards");
+            Console.WriteLine("4 = Centimeters");
+            int targetChoice = Convert.ToInt32(Console.ReadLine());
+
+            LengthUnit targetUnit = targetChoice switch
+            {
+                1 => LengthUnit.FEET,
+                2 => LengthUnit.INCHES,
+                3 => LengthUnit.YARDS,
+                4 => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Target Unit")
+            };
+
+            Quantity q1 = new Quantity(value1, unit1);
+            Quantity q2 = new Quantity(value2, unit2);
+
+            // UC7 Service Method (Overloaded Add)
+            Quantity result = service.Add(q1, q2, targetUnit);
+
+            Console.WriteLine($"Addition Result in {targetUnit}: {result}");
         }
 
     }

@@ -749,5 +749,214 @@ namespace QuantityMeasurementApp.Tests
             Quantity expected = new Quantity(0.003, LengthUnit.FEET);
             Assert.IsTrue(result.Equals(expected));
         }
+
+//======================================UC7===========================================
+        // TC1: Explicit Target Unit - Feet
+        [TestMethod]
+        public void GivenFeetAndInches_WhenAddedWithTargetFeet_ShouldReturnFeet()
+        {
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.FEET);
+
+            Quantity expected = new Quantity(2.0, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC2: Explicit Target Unit - Inches
+        [TestMethod]
+        public void GivenFeetAndInches_WhenAddedWithTargetInches_ShouldReturnInches()
+        {
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.INCHES);
+
+            Quantity expected = new Quantity(24.0, LengthUnit.INCHES);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC3: Explicit Target Unit - Yards
+        [TestMethod]
+        public void GivenFeetAndInches_WhenAddedWithTargetYards_ShouldReturnYards()
+        {
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.YARDS);
+
+            Quantity expected = new Quantity(0.6667, LengthUnit.YARDS);
+            Assert.IsTrue(Math.Abs(result.Value - expected.Value) < 0.001);
+        }
+
+        // TC4: Explicit Target Unit - Centimeters
+        [TestMethod]
+        public void GivenInchesAndInches_WhenAddedWithTargetCentimeters_ShouldReturnCentimeters()
+        {
+            Quantity q1 = new Quantity(1.0, LengthUnit.INCHES);
+            Quantity q2 = new Quantity(1.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.CENTIMETERS);
+
+            Quantity expected = new Quantity(5.08, LengthUnit.CENTIMETERS);
+            Assert.IsTrue(Math.Abs(result.Value - expected.Value) < 0.001);
+        }
+
+        // TC5: Target Same As First Operand
+        [TestMethod]
+        public void GivenYardAndFeet_WhenAddedWithTargetYards_ShouldReturnYards()
+        {
+            Quantity q1 = new Quantity(2.0, LengthUnit.YARDS);
+            Quantity q2 = new Quantity(3.0, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.YARDS);
+
+            Quantity expected = new Quantity(3.0, LengthUnit.YARDS);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC6: Target Same As Second Operand
+        [TestMethod]
+        public void GivenYardAndFeet_WhenAddedWithTargetFeet_ShouldReturnFeet()
+        {
+            Quantity q1 = new Quantity(2.0, LengthUnit.YARDS);
+            Quantity q2 = new Quantity(3.0, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.FEET);
+
+            Quantity expected = new Quantity(9.0, LengthUnit.FEET);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC7: Commutativity with Explicit Target Unit
+        [TestMethod]
+        public void GivenTwoQuantities_WhenOrderChangedWithSameTarget_ShouldBeEqual()
+        {
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            Quantity result1 = service.Add(q1, q2, LengthUnit.YARDS);
+            Quantity result2 = service.Add(q2, q1, LengthUnit.YARDS);
+
+            Assert.IsTrue(Math.Abs(result1.Value - result2.Value) < 0.001);
+        }
+
+        // TC8: Zero Value with Explicit Target Unit
+        [TestMethod]
+        public void GivenValueAndZero_WhenAddedWithTargetYards_ShouldReturnConvertedValue()
+        {
+            Quantity q1 = new Quantity(5.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(0.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.YARDS);
+
+            Quantity expected = new Quantity(1.6667, LengthUnit.YARDS);
+            Assert.IsTrue(Math.Abs(result.Value - expected.Value) < 0.001);
+        }
+
+        // TC9: Negative Values with Explicit Target
+        [TestMethod]
+        public void GivenNegativeValue_WhenAddedWithTargetInches_ShouldReturnCorrectResult()
+        {
+            Quantity q1 = new Quantity(5.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(-2.0, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.INCHES);
+
+            Quantity expected = new Quantity(36.0, LengthUnit.INCHES);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC10: Null Second Operand Should Throw Exception
+        [TestMethod]
+        public void GivenNullTargetUnit_WhenAdded_ShouldThrowArgumentException()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            // Act + Assert (MSTest v4 syntax)
+            Assert.Throws<ArgumentException>(() =>
+            {
+                // Passing invalid target (simulate null case equivalent)
+                service.Add(q1, q2, (LengthUnit)(-1));
+            });
+        }
+
+        // TC11: Large Values Converted to Smaller Unit
+        [TestMethod]
+        public void GivenLargeValues_WhenAddedWithTargetInches_ShouldMaintainPrecision()
+        {
+            Quantity q1 = new Quantity(1000.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(500.0, LengthUnit.FEET);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.INCHES);
+
+            Quantity expected = new Quantity(18000.0, LengthUnit.INCHES);
+            Assert.IsTrue(result.Equals(expected));
+        }
+
+        // TC12: Small To Large Scale Conversion
+        [TestMethod]
+        public void GivenInches_WhenAddedWithTargetYards_ShouldConvertCorrectly()
+        {
+            Quantity q1 = new Quantity(12.0, LengthUnit.INCHES);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            Quantity result = service.Add(q1, q2, LengthUnit.YARDS);
+
+            Quantity expected = new Quantity(0.6667, LengthUnit.YARDS);
+            Assert.IsTrue(Math.Abs(result.Value - expected.Value) < 0.001);
+        }
+
+        // TC13: Invalid Target Unit Should Throw Exception
+        [TestMethod]
+        public void GivenInvalidTargetUnit_WhenAdded_ShouldThrowArgumentException()
+        {
+            // Arrange
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+
+            // Act + Assert
+            Assert.Throws<ArgumentException>(() =>
+            {
+                service.Add(q1, q2, (LengthUnit)(-1));
+            });
+        }
+
+
+        // TC14: Precision Tolerance Test (Multiple Explicit Target Conversions)
+        [TestMethod]
+        public void testAddition_ExplicitTargetUnit_PrecisionTolerance()
+        {
+            double epsilon = 0.001;
+
+            // Case 1: 1 Feet + 12 Inches → Yards
+            Quantity q1 = new Quantity(1.0, LengthUnit.FEET);
+            Quantity q2 = new Quantity(12.0, LengthUnit.INCHES);
+            Quantity result1 = service.Add(q1, q2, LengthUnit.YARDS);
+
+            double expected1 = 0.6667;
+            Assert.IsTrue(Math.Abs(result1.Value - expected1) < epsilon);
+
+
+            // Case 2: 2.54 cm + 1 inch → Feet (2 inches total)
+            Quantity q3 = new Quantity(2.54, LengthUnit.CENTIMETERS);
+            Quantity q4 = new Quantity(1.0, LengthUnit.INCHES);
+            Quantity result2 = service.Add(q3, q4, LengthUnit.FEET);
+
+            double expected2 = 0.1667; // 2 inches = 0.1667 feet
+            Assert.IsTrue(Math.Abs(result2.Value - expected2) < epsilon);
+
+
+            // Case 3: 1 Yard + 3 Feet → Inches (6 feet total)
+            Quantity q5 = new Quantity(1.0, LengthUnit.YARDS);
+            Quantity q6 = new Quantity(3.0, LengthUnit.FEET);
+            Quantity result3 = service.Add(q5, q6, LengthUnit.INCHES);
+
+            double expected3 = 72.0; // 6 feet = 72 inches
+            Assert.IsTrue(Math.Abs(result3.Value - expected3) < epsilon);
+        }
     }
 }
