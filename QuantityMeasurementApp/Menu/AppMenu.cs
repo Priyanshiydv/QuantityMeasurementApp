@@ -28,6 +28,10 @@ namespace QuantityMeasurementApp.Menu
                 Console.WriteLine("4. Convert Length "); //UC5
                 Console.WriteLine("5. Add Two Length Units"); // UC6
                 Console.WriteLine("6. Add Two Length Units with Target Unit"); // UC7
+                Console.WriteLine("7. Compare Weight Units"); //UC9
+                Console.WriteLine("8. Convert Weight");       //UC9
+                Console.WriteLine("9. Add Two Weight Units"); //UC9
+                Console.WriteLine("10. Add Two Weight Units With Target Unit"); //UC9
                 Console.WriteLine("0. Exit");
                 Console.Write("Enter your choice: ");
 
@@ -50,11 +54,29 @@ namespace QuantityMeasurementApp.Menu
                     case "4":
                         ConvertLength();
                         break;
+
                     case "5":
                         AddLengths();
                         break;
+                    
                     case "6":
                         AddLengthsWithTargetUnit();
+                        break;
+                    
+                    case "7":
+                        CompareWeight();
+                        break;
+                    
+                    case "8":
+                        ConvertWeight();
+                        break;
+                    
+                    case "9":
+                        AddWeight();
+                        break;
+                    
+                    case "10":
+                        AddWeightWithTarget();
                         break;
 
                     case "0":
@@ -325,5 +347,201 @@ namespace QuantityMeasurementApp.Menu
             Console.WriteLine($"Addition Result in {targetUnit}: {result}");
         }
 
+        /// <summary>
+        /// UC9: Compares two weight quantities for equality.
+        /// </summary>
+
+        private static void CompareWeight()
+        {
+            Console.Write("Enter first weight value: ");
+            double value1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for first weight:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int choice1 = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit unit1 = choice1 switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            Console.Write("Enter second weight value: ");
+            double value2 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for second weight:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int choice2 = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit unit2 = choice2 switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            QuantityWeight w1 = new QuantityWeight(value1, unit1);
+            QuantityWeight w2 = new QuantityWeight(value2, unit2);
+
+            bool result = service.CompareWeight(w1, w2);
+
+            Console.WriteLine("Weight Equality Result: " + result);
+        }
+        /// <summary>
+        /// UC9: Converts weight from one unit to another.
+        /// </summary>
+        private static void ConvertWeight()
+        {
+            Console.Write("Enter weight value: ");
+            double value = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select source unit:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int sourceChoice = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit sourceUnit = sourceChoice switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            Console.WriteLine("Select target unit:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int targetChoice = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit targetUnit = targetChoice switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            QuantityWeight weight = new QuantityWeight(value, sourceUnit);
+            QuantityWeight result = service.ConvertWeight(weight, targetUnit);
+
+            Console.WriteLine($"Converted Result: {result.Value:F4} {result.Unit}");
+        }
+
+        /// <summary>
+        /// UC9: Adds two weight quantities and returns result in first unit.
+        /// </summary>
+        private static void AddWeight()
+        {
+            Console.Write("Enter first weight value: ");
+            double value1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for first weight:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int choice1 = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit unit1 = choice1 switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            Console.Write("Enter second weight value: ");
+            double value2 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for second weight:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int choice2 = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit unit2 = choice2 switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            QuantityWeight w1 = new QuantityWeight(value1, unit1);
+            QuantityWeight w2 = new QuantityWeight(value2, unit2);
+
+            QuantityWeight result = service.AddWeight(w1, w2);
+
+            Console.WriteLine($"Addition Result: {result.Value:F4} {result.Unit}");
+        }
+
+        /// <summary>
+        /// UC9: Adds two weight quantities and returns result in specified target unit.
+        /// </summary>
+        private static void AddWeightWithTarget()
+        {
+            Console.Write("Enter first weight value: ");
+            double value1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for first weight:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int choice1 = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit unit1 = choice1 switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            Console.Write("Enter second weight value: ");
+            double value2 = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Select unit for second weight:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int choice2 = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit unit2 = choice2 switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            Console.WriteLine("Select TARGET unit:");
+            Console.WriteLine("1 = Kilogram");
+            Console.WriteLine("2 = Gram");
+            Console.WriteLine("3 = Pound");
+            int targetChoice = Convert.ToInt32(Console.ReadLine());
+
+            WeightUnit targetUnit = targetChoice switch
+            {
+                1 => WeightUnit.KILOGRAM,
+                2 => WeightUnit.GRAM,
+                3 => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Unit Selection")
+            };
+
+            QuantityWeight w1 = new QuantityWeight(value1, unit1);
+            QuantityWeight w2 = new QuantityWeight(value2, unit2);
+
+            QuantityWeight result = service.AddWeight(w1, w2, targetUnit);
+
+            Console.WriteLine($"Addition Result in {targetUnit}: {result.Value:F4} {result.Unit}");
+        }
     }
 }

@@ -48,5 +48,28 @@ namespace QuantityMeasurementApp.Interfaces
         /// <param name="targetUnit">Explicit target unit for result</param>
         /// <returns>New Quantity in target unit</returns>
         Quantity Add(Quantity first, Quantity second, LengthUnit targetUnit);
+
+
+        // ================= UC9 - WEIGHT OPERATIONS =================
+
+        /// <summary>
+        /// Compares two weight quantities for equality.
+        /// </summary>
+        bool CompareWeight(QuantityWeight weight1, QuantityWeight weight2);
+
+        /// <summary>
+        /// Converts given weight to target unit.
+        /// </summary>
+        QuantityWeight ConvertWeight(QuantityWeight weight, WeightUnit targetUnit);
+
+        /// <summary>
+        /// Adds two weight quantities and returns result in first unit.
+        /// </summary>
+        QuantityWeight AddWeight(QuantityWeight weight1, QuantityWeight weight2);
+
+        /// <summary>
+        /// Adds two weight quantities and returns result in specified target unit.
+        /// </summary>
+        QuantityWeight AddWeight(QuantityWeight weight1, QuantityWeight weight2, WeightUnit targetUnit);
     }
 }

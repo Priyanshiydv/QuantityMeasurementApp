@@ -73,5 +73,49 @@ namespace QuantityMeasurementApp.Services
             // Delegates to Model (OOP + DRY)
             return first.Add(second, targetUnit); //result in target unit
         }
+
+//======================================UC9==================================================
+        /// <summary>
+        /// Compares two weight quantities for equality.
+        /// </summary>
+        public bool CompareWeight(QuantityWeight weight1, QuantityWeight weight2)
+        {
+            if (weight1 == null || weight2 == null)
+                throw new ArgumentNullException("Weight cannot be null");
+
+            return weight1.Equals(weight2);
+        }
+        /// <summary>
+        /// Converts given weight to target unit.
+        /// </summary>
+        public QuantityWeight ConvertWeight(QuantityWeight weight, WeightUnit targetUnit)
+        {
+            if (weight == null)
+                throw new ArgumentNullException("Weight cannot be null");
+
+            return weight.ConvertTo(targetUnit);
+        }
+
+        /// <summary>
+        /// Adds two weight quantities and returns result in first unit.
+        /// </summary>
+        public QuantityWeight AddWeight(QuantityWeight weight1, QuantityWeight weight2)
+        {
+            if (weight1 == null || weight2 == null)
+                throw new ArgumentNullException("Weight cannot be null");
+
+            return weight1.Add(weight2);
+        }
+
+        /// <summary>
+        /// Adds two weight quantities and returns result in specified target unit.
+        /// </summary>
+        public QuantityWeight AddWeight(QuantityWeight weight1, QuantityWeight weight2, WeightUnit targetUnit)
+        {
+            if (weight1 == null || weight2 == null)
+                throw new ArgumentNullException("Weight cannot be null");
+
+            return weight1.Add(weight2, targetUnit);
+        }
     }
 }

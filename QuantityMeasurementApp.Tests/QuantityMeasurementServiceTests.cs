@@ -958,5 +958,236 @@ namespace QuantityMeasurementApp.Tests
             double expected3 = 72.0; // 6 feet = 72 inches
             Assert.IsTrue(Math.Abs(result3.Value - expected3) < epsilon);
         }
+
+        // ====================== EQUALITY TESTS ======================
+
+        // TC1: Same Reference Equality (Reflexive Property)
+        [TestMethod]
+        public void TC1_GivenWeight_WhenComparedWithItself_ShouldReturnTrue()
+        {
+            QuantityWeight w = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            Assert.IsTrue(w.Equals(w));
+        }
+
+        // TC2: Kilogram to Kilogram Equality (Same Value)
+        [TestMethod]
+        public void TC2_GivenKilogram_WhenSameValue_ShouldReturnTrue()
+        {
+            QuantityWeight w1 = new QuantityWeight(2.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(2.0, WeightUnit.KILOGRAM);
+
+            Assert.IsTrue(w1.Equals(w2));
+        }
+
+        // TC3: Kilogram to Kilogram Equality (Different Value)
+        [TestMethod]
+        public void TC3_GivenKilogram_WhenDifferentValue_ShouldReturnFalse()
+        {
+            QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(2.0, WeightUnit.KILOGRAM);
+
+            Assert.IsFalse(w1.Equals(w2));
+        }
+
+        // TC4: Kilogram to Gram Equality
+        [TestMethod]
+        public void TC4_GivenKilogramAndGram_WhenEquivalent_ShouldReturnTrue()
+        {
+            QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(1000.0, WeightUnit.GRAM);
+
+            Assert.IsTrue(w1.Equals(w2));
+        }
+
+        // TC5: Kilogram to Pound Equality
+        [TestMethod]
+        public void TC5_GivenKilogramAndPound_WhenEquivalent_ShouldReturnTrue()
+        {
+            QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(2.20462, WeightUnit.POUND);
+
+            Assert.IsTrue(w1.Equals(w2));
+        }
+
+        // TC6: Gram to Pound Equality
+        [TestMethod]
+        public void TC6_GivenGramAndPound_WhenEquivalent_ShouldReturnTrue()
+        {
+            QuantityWeight w1 = new QuantityWeight(453.592, WeightUnit.GRAM);
+            QuantityWeight w2 = new QuantityWeight(1.0, WeightUnit.POUND);
+
+            Assert.IsTrue(w1.Equals(w2));
+        }
+
+        // TC7: Null Comparison
+        [TestMethod]
+        public void TC7_GivenWeight_WhenComparedWithNull_ShouldReturnFalse()
+        {
+            QuantityWeight w = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            Assert.IsFalse(w.Equals(null));
+        }
+
+        // TC8: Transitive Property
+        [TestMethod]
+        public void TC8_GivenThreeEquivalentWeights_ShouldSatisfyTransitiveProperty()
+        {
+            QuantityWeight a = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight b = new QuantityWeight(1000.0, WeightUnit.GRAM);
+            QuantityWeight c = new QuantityWeight(2.20462, WeightUnit.POUND);
+
+            Assert.IsTrue(a.Equals(b));
+            Assert.IsTrue(b.Equals(c));
+            Assert.IsTrue(a.Equals(c));
+        }
+
+        // ====================== CONVERSION TESTS ======================
+
+        // TC9: Pound to Kilogram Conversion
+        [TestMethod]
+        public void TC9_GivenPound_WhenConvertedToKilogram_ShouldReturnOne()
+        {
+            QuantityWeight w = new QuantityWeight(2.20462, WeightUnit.POUND);
+            QuantityWeight result = w.ConvertTo(WeightUnit.KILOGRAM);
+
+            Assert.IsTrue(Math.Abs(result.Value - 1.0) < 0.001);
+        }
+
+        // TC10: Kilogram to Pound Conversion
+        [TestMethod]
+        public void TC10_GivenKilogram_WhenConvertedToPound_ShouldReturnCorrectValue()
+        {
+            QuantityWeight w = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight result = w.ConvertTo(WeightUnit.POUND);
+
+            Assert.IsTrue(Math.Abs(result.Value - 2.20462) < 0.001);
+        }
+
+        // TC11: Same Unit Conversion
+        [TestMethod]
+        public void TC11_GivenSameUnitConversion_ShouldReturnSameValue()
+        {
+            QuantityWeight w = new QuantityWeight(5.0, WeightUnit.KILOGRAM);
+            QuantityWeight result = w.ConvertTo(WeightUnit.KILOGRAM);
+
+            Assert.AreEqual(5.0, result.Value);
+        }
+
+        // TC12: Round Trip Conversion
+        [TestMethod]
+        public void TC12_GivenRoundTripConversion_ShouldMaintainValue()
+        {
+            QuantityWeight w = new QuantityWeight(1.5, WeightUnit.KILOGRAM);
+
+            QuantityWeight result = w
+                .ConvertTo(WeightUnit.GRAM)
+                .ConvertTo(WeightUnit.KILOGRAM);
+
+            Assert.IsTrue(Math.Abs(result.Value - 1.5) < 0.001);
+        }
+
+        // ====================== ADDITION TESTS ======================
+
+        // TC13: Addition Same Unit
+        [TestMethod]
+        public void TC13_GivenKilogramPlusKilogram_ShouldReturnSum()
+        {
+            QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(2.0, WeightUnit.KILOGRAM);
+
+            QuantityWeight result = w1.Add(w2);
+
+            Assert.AreEqual(3.0, result.Value);
+        }
+
+        // TC14: Addition Cross Unit (Kilogram + Gram)
+        [TestMethod]
+        public void TC14_GivenKilogramPlusGram_ShouldReturnKilogram()
+        {
+            QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(1000.0, WeightUnit.GRAM);
+
+            QuantityWeight result = w1.Add(w2);
+
+            Assert.IsTrue(result.Equals(new QuantityWeight(2.0, WeightUnit.KILOGRAM)));
+        }
+
+        // TC15: Addition Cross Unit (Pound + Kilogram)
+        [TestMethod]
+        public void TC15_GivenPoundPlusKilogram_ShouldReturnPound()
+        {
+            QuantityWeight w1 = new QuantityWeight(2.20462, WeightUnit.POUND);
+            QuantityWeight w2 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+
+            QuantityWeight result = w1.Add(w2);
+
+            Assert.IsTrue(Math.Abs(result.Value - 4.40924) < 0.01);
+        }
+
+        // TC16: Addition Explicit Target Unit
+        [TestMethod]
+        public void TC16_GivenExplicitTargetUnit_ShouldReturnInTargetUnit()
+        {
+            QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(1000.0, WeightUnit.GRAM);
+
+            QuantityWeight result = w1.Add(w2, WeightUnit.GRAM);
+
+            Assert.AreEqual(2000.0, result.Value);
+        }
+
+        // TC17: Addition Commutativity
+        [TestMethod]
+        public void TC17_GivenAdditionOrderChanged_ShouldReturnSameResult()
+        {
+            QuantityWeight w1 = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(1000.0, WeightUnit.GRAM);
+
+            QuantityWeight r1 = w1.Add(w2, WeightUnit.GRAM);
+            QuantityWeight r2 = w2.Add(w1, WeightUnit.GRAM);
+
+            Assert.IsTrue(Math.Abs(r1.Value - r2.Value) < 0.001);
+        }
+
+        // TC18: Addition With Zero
+        [TestMethod]
+        public void TC18_GivenAdditionWithZero_ShouldReturnSameValue()
+        {
+            QuantityWeight w1 = new QuantityWeight(5.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(0.0, WeightUnit.GRAM);
+
+            QuantityWeight result = w1.Add(w2);
+
+            Assert.AreEqual(5.0, result.Value);
+        }
+
+        // TC19: Addition With Negative Value
+        [TestMethod]
+        public void TC19_GivenNegativeWeightAddition_ShouldReturnCorrectResult()
+        {
+            QuantityWeight w1 = new QuantityWeight(5.0, WeightUnit.KILOGRAM);
+            QuantityWeight w2 = new QuantityWeight(-2000.0, WeightUnit.GRAM);
+
+            QuantityWeight result = w1.Add(w2);
+
+            Assert.AreEqual(3.0, result.Value);
+        }
+
+        // ====================== VALIDATION TEST ======================
+
+       
+        // TC20: Invalid Numeric Value Should Throw ArgumentException
+        [TestMethod]
+        public void TC20_GivenInvalidNumericValue_ShouldThrowArgumentException()
+        {
+            try
+            {
+                QuantityWeight w = new QuantityWeight(double.NaN, WeightUnit.KILOGRAM);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+            
+            }
+        }
     }
 }
