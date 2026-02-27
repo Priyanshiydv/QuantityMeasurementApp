@@ -10,11 +10,17 @@ namespace QuantityMeasurementApp.Models
         private readonly double value;
         private readonly LengthUnit unit;
 
+        /// <summary>
+        /// Gets the numerical value of the quantity.
+        /// </summary>
         public double Value
         {
             get { return value; }
         }
 
+        /// <summary>
+        /// Gets the unit of the quantity.
+        /// </summary>
         public LengthUnit Unit
         {
             get { return unit; }
@@ -31,33 +37,11 @@ namespace QuantityMeasurementApp.Models
             this.unit = unit;
         }
 
-        /// <summary>
-        /// Converts the quantity to base unit (Feet).
-        /// </summary>
-        /// <returns>Value converted to feet.</returns>
-        private double ConvertToFeet()
-        {
-            switch (unit)
-            {
-                case LengthUnit.FEET:
-                    return value;
-
-                case LengthUnit.INCHES:
-                    return value / 12;
-
-                case LengthUnit.YARDS:
-                    return value * 3;
-
-                case LengthUnit.CENTIMETERS:
-                    return value * 0.0328084;
-
-                default:
-                    throw new ArgumentException("Invalid Unit");
-            }
-        }
-
+       
         /// <summary>
         /// Checks equality between two Quantity objects using unit conversion.
+        /// UC1 & UC2 - Equality with unit conversion
+        /// UC8 - Uses LengthUnit extension methods (SRP applied)
         /// </summary>
         /// <param name="obj">Object to compare.</param>
         /// <returns>True if quantities are equal; otherwise false.</returns>
@@ -67,21 +51,29 @@ namespace QuantityMeasurementApp.Models
                 return false;
 
             Quantity other = (Quantity)obj;
+        // ===================== Convert both to Base Unit (Feet) =====================
+            double thisBaseValue = this.unit.ToBase(this.value);
+            double otherBaseValue = other.unit.ToBase(other.value);
 
-            // Convert both to base unit (Feet) and compare
-            return Math.Abs(this.ConvertToFeet() - other.ConvertToFeet()) < 0.0001;
+        // ===================== Floating Point Tolerance Comparison =====================
+            return Math.Abs(thisBaseValue - otherBaseValue) < 0.0001;
         }
 
         /// <summary>
         /// Returns hash code based on base unit value.
+        /// UC1 Requirement - Consistent hashing with equality
+        /// UC8 - Uses LengthUnit extension conversion
         /// </summary>
         public override int GetHashCode()
         {
-            return ConvertToFeet().GetHashCode();
+             double baseValue = unit.ToBase(value);
+            return baseValue.GetHashCode();
         }
 
         /// <summary>
         /// Converts a numeric value from source unit to target unit.
+        /// UC4 - Unit Conversion Feature
+        /// UC8 - Refactored: Delegates conversion to LengthUnitExtensions (SRP)
         /// </summary>
         /// <param name="value">Numeric measurement value.</param>
         /// <param name="source">Source measurement unit.</param>
@@ -105,30 +97,18 @@ namespace QuantityMeasurementApp.Models
             {
                 throw new ArgumentException("Invalid Target Unit");
             }
+        // ===================== Step 1: Convert Source to Base Unit (Feet) =====================
+            double baseValue = source.ToBase(value);
 
-            // ===================== Step 1: Convert source to Feet =====================
-            double valueInFeet = source switch
-            {
-                LengthUnit.FEET => value,
-                LengthUnit.INCHES => value / 12,
-                LengthUnit.YARDS => value * 3,
-                LengthUnit.CENTIMETERS => value / 30.48,
-                _ => throw new ArgumentException("Invalid Source Unit") // safety
-            };
+       // ===================== Step 2: Convert Base Unit to Target Unit =====================
+            double convertedValue = target.FromBase(baseValue);
 
-            // ===================== Step 2: Convert Feet to target unit =====================
-            return target switch
-            {
-                LengthUnit.FEET => valueInFeet,
-                LengthUnit.INCHES => valueInFeet * 12,
-                LengthUnit.YARDS => valueInFeet / 3,
-                LengthUnit.CENTIMETERS => valueInFeet * 30.48,
-                _ => throw new ArgumentException("Invalid Target Unit") // safety
-            };
+            return convertedValue;
         }
 
         /// <summary>
         /// Converts current Quantity to a specified target unit.
+        /// UC4 - Instance Convert API (Better Usability)
         /// </summary>
         /// <param name="targetUnit">Unit to convert into.</param>
         /// <returns>New Quantity object with converted value.</returns>
