@@ -959,6 +959,102 @@ namespace QuantityMeasurementApp.Tests
             Assert.IsTrue(Math.Abs(result3.Value - expected3) < epsilon);
         }
 
+// ===============================UC8=======================================
+
+        // TC1: FEET to Base should return same value
+        [TestMethod]
+        public void GivenFeet_WhenConvertedToBase_ShouldReturnSameValue()
+        {
+            double result = LengthUnit.FEET.ToBase(5.0);
+
+            Assert.AreEqual(5.0, result, EPSILON);
+        }
+
+        // TC2: INCHES to Base conversion
+        [TestMethod]
+        public void GivenInches_WhenConvertedToBase_ShouldReturnFeetValue()
+        {
+            double result = LengthUnit.INCHES.ToBase(12.0);
+
+            Assert.AreEqual(1.0, result, EPSILON);
+        }
+
+        // TC3: YARDS to Base conversion
+        [TestMethod]
+        public void GivenYards_WhenConvertedToBase_ShouldReturnFeetValue()
+        {
+            double result = LengthUnit.YARDS.ToBase(2.0);
+
+            Assert.AreEqual(6.0, result, EPSILON);
+        }
+
+        // TC4: CENTIMETERS to Base conversion
+        [TestMethod]
+        public void GivenCentimeters_WhenConvertedToBase_ShouldReturnFeetValue()
+        {
+            double result = LengthUnit.CENTIMETERS.ToBase(30.48);
+
+            Assert.AreEqual(1.0, result, EPSILON);
+        }
+
+        // TC5: Base to INCHES conversion
+        [TestMethod]
+        public void GivenBaseValue_WhenConvertedToInches_ShouldReturnCorrectValue()
+        {
+            double result = LengthUnit.INCHES.FromBase(1.0);
+
+            Assert.AreEqual(12.0, result, EPSILON);
+        }
+
+        // TC6: Base to YARDS conversion
+        [TestMethod]
+        public void GivenBaseValue_WhenConvertedToYards_ShouldReturnCorrectValue()
+        {
+            double result = LengthUnit.YARDS.FromBase(6.0);
+
+            Assert.AreEqual(2.0, result, EPSILON);
+        }
+
+        // TC7: Base to CENTIMETERS conversion
+        [TestMethod]
+        public void GivenBaseValue_WhenConvertedToCentimeters_ShouldReturnCorrectValue()
+        {
+            double result = LengthUnit.CENTIMETERS.FromBase(1.0);
+
+            Assert.AreEqual(30.48, result, EPSILON);
+        }
+
+        // TC8: Invalid numeric value should throw exception (ToBase)
+        [TestMethod]
+        public void GivenInvalidValue_WhenConvertedToBase_ShouldThrowException()
+        {
+            try
+            {
+                LengthUnit.FEET.ToBase(double.NaN);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+                
+            }
+        }
+
+        // TC9: Invalid numeric value should throw exception (FromBase)
+        [TestMethod]
+        public void GivenInvalidBaseValue_WhenConvertedFromBase_ShouldThrowException()
+        {
+            try
+            {
+                LengthUnit.FEET.FromBase(double.PositiveInfinity);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+                
+            }
+        }
+
+//=======================================UC9===============================================
         // ====================== EQUALITY TESTS ======================
 
         // TC1: Same Reference Equality (Reflexive Property)
