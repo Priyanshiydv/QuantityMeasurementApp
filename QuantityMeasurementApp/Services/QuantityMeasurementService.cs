@@ -1,121 +1,104 @@
-using QuantityMeasurementApp.Interfaces;
+using System;
 using QuantityMeasurementApp.Models;
 
 namespace QuantityMeasurementApp.Services
 {
     /// <summary>
-    /// Provides measurement comparison methods.
+    /// Service implementation for generic quantity operations.
+    /// Handles Length, Weight, and any future measurable category.
     /// </summary>
     public class QuantityMeasurementService : IQuantityMeasurementService
     {
         /// <summary>
-        /// Compares two Feet objects.
+        /// Generic equality comparison.
+        /// Returns false if any quantity is null.
         /// </summary>
-        public bool AreEqual(Feet? value1, Feet? value2)
+        public bool AreEqual<U>(QuantityGeneric<U>? first, QuantityGeneric<U>? second)
+            where U : IMeasurable
         {
-            if (value1 == null || value2 == null)
+            if (first == null || second == null)
                 return false;
 
-            return value1.Equals(value2);
+            return first.Equals(second);
         }
 
         /// <summary>
-        /// Compares two Inch objects
+        /// Adds two quantities and returns result
+        /// in the first quantity's unit.
         /// </summary>
-        public bool AreEqual(Inches? value1, Inches? value2)
+        public QuantityGeneric<U> Add<U>(QuantityGeneric<U>? first,
+                                  QuantityGeneric<U>? second)
+            where U : IMeasurable
         {
-            if (value1 == null || value2 == null)
-                return false;
+            if (first == null || second == null)
+                throw new ArgumentNullException("Quantity cannot be null.");
 
-            return value1.Equals(value2);
-        }        
-
-        /// <summary>
-        /// Compares two generic Quantity objects (UC3).
-        /// </summary>
-        /// <param name="value1">First quantity.</param>
-        /// <param name="value2">Second quantity.</param>
-        /// <returns>True if both quantities are equal after unit conversion.</returns>
-        public bool AreEqual(Quantity? value1, Quantity? value2)
-        {
-            if (value1 == null || value2 == null)
-                return false;
-
-            return value1.Equals(value2);
+            return first.Add(second);
         }
 
         /// <summary>
-        /// UC6: Adds two length quantities (same category - Length).
-        /// Result is returned in the unit of the first operand.
+        /// Adds two quantities and returns result
+        /// in the specified target unit.
         /// </summary>
+        public QuantityGeneric<U> Add<U>(QuantityGeneric<U>? first,QuantityGeneric<U>? second, U targetUnit)
+            where U : IMeasurable
+        {
+            if (first == null || second == null)
+                throw new ArgumentNullException("Quantity cannot be null.");
+             if (targetUnit == null)
+                throw new ArgumentException("Target unit cannot be null.");
+
+            return first.Add(second, targetUnit);
+        }
+
+
+
+
+//===========================UC1 AND UC2===========================
+        public bool AreEqual(Feet first, Feet second)
+        {
+            if (first == null || second == null)
+                return false;
+
+            return first.Equals(second);
+        }
+
+        public bool AreEqual(Inches first, Inches second)
+        {
+            if (first == null || second == null)
+                return false;
+
+            return first.Equals(second);
+        }
+
+        public bool AreEqual(Quantity first, Quantity second)
+        {
+            if (first == null || second == null)
+                return false;
+
+            return first.Equals(second);
+        }
+
         public Quantity Add(Quantity? first, Quantity? second)
         {
-            // ===================== Validation =====================
             if (first == null || second == null)
-                throw new ArgumentNullException("Quantity cannot be null.");
+                throw new ArgumentNullException();
 
-            // Delegating addition logic to Quantity model 
-            return first.Add(second); //result in first operand unit
+            var result = first.Add(second); // returns QuantityGeneric<IMeasurable>
+
+            return new Quantity(result.Value, result.Unit);
         }
 
-        /// <summary>
-        /// UC7: Adds two length quantities and returns result in EXPLICIT target unit.
-        /// </summary>
         public Quantity Add(Quantity? first, Quantity? second, LengthUnit targetUnit)
         {
-            // ===================== Validation =====================
             if (first == null || second == null)
-                throw new ArgumentNullException("Quantity cannot be null.");
+                throw new ArgumentNullException();
 
-            if (!Enum.IsDefined(typeof(LengthUnit), targetUnit))
-                throw new ArgumentException("Invalid Target Unit");
+            var result = first.Add(second, targetUnit);
 
-            // Delegates to Model (OOP + DRY)
-            return first.Add(second, targetUnit); //result in target unit
+            return new Quantity(result.Value, result.Unit);
         }
+        
 
-//======================================UC9==================================================
-        /// <summary>
-        /// Compares two weight quantities for equality.
-        /// </summary>
-        public bool CompareWeight(QuantityWeight weight1, QuantityWeight weight2)
-        {
-            if (weight1 == null || weight2 == null)
-                throw new ArgumentNullException("Weight cannot be null");
-
-            return weight1.Equals(weight2);
-        }
-        /// <summary>
-        /// Converts given weight to target unit.
-        /// </summary>
-        public QuantityWeight ConvertWeight(QuantityWeight weight, WeightUnit targetUnit)
-        {
-            if (weight == null)
-                throw new ArgumentNullException("Weight cannot be null");
-
-            return weight.ConvertTo(targetUnit);
-        }
-
-        /// <summary>
-        /// Adds two weight quantities and returns result in first unit.
-        /// </summary>
-        public QuantityWeight AddWeight(QuantityWeight weight1, QuantityWeight weight2)
-        {
-            if (weight1 == null || weight2 == null)
-                throw new ArgumentNullException("Weight cannot be null");
-
-            return weight1.Add(weight2);
-        }
-
-        /// <summary>
-        /// Adds two weight quantities and returns result in specified target unit.
-        /// </summary>
-        public QuantityWeight AddWeight(QuantityWeight weight1, QuantityWeight weight2, WeightUnit targetUnit)
-        {
-            if (weight1 == null || weight2 == null)
-                throw new ArgumentNullException("Weight cannot be null");
-
-            return weight1.Add(weight2, targetUnit);
-        }
     }
 }

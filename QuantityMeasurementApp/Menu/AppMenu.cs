@@ -4,544 +4,267 @@ using QuantityMeasurementApp.Services;
 
 namespace QuantityMeasurementApp.Menu
 {
-    /// <summary>
-    /// Handles application execution and menu.
-    /// </summary>
-    public class AppMenu
+    public static class AppMenu
     {
-        private static readonly QuantityMeasurementService service = 
-            new QuantityMeasurementService();
+        private static readonly QuantityMeasurementService service = new QuantityMeasurementService();
 
-        /// <summary>
-        /// Starts the application.
-        /// </summary>
         public static void Start()
         {
-            string? choice;
-
-            do
+            while (true)
             {
-                Console.WriteLine("---- Quantity Measurement App ----");
-                Console.WriteLine("1. Compare Feet"); //UC1
-                Console.WriteLine("2. Compare Inches"); //UC2
-                Console.WriteLine("3. Compare Generic Quantity"); //UC3 //UC4
-                Console.WriteLine("4. Convert Length "); //UC5
-                Console.WriteLine("5. Add Two Length Units"); // UC6
-                Console.WriteLine("6. Add Two Length Units with Target Unit"); // UC7
-                Console.WriteLine("7. Compare Weight Units"); //UC9
-                Console.WriteLine("8. Convert Weight");       //UC9
-                Console.WriteLine("9. Add Two Weight Units"); //UC9
-                Console.WriteLine("10. Add Two Weight Units With Target Unit"); //UC9
+                Console.WriteLine("\n===== QUANTITY MEASUREMENT APP =====");
+                Console.WriteLine("1. Length Equality");
+                Console.WriteLine("2. Length Conversion");
+                Console.WriteLine("3. Length Addition");
+                Console.WriteLine("4. Weight Equality");
+                Console.WriteLine("5. Weight Conversion");
+                Console.WriteLine("6. Weight Addition");
+                Console.WriteLine("7. Cross Category Equality");
+                Console.WriteLine("8. Generic Demonstration");
                 Console.WriteLine("0. Exit");
-                Console.Write("Enter your choice: ");
+                Console.Write("Select Option: ");
 
-                choice = Console.ReadLine();
+                string? choice = Console.ReadLine();
 
                 switch (choice)
                 {
                     case "1":
-                        CompareFeet();
+                        LengthEquality();
                         break;
 
                     case "2":
-                        CompareInches();
+                        LengthConversion();
                         break;
 
                     case "3":
-                        CompareGenericQuantity();
+                        LengthAddition();
                         break;
-                    
+
                     case "4":
-                        ConvertLength();
+                        WeightEquality();
                         break;
 
                     case "5":
-                        AddLengths();
+                        WeightConversion();
                         break;
-                    
+
                     case "6":
-                        AddLengthsWithTargetUnit();
+                        WeightAddition();
                         break;
-                    
+
                     case "7":
-                        CompareWeight();
+                        CrossCategoryEquality();
                         break;
-                    
+
                     case "8":
-                        ConvertWeight();
-                        break;
-                    
-                    case "9":
-                        AddWeight();
-                        break;
-                    
-                    case "10":
-                        AddWeightWithTarget();
+                        GenericDemo();
                         break;
 
                     case "0":
-                        Console.WriteLine("Exiting application...");
-                        break;
+                        Console.WriteLine("Exiting Application...");
+                        return;
 
                     default:
-                        Console.WriteLine("Invalid choice. Try again.");
+                        Console.WriteLine("Invalid choice.");
                         break;
                 }
-
-                Console.WriteLine();
-
-            } while (choice != "0");
+            }
         }
 
-        /// <summary>
-        /// UC1: Compare Feet values.
-        /// </summary>
-        private static void CompareFeet()
+        // ---------------- LENGTH OPERATIONS ----------------
+
+        private static void LengthEquality()
         {
-            Console.Write("Enter first Feet value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("\nEnter First Length");
+            var q1 = ReadLength();
 
-            Console.Write("Enter second Feet value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Feet f1 = new Feet(value1);
-            Feet f2 = new Feet(value2);
-
-            bool result = service.AreEqual(f1, f2);
-
-            Console.WriteLine("Feet Equality Result: " + result);
-        }
-
-        /// <summary>
-        /// UC2: Compare Inches values.
-        /// </summary>
-        private static void CompareInches()
-        {
-            Console.Write("Enter first Inches value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
-
-            Console.Write("Enter second Inches value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Inches i1 = new Inches(value1);
-            Inches i2 = new Inches(value2);
-
-            bool result = service.AreEqual(i1, i2);
-            Console.WriteLine("Inches Equality Result: " + result);
-        }
-
-        /// <summary>
-        /// UC3: Compare Generic Quantity (Feet & Inch using DRY).
-        /// </summary>
-        private static void CompareGenericQuantity()
-        {
-            Console.Write("Enter first value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Select unit for first value:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int unitChoice1 = Convert.ToInt32(Console.ReadLine());
-
-            LengthUnit unit1 = unitChoice1 switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-                
-            };
-
-            Console.Write("Enter second value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Select unit for second value");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int unitChoice2 = Convert.ToInt32(Console.ReadLine());
-
-            LengthUnit unit2 = unitChoice2 switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-                
-            };
-
-            Quantity q1 = new Quantity(value1, unit1);
-            Quantity q2 = new Quantity(value2, unit2);
+            Console.WriteLine("\nEnter Second Length");
+            var q2 = ReadLength();
 
             bool result = service.AreEqual(q1, q2);
 
-            Console.WriteLine("Generic Quantity Equality Result: " + result);
+            Console.WriteLine($"Result: {result}");
         }
 
-        /// <summary>
-        /// UC5: Convert length from one unit to another.
-        /// </summary>
-        private static void ConvertLength()
+        private static void LengthConversion()
         {
-            Console.Write("Enter value to convert: ");
-            double value = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("\nEnter Length to Convert");
+            var quantity = ReadLength();
 
-            Console.WriteLine("Select source unit:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int sourceChoice = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Convert To Unit:");
+            LengthUnit target = ReadLengthUnit();
 
-            LengthUnit sourceUnit = sourceChoice switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Source Unit")
-            };
+            var result = quantity.ConvertTo(target);
 
-            Console.WriteLine("Select target unit:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int targetChoice = Convert.ToInt32(Console.ReadLine());
-
-            LengthUnit targetUnit = targetChoice switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Target Unit")
-            };
-
-            double result = Quantity.Convert(value, sourceUnit, targetUnit);
-
-            Console.WriteLine($"Converted Value: {result:F1} {targetUnit}");
+            Console.WriteLine($"Converted: {result}");
         }
 
-        /// <summary>
-        /// UC6: Add two length quantities and return result in the unit of first operand.
-        /// </summary>
-        private static void AddLengths()
+        private static void LengthAddition()
         {
-            Console.Write("Enter first value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("\nEnter First Length");
+            var q1 = ReadLength();
 
-            Console.WriteLine("Select unit for first value:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int unitChoice1 = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\nEnter Second Length");
+            var q2 = ReadLength();
 
-            LengthUnit unit1 = unitChoice1 switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
+            Console.WriteLine("Result Unit:");
+            LengthUnit resultUnit = ReadLengthUnit();
 
-            Console.Write("Enter second value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Select unit for second value:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int unitChoice2 = Convert.ToInt32(Console.ReadLine());
-
-            LengthUnit unit2 = unitChoice2 switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            Quantity q1 = new Quantity(value1, unit1);
-            Quantity q2 = new Quantity(value2, unit2);
-
-            Quantity result = service.Add(q1, q2);
+            var result = q1.Add(q2, resultUnit);
 
             Console.WriteLine($"Addition Result: {result}");
         }
 
-        /// <summary>
-        /// UC7: Add two length quantities and return result in a specified target unit.
-        /// </summary>
-        private static void AddLengthsWithTargetUnit()
+        // ---------------- WEIGHT OPERATIONS ----------------
+
+        private static void WeightEquality()
         {
-            Console.Write("Enter first value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("\nEnter First Weight");
+            var w1 = ReadWeight();
 
-            Console.WriteLine("Select unit for first value:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int unitChoice1 = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("\nEnter Second Weight");
+            var w2 = ReadWeight();
 
-            LengthUnit unit1 = unitChoice1 switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
+            bool result = service.AreEqual(w1, w2);
 
-            Console.Write("Enter second value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Select unit for second value:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int unitChoice2 = Convert.ToInt32(Console.ReadLine());
-
-            LengthUnit unit2 = unitChoice2 switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            Console.WriteLine("Select TARGET unit for result:");
-            Console.WriteLine("1 = Feet");
-            Console.WriteLine("2 = Inches");
-            Console.WriteLine("3 = Yards");
-            Console.WriteLine("4 = Centimeters");
-            int targetChoice = Convert.ToInt32(Console.ReadLine());
-
-            LengthUnit targetUnit = targetChoice switch
-            {
-                1 => LengthUnit.FEET,
-                2 => LengthUnit.INCHES,
-                3 => LengthUnit.YARDS,
-                4 => LengthUnit.CENTIMETERS,
-                _ => throw new ArgumentException("Invalid Target Unit")
-            };
-
-            Quantity q1 = new Quantity(value1, unit1);
-            Quantity q2 = new Quantity(value2, unit2);
-
-            // UC7 Service Method (Overloaded Add)
-            Quantity result = service.Add(q1, q2, targetUnit);
-
-            Console.WriteLine($"Addition Result in {targetUnit}: {result}");
+            Console.WriteLine($"Result: {result}");
         }
 
-        /// <summary>
-        /// UC9: Compares two weight quantities for equality.
-        /// </summary>
-
-        private static void CompareWeight()
+        private static void WeightConversion()
         {
-            Console.Write("Enter first weight value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("\nEnter Weight to Convert");
+            var weight = ReadWeight();
 
-            Console.WriteLine("Select unit for first weight:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int choice1 = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Convert To Unit:");
+            WeightUnit target = ReadWeightUnit();
 
-            WeightUnit unit1 = choice1 switch
-            {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
+            var result = weight.ConvertTo(target);
 
-            Console.Write("Enter second weight value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Select unit for second weight:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int choice2 = Convert.ToInt32(Console.ReadLine());
-
-            WeightUnit unit2 = choice2 switch
-            {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            QuantityWeight w1 = new QuantityWeight(value1, unit1);
-            QuantityWeight w2 = new QuantityWeight(value2, unit2);
-
-            bool result = service.CompareWeight(w1, w2);
-
-            Console.WriteLine("Weight Equality Result: " + result);
+            Console.WriteLine($"Converted: {result}");
         }
-        /// <summary>
-        /// UC9: Converts weight from one unit to another.
-        /// </summary>
-        private static void ConvertWeight()
+
+        private static void WeightAddition()
         {
-            Console.Write("Enter weight value: ");
+            Console.WriteLine("\nEnter First Weight");
+            var w1 = ReadWeight();
+
+            Console.WriteLine("\nEnter Second Weight");
+            var w2 = ReadWeight();
+
+            Console.WriteLine("Result Unit:");
+            WeightUnit resultUnit = ReadWeightUnit();
+
+            var result = w1.Add(w2, resultUnit);
+
+            Console.WriteLine($"Addition Result: {result}");
+        }
+
+        // ---------------- CROSS CATEGORY ----------------
+
+        private static void CrossCategoryEquality()
+        {
+            Console.WriteLine("\nEnter Length");
+            var length = ReadLength();
+
+            Console.WriteLine("\nEnter Weight");
+            var weight = ReadWeight();
+
+            bool result = length.Equals(weight);
+
+            Console.WriteLine($"Result: {result}");
+        }
+
+        // ---------------- GENERIC DEMO ----------------
+
+        private static void GenericDemo()
+        {
+            Console.WriteLine("\n1. Length Generic Equality");
+            Console.WriteLine("2. Weight Generic Equality");
+            Console.Write("Choose: ");
+
+            string? choice = Console.ReadLine();
+
+            if (choice == "1")
+            {
+                var q1 = ReadLength();
+                var q2 = ReadLength();
+                DemonstrateEquality(q1, q2);
+            }
+            else if (choice == "2")
+            {
+                var w1 = ReadWeight();
+                var w2 = ReadWeight();
+                DemonstrateEquality(w1, w2);
+            }
+        }
+
+        // ---------------- GENERIC METHOD ----------------
+
+        private static void DemonstrateEquality<T>(QuantityGeneric<T> q1, QuantityGeneric<T> q2)
+            where T : IMeasurable
+        {
+            Console.WriteLine("\n---- Generic Equality Demonstration ----");
+            Console.WriteLine($"Quantity 1: {q1}");
+            Console.WriteLine($"Quantity 2: {q2}");
+            Console.WriteLine($"Are Equal? {q1.Equals(q2)}");
+        }
+
+        // ---------------- INPUT HELPERS ----------------
+
+        private static QuantityGeneric<LengthUnit> ReadLength()
+        {
+            Console.Write("Enter Value: ");
             double value = Convert.ToDouble(Console.ReadLine());
 
-            Console.WriteLine("Select source unit:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int sourceChoice = Convert.ToInt32(Console.ReadLine());
+            LengthUnit unit = ReadLengthUnit();
 
-            WeightUnit sourceUnit = sourceChoice switch
-            {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            Console.WriteLine("Select target unit:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int targetChoice = Convert.ToInt32(Console.ReadLine());
-
-            WeightUnit targetUnit = targetChoice switch
-            {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            QuantityWeight weight = new QuantityWeight(value, sourceUnit);
-            QuantityWeight result = service.ConvertWeight(weight, targetUnit);
-
-            Console.WriteLine($"Converted Result: {result.Value:F4} {result.Unit}");
+            return new QuantityGeneric<LengthUnit>(value, unit);
         }
 
-        /// <summary>
-        /// UC9: Adds two weight quantities and returns result in first unit.
-        /// </summary>
-        private static void AddWeight()
+        private static LengthUnit ReadLengthUnit()
         {
-            Console.Write("Enter first weight value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
+            Console.WriteLine("Select Length Unit:");
+            Console.WriteLine("1. FEET");
+            Console.WriteLine("2. INCHES");
+            Console.WriteLine("3. YARDS");
+            Console.WriteLine("4. CENTIMETERS");
+            Console.Write("Choice: ");
 
-            Console.WriteLine("Select unit for first weight:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int choice1 = Convert.ToInt32(Console.ReadLine());
-
-            WeightUnit unit1 = choice1 switch
+            return Console.ReadLine() switch
             {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
+                "1" => LengthUnit.FEET,
+                "2" => LengthUnit.INCHES,
+                "3" => LengthUnit.YARDS,
+                "4" => LengthUnit.CENTIMETERS,
+                _ => throw new ArgumentException("Invalid Length Unit")
             };
-
-            Console.Write("Enter second weight value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Select unit for second weight:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int choice2 = Convert.ToInt32(Console.ReadLine());
-
-            WeightUnit unit2 = choice2 switch
-            {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            QuantityWeight w1 = new QuantityWeight(value1, unit1);
-            QuantityWeight w2 = new QuantityWeight(value2, unit2);
-
-            QuantityWeight result = service.AddWeight(w1, w2);
-
-            Console.WriteLine($"Addition Result: {result.Value:F4} {result.Unit}");
         }
 
-        /// <summary>
-        /// UC9: Adds two weight quantities and returns result in specified target unit.
-        /// </summary>
-        private static void AddWeightWithTarget()
+        private static QuantityGeneric<WeightUnit> ReadWeight()
         {
-            Console.Write("Enter first weight value: ");
-            double value1 = Convert.ToDouble(Console.ReadLine());
+            Console.Write("Enter Value: ");
+            double value = Convert.ToDouble(Console.ReadLine());
 
-            Console.WriteLine("Select unit for first weight:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int choice1 = Convert.ToInt32(Console.ReadLine());
+            WeightUnit unit = ReadWeightUnit();
 
-            WeightUnit unit1 = choice1 switch
+            return new QuantityGeneric<WeightUnit>(value, unit);
+        }
+
+        private static WeightUnit ReadWeightUnit()
+        {
+            Console.WriteLine("Select Weight Unit:");
+            Console.WriteLine("1. KILOGRAM");
+            Console.WriteLine("2. GRAM");
+            Console.WriteLine("3. POUND");
+            Console.Write("Choice: ");
+
+            return Console.ReadLine() switch
             {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
+                "1" => WeightUnit.KILOGRAM,
+                "2" => WeightUnit.GRAM,
+                "3" => WeightUnit.POUND,
+                _ => throw new ArgumentException("Invalid Weight Unit")
             };
-
-            Console.Write("Enter second weight value: ");
-            double value2 = Convert.ToDouble(Console.ReadLine());
-
-            Console.WriteLine("Select unit for second weight:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int choice2 = Convert.ToInt32(Console.ReadLine());
-
-            WeightUnit unit2 = choice2 switch
-            {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            Console.WriteLine("Select TARGET unit:");
-            Console.WriteLine("1 = Kilogram");
-            Console.WriteLine("2 = Gram");
-            Console.WriteLine("3 = Pound");
-            int targetChoice = Convert.ToInt32(Console.ReadLine());
-
-            WeightUnit targetUnit = targetChoice switch
-            {
-                1 => WeightUnit.KILOGRAM,
-                2 => WeightUnit.GRAM,
-                3 => WeightUnit.POUND,
-                _ => throw new ArgumentException("Invalid Unit Selection")
-            };
-
-            QuantityWeight w1 = new QuantityWeight(value1, unit1);
-            QuantityWeight w2 = new QuantityWeight(value2, unit2);
-
-            QuantityWeight result = service.AddWeight(w1, w2, targetUnit);
-
-            Console.WriteLine($"Addition Result in {targetUnit}: {result.Value:F4} {result.Unit}");
         }
     }
 }

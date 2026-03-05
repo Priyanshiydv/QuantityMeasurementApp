@@ -880,7 +880,7 @@ namespace QuantityMeasurementApp.Tests
             Assert.Throws<ArgumentException>(() =>
             {
                 // Passing invalid target (simulate null case equivalent)
-                service.Add(q1, q2, (LengthUnit)(-1));
+                service.Add(q1, q2, null!);
             });
         }
 
@@ -921,7 +921,7 @@ namespace QuantityMeasurementApp.Tests
             // Act + Assert
             Assert.Throws<ArgumentException>(() =>
             {
-                service.Add(q1, q2, (LengthUnit)(-1));
+                service.Add(q1, q2, null!);
             });
         }
 
@@ -1284,6 +1284,159 @@ namespace QuantityMeasurementApp.Tests
             {
             
             }
+        }
+
+//=======================================UC10===============================================
+        //======================= GENERIC EQUALITY TESTS ======================
+
+        // TC1: Length Equality (Feet vs Inches)
+        [TestMethod]
+        public void TC1_GivenFeetAndInches_WhenEquivalent_ShouldReturnTrue()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(1.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(12.0, LengthUnit.INCHES);
+
+            Assert.IsTrue(q1.Equals(q2));
+        }
+
+        // TC2: Weight Equality (Kilogram vs Gram)
+        [TestMethod]
+        public void TC2_GivenKilogramAndGram_WhenEquivalent_ShouldReturnTrue()
+        {
+            QuantityGeneric<WeightUnit> q1 = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
+            QuantityGeneric<WeightUnit> q2 = new QuantityGeneric<WeightUnit>(1000.0, WeightUnit.GRAM);
+
+            Assert.IsTrue(q1.Equals(q2));
+        }
+
+        // TC3: Cross Category Comparison (Length vs Weight)
+        [TestMethod]
+        public void TC3_GivenLengthAndWeight_WhenCompared_ShouldReturnFalse()
+        {
+            QuantityGeneric<LengthUnit> length = new QuantityGeneric<LengthUnit>(1.0, LengthUnit.FEET);
+            QuantityGeneric<WeightUnit> weight = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
+
+            Assert.IsFalse(length.Equals(weight));
+        }
+
+        // TC4: Null Comparison
+        [TestMethod]
+        public void TC4_GivenQuantity_WhenComparedWithNull_ShouldReturnFalse()
+        {
+            QuantityGeneric<WeightUnit> q = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
+
+            Assert.IsFalse(q.Equals(null));
+        }
+
+        //====================== GENERIC CONVERSION TESTS ======================
+        // TC5: Length Conversion (Feet to Inch)
+        [TestMethod]
+        public void TC5_GivenFeet_WhenConvertedToInch_ShouldReturnTwelve()
+        {
+            QuantityGeneric<LengthUnit> q = new QuantityGeneric<LengthUnit>(1.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> result = q.ConvertTo(LengthUnit.INCHES);
+
+            Assert.IsTrue(Math.Abs(result.Value - 12.0) < 0.001);
+        }
+
+        // TC6: Weight Conversion (Kilogram to Gram)
+        [TestMethod]
+        public void TC6_GivenKilogram_WhenConvertedToGram_ShouldReturnThousand()
+        {
+            QuantityGeneric<WeightUnit> q = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
+            QuantityGeneric<WeightUnit> result = q.ConvertTo(WeightUnit.GRAM);
+
+            Assert.AreEqual(1000.0, result.Value);
+        }
+
+        // TC7: Round Trip Conversion
+        [TestMethod]
+        public void TC7_GivenRoundTripConversion_ShouldMaintainValue()
+        {
+            QuantityGeneric<LengthUnit> q = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+
+            QuantityGeneric<LengthUnit> result = q
+                .ConvertTo(LengthUnit.INCHES)
+                .ConvertTo(LengthUnit.FEET);
+
+            Assert.IsTrue(Math.Abs(result.Value - 5.0) < 0.001);
+        }
+        //====================== GENERIC ADDITION TESTS ======================
+        // TC8: Length Addition (Feet + Inch)
+        [TestMethod]
+        public void TC8_GivenFeetPlusInch_ShouldReturnCorrectResult()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(1.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(12.0, LengthUnit.INCHES);
+
+            QuantityGeneric<LengthUnit> result = q1.Add(q2, LengthUnit.FEET);
+
+            Assert.IsTrue(result.Equals(new QuantityGeneric<LengthUnit>(2.0, LengthUnit.FEET)));
+        }
+
+        // TC9: Weight Addition (Kilogram + Gram)
+        [TestMethod]
+        public void TC9_GivenKilogramPlusGram_ShouldReturnCorrectResult()
+        {
+            QuantityGeneric<WeightUnit> q1 = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
+            QuantityGeneric<WeightUnit> q2 = new QuantityGeneric<WeightUnit>(1000.0, WeightUnit.GRAM);
+
+            QuantityGeneric<WeightUnit> result = q1.Add(q2, WeightUnit.KILOGRAM);
+
+            Assert.IsTrue(result.Equals(new QuantityGeneric<WeightUnit>(2.0, WeightUnit.KILOGRAM)));
+        }
+
+       //====================== CONSTRUCTOR VALIDATION TESTS ======================
+       // TC10: Null Unit Should Throw ArgumentException
+        [TestMethod]
+        public void TC10_GivenNullUnit_WhenCreatingQuantity_ShouldThrowArgumentException()
+        {
+            try
+            {
+                QuantityGeneric<LengthUnit> q = new QuantityGeneric<LengthUnit>(1.0, null!);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+                // Test Passed
+            }
+        }
+
+        // TC11: Invalid Numeric Value (NaN) Should Throw ArgumentException
+        [TestMethod]
+        public void TC11_GivenInvalidNumericValue_ShouldThrowArgumentException()
+        {
+            try
+            {
+                QuantityGeneric<WeightUnit> q =
+                    new QuantityGeneric<WeightUnit>(double.NaN, WeightUnit.KILOGRAM);
+
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+                // Test Passed
+            }
+        }
+
+        //====================== HASHCODE & EQUALITY CONTRACT ======================
+        // TC12: Equal Objects Should Have Same HashCode
+        [TestMethod]
+        public void TC12_GivenEqualQuantities_ShouldHaveSameHashCode()
+        {
+            QuantityGeneric<WeightUnit> q1 = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
+            QuantityGeneric<WeightUnit> q2 = new QuantityGeneric<WeightUnit>(1000.0, WeightUnit.GRAM);
+
+            Assert.AreEqual(q1.GetHashCode(), q2.GetHashCode());
+        }
+
+        // TC13: Reflexive Property
+        [TestMethod]
+        public void TC13_GivenQuantity_WhenComparedWithItself_ShouldReturnTrue()
+        {
+            QuantityGeneric<LengthUnit> q = new QuantityGeneric<LengthUnit>(2.0, LengthUnit.FEET);
+
+            Assert.IsTrue(q.Equals(q));
         }
     }
 }
