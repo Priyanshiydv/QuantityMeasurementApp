@@ -1661,5 +1661,223 @@ namespace QuantityMeasurementApp.Tests
 
             Assert.AreEqual(v1.GetHashCode(), v2.GetHashCode());
         }
+
+//=======================================UC12===============================================
+        // ====================== SUBTRACTION TESTS ======================
+
+        // TC1: Same Unit Subtraction (Feet - Feet)
+        [TestMethod]
+        public void TC1_GivenFeetMinusFeet_ShouldReturnCorrectDifference()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2);
+
+            Assert.AreEqual(5.0, result.Value);
+        }
+
+        // TC2: Cross Unit Subtraction (Feet - Inches)
+        [TestMethod]
+        public void TC2_GivenFeetMinusInches_ShouldReturnCorrectValue()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(6.0, LengthUnit.INCHES);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2);
+
+            Assert.IsTrue(Math.Abs(result.Value - 9.5) < 0.01);
+        }
+
+        // TC3: Explicit Target Unit (Inches)
+        [TestMethod]
+        public void TC3_GivenExplicitTargetUnit_ShouldReturnInches()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(6.0, LengthUnit.INCHES);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2, LengthUnit.INCHES);
+
+            Assert.AreEqual(114.0, result.Value);
+        }
+
+        // TC4: Subtraction Resulting in Negative Value
+        [TestMethod]
+        public void TC4_GivenSmallerMinusLarger_ShouldReturnNegative()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2);
+
+            Assert.AreEqual(-5.0, result.Value);
+        }
+
+        // TC5: Subtraction Resulting in Zero
+        [TestMethod]
+        public void TC5_GivenEquivalentQuantities_ShouldReturnZero()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(120.0, LengthUnit.INCHES);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2);
+
+            Assert.IsTrue(Math.Abs(result.Value) < 0.01);
+        }
+
+        // TC6: Subtraction With Zero Operand
+        [TestMethod]
+        public void TC6_GivenSubtractZero_ShouldReturnSameValue()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(0.0, LengthUnit.INCHES);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2);
+
+            Assert.AreEqual(5.0, result.Value);
+        }
+
+        // TC7: Subtraction Non-Commutativity
+        [TestMethod]
+        public void TC7_GivenOrderChanged_ShouldReturnDifferentResults()
+        {
+            QuantityGeneric<LengthUnit> a = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> b = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+
+            QuantityGeneric<LengthUnit> r1 = a.Subtract(b);
+            QuantityGeneric<LengthUnit> r2 = b.Subtract(a);
+
+            Assert.AreNotEqual(r1.Value, r2.Value);
+        }
+
+        // ====================== DIVISION TESTS ======================
+
+        // TC8: Same Unit Division
+        [TestMethod]
+        public void TC8_GivenFeetDividedByFeet_ShouldReturnRatio()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(2.0, LengthUnit.FEET);
+
+            double result = q1.Divide(q2);
+
+            Assert.AreEqual(5.0, result);
+        }
+
+        // TC9: Cross Unit Division
+        [TestMethod]
+        public void TC9_GivenInchesDividedByFeet_ShouldReturnOne()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(24.0, LengthUnit.INCHES);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(2.0, LengthUnit.FEET);
+
+            double result = q1.Divide(q2);
+
+            Assert.IsTrue(Math.Abs(result - 1.0) < 0.01);
+        }
+
+        // TC10: Division Result Greater Than One
+        [TestMethod]
+        public void TC10_GivenLargerDividedBySmaller_ShouldReturnGreaterThanOne()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(2.0, LengthUnit.FEET);
+
+            double result = q1.Divide(q2);
+
+            Assert.AreEqual(5.0, result);
+        }
+
+        // TC11: Division Result Less Than One
+        [TestMethod]
+        public void TC11_GivenSmallerDividedByLarger_ShouldReturnFraction()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+
+            double result = q1.Divide(q2);
+
+            Assert.AreEqual(0.5, result);
+        }
+
+        // TC12: Division Result Equal To One
+        [TestMethod]
+        public void TC12_GivenEqualQuantities_ShouldReturnOne()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+
+            double result = q1.Divide(q2);
+
+            Assert.AreEqual(1.0, result);
+        }
+
+        // ====================== ERROR HANDLING TESTS ======================
+
+        // TC13: Division By Zero
+        [TestMethod]
+        public void TC13_GivenDivisionByZero_ShouldThrowException()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(0.0, LengthUnit.FEET);
+             try
+            {
+                q1.Divide(q2);
+                Assert.Fail("Expected ArithmeticException was not thrown.");
+            }
+            catch (ArithmeticException)
+            {
+            }
+        }
+
+        // TC14: Subtraction With Null Operand
+        [TestMethod]
+        public void TC14_GivenNullOperand_ShouldThrowException()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+
+            try
+            {
+                q1.Subtract(null);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
+
+        // TC15: Cross Category Subtraction
+        [TestMethod]
+        public void TC15_GivenLengthAndWeightSubtraction_ShouldThrowException()
+        {
+            QuantityGeneric<LengthUnit> length = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<WeightUnit> weight = new QuantityGeneric<WeightUnit>(5.0, WeightUnit.KILOGRAM);
+            try
+            {
+                length.Subtract(weight);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
+            
+        // TC16: Cross Category Division
+        [TestMethod]
+        public void TC16_GivenLengthAndWeightDivision_ShouldThrowException()
+        {
+            QuantityGeneric<LengthUnit> length = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<WeightUnit> weight = new QuantityGeneric<WeightUnit>(5.0, WeightUnit.KILOGRAM);
+
+             try
+            {
+                length.Divide(weight);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+        
+            }
+        }
     }
 }

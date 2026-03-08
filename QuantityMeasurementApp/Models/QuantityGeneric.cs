@@ -103,5 +103,79 @@ namespace QuantityMeasurementApp.Models
         {
             return $"{Value:F2} {Unit.GetUnitName()}";
         }
+
+
+
+        /// <summary>
+        /// Subtract and return result in first operand unit (implicit target)
+        /// </summary>
+        public QuantityGeneric<U> Subtract(QuantityGeneric<U>? other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            double base1 = Unit.ConvertToBaseUnit(Value);
+            double base2 = other.Unit.ConvertToBaseUnit(other.Value);
+
+            double diffBase = base1 - base2;
+            double finalValue = Unit.ConvertFromBaseUnit(diffBase);
+
+            finalValue = Math.Round(finalValue, 2);
+
+            return new QuantityGeneric<U>(finalValue, Unit);
+        }
+
+        /// <summary>
+        /// Subtract and return result in specified target unit
+        /// </summary>
+        public QuantityGeneric<U> Subtract(QuantityGeneric<U> other, U targetUnit)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (targetUnit == null)
+                throw new ArgumentException("Target unit cannot be null.");
+
+            double base1 = Unit.ConvertToBaseUnit(Value);
+            double base2 = other.Unit.ConvertToBaseUnit(other.Value);
+
+            double diffBase = base1 - base2;
+            double finalValue = targetUnit.ConvertFromBaseUnit(diffBase);
+
+            finalValue = Math.Round(finalValue, 2);
+
+            return new QuantityGeneric<U>(finalValue, targetUnit);
+        }
+
+        /// <summary>
+        /// Divide two quantities and return dimensionless ratio
+        /// </summary>
+        public double Divide(QuantityGeneric<U> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            double base1 = Unit.ConvertToBaseUnit(Value);
+            double base2 = other.Unit.ConvertToBaseUnit(other.Value);
+
+            if (Math.Abs(base2) < EPSILON)
+                throw new ArithmeticException("Division by zero is not allowed.");
+
+            double result = base1 / base2;
+
+            return result;
+        }
+
+        // Cross-type subtraction
+        public QuantityGeneric<U> Subtract<V>(QuantityGeneric<V> other) where V : IMeasurable
+        {
+            throw new ArgumentException("Cannot subtract quantities of different measurement categories.");
+        }
+
+        // Cross-type division
+        public double Divide<V>(QuantityGeneric<V> other) where V : IMeasurable
+        {
+            throw new ArgumentException("Cannot divide quantities of different measurement categories.");
+        }
     }
 }

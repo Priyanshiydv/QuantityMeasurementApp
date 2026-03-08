@@ -23,7 +23,10 @@ namespace QuantityMeasurementApp.Menu
                 Console.WriteLine("8. Generic Demonstration");
                 Console.WriteLine("9. Volume Equality");       
                 Console.WriteLine("10. Volume Conversion");    
-                Console.WriteLine("11. Volume Addition");  
+                Console.WriteLine("11. Volume Addition"); 
+                Console.WriteLine("12. Subtraction Operation");
+                Console.WriteLine("13. Division Operation"); 
+                Console.WriteLine("14. Cross Category Operations");
                 Console.WriteLine("0. Exit");
                 Console.Write("Select Option: ");
 
@@ -72,6 +75,16 @@ namespace QuantityMeasurementApp.Menu
 
                     case "11":
                         VolumeAddition();
+                        break;
+                    case "12":
+                        SubtractionDemo();
+                        break;
+
+                    case "13":
+                        DivisionDemo();
+                        break;
+                    case "14":
+                        CrossCategoryOperation();
                         break;
 
                     case "0":
@@ -456,5 +469,218 @@ namespace QuantityMeasurementApp.Menu
                 _ => throw new ArgumentException("Invalid Volume Unit")
             };
         }
+
+//==========================Subtraction Demonstration============================
+        private static void SubtractionDemo()
+        {
+            Console.WriteLine("\nSelect Category:");
+            Console.WriteLine("1. Length");
+            Console.WriteLine("2. Weight");
+            Console.WriteLine("3. Volume");
+            Console.Write("Choice: ");
+
+            string? choice = Console.ReadLine();
+            try
+            {
+                if (choice == "1")
+                {
+                    var q1 = ReadLength();
+                    var q2 = ReadLength();
+
+                    Console.WriteLine("1. Implicit Unit");
+                    Console.WriteLine("2. Explicit Unit");
+
+                    string? type = Console.ReadLine();
+
+                    if (type == "1")
+                    {
+                        var result = q1.Subtract(q2);
+                        Console.WriteLine($"Result: {result}");
+                    }
+                    else if (type == "2")
+                    {
+                        LengthUnit target = ReadLengthUnit();
+                        var result = q1.Subtract(q2, target);
+                        Console.WriteLine($"Result: {result}");
+                    }
+                }
+
+                else if (choice == "2")
+                {
+                    var w1 = ReadWeight();
+                    var w2 = ReadWeight();
+
+                    Console.WriteLine("1. Implicit Unit");
+                    Console.WriteLine("2. Explicit Unit");
+
+                    string? type = Console.ReadLine();
+
+                    if (type == "1")
+                    {
+                        var result = w1.Subtract(w2);
+                        Console.WriteLine($"Result: {result}");
+                    }
+                    else if (type == "2")
+                    {
+                        WeightUnit target = ReadWeightUnit();
+                        var result = w1.Subtract(w2, target);
+                        Console.WriteLine($"Result: {result}");
+                    }
+                }
+
+                else if (choice == "3")
+                {
+                    var v1 = ReadVolume();
+                    var v2 = ReadVolume();
+
+                    Console.WriteLine("1. Implicit Unit");
+                    Console.WriteLine("2. Explicit Unit");
+
+                    string? type = Console.ReadLine();
+
+                    if (type == "1")
+                    {
+                        var result = v1.Subtract(v2);
+                        Console.WriteLine($"Result: {result}");
+                    }
+                    else if (type == "2")
+                    {
+                        VolumeUnit target = ReadVolumeUnit();
+                        var result = v1.Subtract(v2, target);
+                        Console.WriteLine($"Result: {result}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid choice.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+//==============================Division Demonstration===========================
+        private static void DivisionDemo()
+        {
+            Console.WriteLine("\nSelect Category:");
+            Console.WriteLine("1. Length");
+            Console.WriteLine("2. Weight");
+            Console.WriteLine("3. Volume");
+            Console.Write("Choice: ");
+
+            string? choice = Console.ReadLine();
+
+            try
+            {
+                if (choice == "1")
+                {
+                    var q1 = ReadLength();
+                    var q2 = ReadLength();
+
+                    double result = q1.Divide(q2);
+
+                    Console.WriteLine($"Division Result: {result:F1}");
+                }
+
+                else if (choice == "2")
+                {
+                    var w1 = ReadWeight();
+                    var w2 = ReadWeight();
+
+                    double result = w1.Divide(w2);
+
+                    Console.WriteLine($"Division Result: {result:F1}");
+                }
+
+                else if (choice == "3")
+                {
+                    var v1 = ReadVolume();
+                    var v2 = ReadVolume();
+
+                    double result = v1.Divide(v2);
+
+                    Console.WriteLine($"Division Result: {result:F1}");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (ArithmeticException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+//================Cross Category Operations===============================
+        private static void CrossCategoryOperation()
+        {
+            Console.WriteLine("\n--- Cross Category Operations ---");
+            Console.WriteLine("1. Cross Category Subtraction");
+            Console.WriteLine("2. Cross Category Division");
+            Console.Write("Choice: ");
+
+            string? operationChoice = Console.ReadLine();
+
+            try
+            {
+                var q1 = ReadAnyCategoryQuantity("First Quantity");
+                var q2 = ReadAnyCategoryQuantity("Second Quantity");
+
+                dynamic d1 = q1;
+                dynamic d2 = q2;
+
+                if (operationChoice == "1")
+                {
+                    var result = d1.Subtract(d2);
+                    Console.WriteLine($"Result: {result}");
+                }
+                else if (operationChoice == "2")
+                {
+                    double result = d1.Divide(d2);
+                    Console.WriteLine($"Division Result: {result:F2}");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            catch (ArithmeticException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+        private static object ReadAnyCategoryQuantity(string label)
+        {
+            Console.WriteLine($"\nSelect {label} Category:");
+            Console.WriteLine("1. Length");
+            Console.WriteLine("2. Weight");
+            Console.WriteLine("3. Volume");
+            Console.Write("Choice: ");
+
+            string? choice = Console.ReadLine();
+
+            return choice switch
+            {
+                "1" => ReadLength(),
+                "2" => ReadWeight(),
+                "3" => ReadVolume(),
+                _ => throw new ArgumentException("Invalid category")
+            };
+        }
     }
 }
+
