@@ -1438,5 +1438,228 @@ namespace QuantityMeasurementApp.Tests
 
             Assert.IsTrue(q.Equals(q));
         }
+
+//=======================================UC11===============================================
+        // ====================== VOLUME EQUALITY TESTS ======================
+        // TC1: Litre to Litre Equality
+        [TestMethod]
+        public void TC1_GivenLitre_WhenSameValue_ShouldReturnTrue()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+
+            Assert.IsTrue(v1.Equals(v2));
+        }
+
+        // TC2: Litre to Litre Different Value
+        [TestMethod]
+        public void TC2_GivenLitre_WhenDifferentValue_ShouldReturnFalse()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(2.0, VolumeUnit.LITRE);
+
+            Assert.IsFalse(v1.Equals(v2));
+        }
+
+        // TC3: Litre to Millilitre Equality
+        [TestMethod]
+        public void TC3_GivenLitreAndMillilitre_WhenEquivalent_ShouldReturnTrue()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(1000.0, VolumeUnit.MILLILITRE);
+
+            Assert.IsTrue(v1.Equals(v2));
+        }
+
+        // TC4: Litre to Gallon Equality
+        [TestMethod]
+        public void TC4_GivenLitreAndGallon_WhenEquivalent_ShouldReturnTrue()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(0.264172, VolumeUnit.GALLON);
+
+            Assert.IsTrue(Math.Abs(v1.ConvertTo(VolumeUnit.GALLON).Value - v2.Value) < 0.01);
+        }
+
+        // TC5: Null Comparison
+        [TestMethod]
+        public void TC5_GivenVolume_WhenComparedWithNull_ShouldReturnFalse()
+        {
+            QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+
+            Assert.IsFalse(v.Equals(null));
+        }
+
+        // TC6: Same Reference Equality
+        [TestMethod]
+        public void TC6_GivenVolume_WhenComparedWithItself_ShouldReturnTrue()
+        {
+            QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(2.0, VolumeUnit.LITRE);
+
+            Assert.IsTrue(v.Equals(v));
+        }
+        // ====================== VOLUME CONVERSION TESTS ======================
+
+        // TC7: Litre to Millilitre
+        [TestMethod]
+        public void TC7_GivenLitre_WhenConvertedToMillilitre_ShouldReturnThousand()
+        {
+            QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+
+            QuantityGeneric<VolumeUnit> result = v.ConvertTo(VolumeUnit.MILLILITRE);
+
+            Assert.AreEqual(1000.0, result.Value);
+        }
+
+        // TC8: Millilitre to Litre
+        [TestMethod]
+        public void TC8_GivenMillilitre_WhenConvertedToLitre_ShouldReturnOne()
+        {
+            QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1000.0, VolumeUnit.MILLILITRE);
+
+            QuantityGeneric<VolumeUnit> result = v.ConvertTo(VolumeUnit.LITRE);
+
+            Assert.IsTrue(Math.Abs(result.Value - 1.0) < 0.001);
+        }
+
+        // TC9: Gallon to Litre
+        [TestMethod]
+        public void TC9_GivenGallon_WhenConvertedToLitre_ShouldReturnCorrectValue()
+        {
+            QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.GALLON);
+
+            QuantityGeneric<VolumeUnit> result = v.ConvertTo(VolumeUnit.LITRE);
+
+            Assert.IsTrue(Math.Abs(result.Value - 3.78541) < 0.01);
+        }
+
+        // TC10: Same Unit Conversion
+        [TestMethod]
+        public void TC10_GivenSameUnitConversion_ShouldReturnSameValue()
+        {
+            QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(5.0, VolumeUnit.LITRE);
+
+            QuantityGeneric<VolumeUnit> result = v.ConvertTo(VolumeUnit.LITRE);
+
+            Assert.AreEqual(5.0, result.Value);
+        }
+
+        // TC11: Round Trip Conversion
+        [TestMethod]
+        public void TC11_GivenRoundTripConversion_ShouldMaintainValue()
+        {
+            QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1.5, VolumeUnit.LITRE);
+
+            QuantityGeneric<VolumeUnit> result =
+                v.ConvertTo(VolumeUnit.MILLILITRE)
+                .ConvertTo(VolumeUnit.LITRE);
+
+            Assert.IsTrue(Math.Abs(result.Value - 1.5) < 0.001);
+        }
+
+        // ====================== VOLUME ADDITION TESTS ======================
+        // TC12: Same Unit Addition
+        [TestMethod]
+        public void TC12_GivenLitrePlusLitre_ShouldReturnSum()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(2.0, VolumeUnit.LITRE);
+
+            QuantityGeneric<VolumeUnit> result = v1.Add(v2);
+
+            Assert.AreEqual(3.0, result.Value);
+        }
+
+        // TC13: Cross Unit Addition
+        [TestMethod]
+        public void TC13_GivenLitrePlusMillilitre_ShouldReturnCorrectResult()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(1000.0, VolumeUnit.MILLILITRE);
+
+            QuantityGeneric<VolumeUnit> result = v1.Add(v2);
+
+            Assert.IsTrue(result.Equals(new QuantityGeneric<VolumeUnit>(2.0, VolumeUnit.LITRE)));
+        }
+
+        // TC14: Explicit Target Unit
+        [TestMethod]
+        public void TC14_GivenExplicitTargetUnit_ShouldReturnMillilitre()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(1000.0, VolumeUnit.MILLILITRE);
+
+            QuantityGeneric<VolumeUnit> result = v1.Add(v2, VolumeUnit.MILLILITRE);
+
+            Assert.AreEqual(2000.0, result.Value);
+        }
+
+        // TC15: Addition Commutativity
+        [TestMethod]
+        public void TC15_GivenAdditionOrderChanged_ShouldReturnSameResult()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(1000.0, VolumeUnit.MILLILITRE);
+
+            QuantityGeneric<VolumeUnit> r1 = v1.Add(v2, VolumeUnit.MILLILITRE);
+            QuantityGeneric<VolumeUnit> r2 = v2.Add(v1, VolumeUnit.MILLILITRE);
+
+            Assert.IsTrue(Math.Abs(r1.Value - r2.Value) < 0.001);
+        }
+
+        // TC16: Addition With Zero
+        [TestMethod]
+        public void TC16_GivenAdditionWithZero_ShouldReturnSameValue()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(5.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(0.0, VolumeUnit.MILLILITRE);
+
+            QuantityGeneric<VolumeUnit> result = v1.Add(v2);
+
+            Assert.AreEqual(5.0, result.Value);
+        }
+
+        // TC17: Negative Value Addition
+        [TestMethod]
+        public void TC17_GivenNegativeVolumeAddition_ShouldReturnCorrectResult()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(5.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(-2000.0, VolumeUnit.MILLILITRE);
+
+            QuantityGeneric<VolumeUnit> result = v1.Add(v2);
+
+            Assert.AreEqual(3.0, result.Value);
+        }
+        // ====================== CROSS CATEGORY TESTS ======================
+
+        // TC18: Volume vs Length
+        [TestMethod]
+        public void TC18_GivenVolumeAndLength_WhenCompared_ShouldReturnFalse()
+        {
+            QuantityGeneric<VolumeUnit> volume = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<LengthUnit> length = new QuantityGeneric<LengthUnit>(1.0, LengthUnit.FEET);
+
+            Assert.IsFalse(volume.Equals(length));
+        }
+
+        // TC19: Volume vs Weight
+        [TestMethod]
+        public void TC19_GivenVolumeAndWeight_WhenCompared_ShouldReturnFalse()
+        {
+            QuantityGeneric<VolumeUnit> volume = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<WeightUnit> weight = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
+
+            Assert.IsFalse(volume.Equals(weight));
+        }
+
+        // TC20: HashCode Consistency
+        [TestMethod]
+        public void TC20_GivenEqualVolumes_ShouldHaveSameHashCode()
+        {
+            QuantityGeneric<VolumeUnit> v1 = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
+            QuantityGeneric<VolumeUnit> v2 = new QuantityGeneric<VolumeUnit>(1000.0, VolumeUnit.MILLILITRE);
+
+            Assert.AreEqual(v1.GetHashCode(), v2.GetHashCode());
+        }
     }
 }
