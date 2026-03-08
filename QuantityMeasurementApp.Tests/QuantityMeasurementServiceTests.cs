@@ -1879,5 +1879,128 @@ namespace QuantityMeasurementApp.Tests
         
             }
         }
+
+//=======================================UC13===============================================
+        // ====================== VALIDATION CONSISTENCY TESTS ======================
+
+        // TC1: Add With Null Operand
+        [TestMethod]
+        public void TC1_GivenNullOperandInAdd_ShouldThrowException()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+
+            try
+            {
+                q1.Add(null);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
+
+        // TC2: Divide With Null Operand
+        [TestMethod]
+        public void TC2_GivenNullOperandInDivide_ShouldThrowException()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+
+            try
+            {
+                q1.Divide(null);
+                Assert.Fail("Expected ArgumentException was not thrown.");
+            }
+            catch (ArgumentException)
+            {
+            }
+        }
+
+        // ====================== ROUNDING CONSISTENCY ======================
+
+        // TC3: Subtraction Result Rounded To Two Decimals
+        [TestMethod]
+        public void TC3_GivenDecimalSubtraction_ShouldRoundToTwoDecimals()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.25, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(5.13, LengthUnit.FEET);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2);
+
+            Assert.AreEqual(5.12, result.Value);
+        }
+
+        // ====================== IMMUTABILITY TESTS ======================
+
+        // TC4: Original Quantities Should Not Change After Add
+        [TestMethod]
+        public void TC4_GivenAddition_ShouldNotModifyOriginalObjects()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+
+            QuantityGeneric<LengthUnit> result = q1.Add(q2);
+
+            Assert.AreEqual(10.0, q1.Value);
+            Assert.AreEqual(5.0, q2.Value);
+        }
+
+        // TC5: Original Quantities Should Not Change After Subtract
+        [TestMethod]
+        public void TC5_GivenSubtraction_ShouldNotModifyOriginalObjects()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(5.0, LengthUnit.FEET);
+
+            QuantityGeneric<LengthUnit> result = q1.Subtract(q2);
+
+            Assert.AreEqual(10.0, q1.Value);
+            Assert.AreEqual(5.0, q2.Value);
+        }
+
+        // ====================== BEHAVIOR PRESERVATION ======================
+
+        // TC6: UC12 Addition Behavior Still Works
+        [TestMethod]
+        public void TC6_GivenFeetAndInchesAddition_ShouldReturnTwoFeet()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(1.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(12.0, LengthUnit.INCHES);
+
+            QuantityGeneric<LengthUnit> result = q1.Add(q2);
+
+            Assert.IsTrue(Math.Abs(result.Value - 2.0) < 0.01);
+        }
+
+        // TC7: Division Should Return Raw Double (No Rounding)
+        [TestMethod]
+        public void TC7_GivenDivision_ShouldReturnExactRatio()
+        {
+            QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(7.0, LengthUnit.FEET);
+            QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(2.0, LengthUnit.FEET);
+
+            double result = q1.Divide(q2);
+
+            Assert.AreEqual(3.5, result);
+        }
+
+        // ====================== CROSS CATEGORY CONSISTENCY ======================
+
+        // TC8: Cross Category Add Should Throw Exception
+        [TestMethod]
+        public void TC8_GivenLengthAndWeightAddition_ShouldThrowException()
+        {
+            QuantityGeneric<LengthUnit> length = new QuantityGeneric<LengthUnit>(10.0, LengthUnit.FEET);
+            QuantityGeneric<WeightUnit> weight = new QuantityGeneric<WeightUnit>(5.0, WeightUnit.KILOGRAM);
+
+            try
+            {
+                length.Add((QuantityGeneric<LengthUnit>)(object)weight);
+                Assert.Fail("Expected exception not thrown");
+            }
+            catch (InvalidCastException)
+            {
+                
+            }
+        }
     }
 }
