@@ -23,7 +23,7 @@ The **Quantity Measurement Application** is a C# console-based project designed 
 
 ## Project Structure
 
-<<<<<<< HEAD
+
 ```text
 =======
 # Key Features:
@@ -41,7 +41,7 @@ Follows SOLID principles (DRY, SRP, Interface Segregation)
 Modular UC-wise branch development for maintainability
 
 Project Structure
->>>>>>> 9eb514162bd69d5d0fab93e23c93a6a6819e46f3
+
 QuantityMeasurementApp
 ├── QuantityMeasurementApp (Main Application)
 │   ├── Interface
@@ -65,14 +65,13 @@ QuantityMeasurementApp
 │   │   └── QuantityMeasurementService.cs
 │   └── Program.cs
 ├── QuantityMeasurementApp.Tests (Unit Tests)
-<<<<<<< HEAD
+
      └── QuantityMeasurementServiceTests.cs
         └── All UC1–UC14 test cases
 =======
-│   └── QuantityMeasurementServiceTests.cs
-│       └── All UC1–UC14 test cases
-└── README.md
->>>>>>> 9eb514162bd69d5d0fab93e23c93a6a6819e46f3
+    └── QuantityMeasurementServiceTests.cs
+        └── All UC1–UC14 test cases
+
 
 Branches and Features (UC1–UC14)
 
