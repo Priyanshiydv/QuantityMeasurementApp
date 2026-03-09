@@ -5,6 +5,7 @@ namespace QuantityMeasurementApp.Models
     /// <summary>
     /// Generic Quantity class supporting multiple measurement categories.
     /// UC13 - DRY Refactoring with Centralized Arithmetic Logic
+    /// UC14
     /// </summary>
     public class QuantityGeneric<U> where U : IMeasurable
     {
@@ -92,6 +93,12 @@ namespace QuantityMeasurementApp.Models
 
             if (targetUnitRequired && targetUnit == null)
                 throw new ArgumentException("Target unit cannot be null.");
+
+            // UC14 Temperature restriction
+            if (Unit is TemperatureUnit temp)
+            {
+                temp.ValidateOperationSupport("arithmetic");
+            }
         }
 
         /// <summary>
@@ -125,6 +132,9 @@ namespace QuantityMeasurementApp.Models
         /// </summary>
         public QuantityGeneric<U> Add(QuantityGeneric<U>? other)
         {
+            if (typeof(U) == typeof(TemperatureUnitWrapper))
+        throw new NotSupportedException("Addition not supported for temperature units.");
+
             ValidateArithmeticOperands(other, Unit, false);
 
             double resultBase = PerformBaseArithmetic(other!, ArithmeticOperation.ADD);
@@ -138,6 +148,8 @@ namespace QuantityMeasurementApp.Models
         /// </summary>
         public QuantityGeneric<U> Add(QuantityGeneric<U>? other, U targetUnit)
         {
+            if (typeof(U) == typeof(TemperatureUnitWrapper))
+        throw new NotSupportedException("Addition not supported for temperature units.");
             ValidateArithmeticOperands(other, targetUnit, true);
 
             double resultBase = PerformBaseArithmetic(other!, ArithmeticOperation.ADD);
@@ -151,6 +163,9 @@ namespace QuantityMeasurementApp.Models
         /// </summary>
         public QuantityGeneric<U> Subtract(QuantityGeneric<U>? other)
         {
+            if (typeof(U) == typeof(TemperatureUnitWrapper))
+        throw new NotSupportedException("Addition not supported for temperature units.");
+
             ValidateArithmeticOperands(other, Unit, false);
 
             double resultBase = PerformBaseArithmetic(other!, ArithmeticOperation.SUBTRACT);
@@ -166,6 +181,9 @@ namespace QuantityMeasurementApp.Models
         /// </summary>
         public QuantityGeneric<U> Subtract(QuantityGeneric<U>? other, U targetUnit)
         {
+            if (typeof(U) == typeof(TemperatureUnitWrapper))
+        throw new NotSupportedException("Addition not supported for temperature units.");
+
             ValidateArithmeticOperands(other, targetUnit, true);
 
             double resultBase = PerformBaseArithmetic(other!, ArithmeticOperation.SUBTRACT);
@@ -181,6 +199,9 @@ namespace QuantityMeasurementApp.Models
         /// </summary>
         public double Divide(QuantityGeneric<U>? other)
         {
+            if (typeof(U) == typeof(TemperatureUnitWrapper))
+        throw new NotSupportedException("Addition not supported for temperature units.");
+        
             ValidateArithmeticOperands(other, default, false);
 
             return PerformBaseArithmetic(other!, ArithmeticOperation.DIVIDE);

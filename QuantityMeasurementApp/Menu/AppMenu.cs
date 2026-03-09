@@ -27,6 +27,9 @@ namespace QuantityMeasurementApp.Menu
                 Console.WriteLine("12. Subtraction Operation");
                 Console.WriteLine("13. Division Operation"); 
                 Console.WriteLine("14. Cross Category Operations");
+                Console.WriteLine("15. Temperature Equality");
+                Console.WriteLine("16. Temperature Conversion");
+                Console.WriteLine("17. Temperature Arithmetic Test");
                 Console.WriteLine("0. Exit");
                 Console.Write("Select Option: ");
 
@@ -85,6 +88,17 @@ namespace QuantityMeasurementApp.Menu
                         break;
                     case "14":
                         CrossCategoryOperation();
+                        break;
+                    case "15":
+                        TemperatureEquality();
+                        break;
+
+                    case "16":
+                        TemperatureConversion();
+                        break;
+
+                    case "17":
+                        TemperatureArithmeticTest();
                         break;
 
                     case "0":
@@ -240,6 +254,7 @@ namespace QuantityMeasurementApp.Menu
             Console.WriteLine("1. Length");
             Console.WriteLine("2. Weight");
             Console.WriteLine("3. Volume");
+            Console.WriteLine("4. Temperature");
             Console.Write("Choice: ");
 
             string? choice1 = Console.ReadLine();
@@ -249,6 +264,7 @@ namespace QuantityMeasurementApp.Menu
                 "1" => ReadLength(),
                 "2" => ReadWeight(),
                 "3" => ReadVolume(),
+                "4" => ReadTemperature(),
                 _ => throw new ArgumentException("Invalid category")
             };
 
@@ -256,6 +272,7 @@ namespace QuantityMeasurementApp.Menu
             Console.WriteLine("1. Length");
             Console.WriteLine("2. Weight");
             Console.WriteLine("3. Volume");
+            Console.WriteLine("4. Temperature");
             Console.Write("Choice: ");
 
             string? choice2 = Console.ReadLine();
@@ -265,11 +282,17 @@ namespace QuantityMeasurementApp.Menu
                 "1" => ReadLength(),
                 "2" => ReadWeight(),
                 "3" => ReadVolume(),
+                "4" => ReadTemperature(),
                 _ => throw new ArgumentException("Invalid category")
             };
-
-            // Different categories are incompatible
-            Console.WriteLine("\nResult: False (Different Categories)");
+            if (q1.GetType() != q2.GetType())
+            {
+                Console.WriteLine("\nResult: False (Different Categories)");
+            }
+            else
+            {
+                Console.WriteLine("\nSame Category Selected. Use Specific Equality Option.");
+            }
         }
 
 
@@ -669,6 +692,7 @@ namespace QuantityMeasurementApp.Menu
             Console.WriteLine("1. Length");
             Console.WriteLine("2. Weight");
             Console.WriteLine("3. Volume");
+            Console.WriteLine("4. Temperature");
             Console.Write("Choice: ");
 
             string? choice = Console.ReadLine();
@@ -678,7 +702,78 @@ namespace QuantityMeasurementApp.Menu
                 "1" => ReadLength(),
                 "2" => ReadWeight(),
                 "3" => ReadVolume(),
+                "4" => ReadTemperature(),
                 _ => throw new ArgumentException("Invalid category")
+            };
+        }
+
+        private static void TemperatureEquality()
+        {
+            Console.WriteLine("\nEnter First Temperature");
+            var t1 = ReadTemperature();
+
+            Console.WriteLine("\nEnter Second Temperature");
+            var t2 = ReadTemperature();
+
+            bool result = t1.Equals(t2);
+
+            Console.WriteLine($"Result: {result}");
+        }
+
+        private static void TemperatureConversion()
+        {
+            Console.WriteLine("\nEnter Temperature to Convert");
+            var temp = ReadTemperature();
+
+            Console.WriteLine("Convert To Unit:");
+            TemperatureUnit targetUnit = ReadTemperatureUnit();
+            TemperatureUnitWrapper target = new TemperatureUnitWrapper(targetUnit);
+            var result = temp.ConvertTo(target);
+            Console.WriteLine($"Converted: {result}");
+        }
+
+        private static void TemperatureArithmeticTest()
+        {
+            try
+            {
+                Console.WriteLine("\nEnter First Temperature");
+                var t1 = ReadTemperature();
+
+                Console.WriteLine("\nEnter Second Temperature");
+                var t2 = ReadTemperature();
+
+                var result = t1.Add(t2);   // should throw exception
+
+                Console.WriteLine(result);
+            }
+            catch (NotSupportedException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+        private static QuantityGeneric<TemperatureUnitWrapper> ReadTemperature()
+        {
+            Console.Write("Enter Value: ");
+            double value = Convert.ToDouble(Console.ReadLine());
+
+            TemperatureUnit unit = ReadTemperatureUnit();
+
+            return new QuantityGeneric<TemperatureUnitWrapper>(value, new TemperatureUnitWrapper(unit));
+        }
+        private static TemperatureUnit ReadTemperatureUnit()
+        {
+            Console.WriteLine("Select Temperature Unit:");
+            Console.WriteLine("1. CELSIUS");
+            Console.WriteLine("2. FAHRENHEIT");
+            Console.WriteLine("3. KELVIN");
+            Console.Write("Choice: ");
+
+            return Console.ReadLine() switch
+            {
+                "1" => TemperatureUnit.CELSIUS,
+                "2" => TemperatureUnit.FAHRENHEIT,
+                "3" => TemperatureUnit.KELVIN,
+                _ => throw new ArgumentException("Invalid Temperature Unit")
             };
         }
     }

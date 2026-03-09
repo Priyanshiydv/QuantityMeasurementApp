@@ -2002,5 +2002,310 @@ namespace QuantityMeasurementApp.Tests
                 
             }
         }
-    }
+
+//=======================================UC14===============================================
+        // ====================== TEMPERATURE TESTS ======================
+            // ---------------- EQUALITY TESTS ----------------
+
+            // TC1: Celsius-to-Celsius Equality
+            [TestMethod]
+            public void TC1_TemperatureEquality_CelsiusToCelsius_SameValue()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+
+                Assert.IsTrue(t1.Equals(t2));
+            }
+
+            // TC2: Fahrenheit-to-Fahrenheit Equality
+            [TestMethod]
+            public void TC2_TemperatureEquality_FahrenheitToFahrenheit_SameValue()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(32.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(32.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.IsTrue(t1.Equals(t2));
+            }
+
+            // TC3: Kelvin-to-Kelvin Equality
+            [TestMethod]
+            public void TC3_TemperatureEquality_KelvinToKelvin_SameValue()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(273.15, new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(273.15, new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+
+                Assert.IsTrue(t1.Equals(t2));
+            }
+
+            // TC4: Cross-Unit Celsius to Fahrenheit (0°C = 32°F)
+            [TestMethod]
+            public void TC4_TemperatureEquality_CelsiusToFahrenheit_0CEquals32F()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tF = new QuantityGeneric<TemperatureUnitWrapper>(32.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.IsTrue(tC.Equals(tF));
+            }
+
+            // TC5: Cross-Unit Celsius to Fahrenheit (100°C = 212°F)
+            [TestMethod]
+            public void TC5_TemperatureEquality_CelsiusToFahrenheit_100CEquals212F()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(100.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tF = new QuantityGeneric<TemperatureUnitWrapper>(212.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.IsTrue(tC.Equals(tF));
+            }
+
+            // TC6: Cross-Unit Celsius to Kelvin (0°C = 273.15 K)
+            [TestMethod]
+            public void TC6_TemperatureEquality_CelsiusToKelvin_0CEquals273K()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tK = new QuantityGeneric<TemperatureUnitWrapper>(273.15, new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+
+                Assert.IsTrue(tC.Equals(tK));
+            }
+
+            // TC7: Cross-Unit Fahrenheit to Kelvin (32°F = 273.15 K)
+            [TestMethod]
+            public void TC7_TemperatureEquality_FahrenheitToKelvin_32FEquals273K()
+            {
+                var tF = new QuantityGeneric<TemperatureUnitWrapper>(32.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+                var tK = new QuantityGeneric<TemperatureUnitWrapper>(273.15, new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+
+                Assert.IsTrue(tF.Equals(tK));
+            }
+
+            // TC8: Symmetric Equality
+            [TestMethod]
+            public void TC8_TemperatureEquality_SymmetricProperty()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(32.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.IsTrue(t1.Equals(t2));
+                Assert.IsTrue(t2.Equals(t1));
+            }
+
+            // TC9: Reflexive Equality
+            [TestMethod]
+            public void TC9_TemperatureEquality_ReflexiveProperty()
+            {
+                var t = new QuantityGeneric<TemperatureUnitWrapper>(50.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                Assert.IsTrue(t.Equals(t));
+            }
+
+            // TC10: Transitive Equality
+            [TestMethod]
+            public void TC10_TemperatureEquality_TransitiveProperty()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(32.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+                var t3 = new QuantityGeneric<TemperatureUnitWrapper>(273.15, new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+
+                Assert.IsTrue(t1.Equals(t2));
+                Assert.IsTrue(t2.Equals(t3));
+                Assert.IsTrue(t1.Equals(t3));
+            }
+
+            // ---------------- CONVERSION TESTS ----------------
+
+            // TC11: Celsius to Fahrenheit Conversion
+            [TestMethod]
+            public void TC11_TemperatureConversion_CelsiusToFahrenheit_VariousValues()
+            {
+                double[] celsius = { 0, 100, -40, 50 };
+                double[] expectedF = { 32, 212, -40, 122 };
+
+                for (int i = 0; i < celsius.Length; i++)
+                {
+                    var tC = new QuantityGeneric<TemperatureUnitWrapper>(celsius[i], new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                    var tF = tC.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+                    Assert.IsTrue(Math.Abs(tF.Value - expectedF[i]) < 0.01);
+                }
+            }
+
+            // TC12: Fahrenheit to Celsius Conversion
+            [TestMethod]
+            public void TC12_TemperatureConversion_FahrenheitToCelsius_VariousValues()
+            {
+                double[] fahrenheit = { 32, 212, -40, 122 };
+                double[] expectedC = { 0, 100, -40, 50 };
+
+                for (int i = 0; i < fahrenheit.Length; i++)
+                {
+                    var tF = new QuantityGeneric<TemperatureUnitWrapper>(fahrenheit[i], new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+                    var tC = tF.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                    Assert.IsTrue(Math.Abs(tC.Value - expectedC[i]) < 0.01);
+                }
+            }
+
+            // TC13: Celsius to Kelvin Conversion
+            [TestMethod]
+            public void TC13_TemperatureConversion_CelsiusToKelvin()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tK = tC.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+                Assert.IsTrue(Math.Abs(tK.Value - 273.15) < 0.01);
+            }
+
+            // TC14: Kelvin to Celsius Conversion
+            [TestMethod]
+            public void TC14_TemperatureConversion_KelvinToCelsius()
+            {
+                var tK = new QuantityGeneric<TemperatureUnitWrapper>(273.15, new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+                var tC = tK.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                Assert.IsTrue(Math.Abs(tC.Value - 0.0) < 0.01);
+            }
+
+            // TC15: Round Trip Conversion Preserves Value
+            [TestMethod]
+            public void TC15_TemperatureConversion_RoundTripPreservesValue()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(50.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tF = tC.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+                var tC2 = tF.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+
+                Assert.IsTrue(Math.Abs(tC.Value - tC2.Value) < 0.01);
+            }
+
+            // TC16: Conversion of Zero Value
+            [TestMethod]
+            public void TC16_TemperatureConversion_ZeroValue()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(0.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tF = tC.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.AreEqual(32.0, tF.Value);
+            }
+
+            // TC17: Absolute Zero Edge Case
+            [TestMethod]
+            public void TC17_TemperatureConversion_AbsoluteZero()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(-273.15, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tK = tC.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.KELVIN));
+                var tF = tC.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.IsTrue(Math.Abs(tK.Value - 0.0) < 0.01);
+                Assert.IsTrue(Math.Abs(tF.Value - (-459.67)) < 0.01);
+            }
+
+            // TC18: Intersection Point (-40°C = -40°F)
+            [TestMethod]
+            public void TC18_TemperatureConversion_IntersectionNegative40()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(-40.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tF = new QuantityGeneric<TemperatureUnitWrapper>(-40.0, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.IsTrue(tC.Equals(tF));
+            }
+
+            // ---------------- UNSUPPORTED OPERATION TESTS ----------------
+
+            [TestMethod]
+            public void TC19_TemperatureUnsupported_Add_ShouldThrowException()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(100.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(50.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+
+                 try
+                {
+                    t1.Add(t2);
+                    Assert.Fail("Expected NotSupportedException was not thrown.");
+                }
+                catch (NotSupportedException)
+                {
+                    // Test passes
+                }
+            }
+
+            [TestMethod]
+            public void TC20_TemperatureUnsupported_Subtract_ShouldThrowException()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(100.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(50.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+
+                try
+                {
+                    t1.Subtract(t2);
+                    Assert.Fail("Expected NotSupportedException was not thrown.");
+                }
+                catch (NotSupportedException)
+                {
+                    // Test passes
+                }
+            }
+
+            [TestMethod]
+            public void TC21_TemperatureUnsupported_Divide_ShouldThrowException()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(100.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(50.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                try
+                {
+                    t1.Divide(t2);
+                    Assert.Fail("Expected NotSupportedException was not thrown.");
+                }
+                catch (NotSupportedException)
+                {
+                    // Test passes
+                }
+            }
+
+            // ---------------- NULL AND CROSS-CATEGORY TESTS ----------------
+
+            [TestMethod]
+            public void TC22_TemperatureNullOperandValidation()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(100.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                Assert.IsFalse(t1.Equals(null));
+            }
+
+            [TestMethod]
+            public void TC23_TemperatureVsLengthIncompatibility()
+            {
+                var t = new QuantityGeneric<TemperatureUnitWrapper>(100.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var length = new QuantityGeneric<LengthUnit>(100.0, LengthUnit.FEET);
+                Assert.IsFalse(t.Equals((object)length));
+            }
+
+            [TestMethod]
+            public void TC24_TemperatureVsWeightIncompatibility()
+            {
+                var t = new QuantityGeneric<TemperatureUnitWrapper>(50.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var weight = new QuantityGeneric<WeightUnit>(50.0, WeightUnit.KILOGRAM);
+                Assert.IsFalse(t.Equals((object)weight));
+            }
+
+            [TestMethod]
+            public void TC25_TemperatureVsVolumeIncompatibility()
+            {
+                var t = new QuantityGeneric<TemperatureUnitWrapper>(25.0, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var volume = new QuantityGeneric<VolumeUnit>(25.0, VolumeUnit.LITRE);
+                Assert.IsFalse(t.Equals((object)volume));
+            }
+
+            // ---------------- PRECISION AND ROUNDING ----------------
+
+            [TestMethod]
+            public void TC26_TemperatureConversionPrecision_Epsilon()
+            {
+                var tC = new QuantityGeneric<TemperatureUnitWrapper>(0.123456, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var tF = tC.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+                var tC2 = tF.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+
+                Assert.IsTrue(Math.Abs(tC.Value - tC2.Value) < 0.01);
+            }
+
+            [TestMethod]
+            public void TC27_TemperatureConversionEdgeCase_VerySmallDifference()
+            {
+                var t1 = new QuantityGeneric<TemperatureUnitWrapper>(0.0001, new TemperatureUnitWrapper(TemperatureUnit.CELSIUS));
+                var t2 = new QuantityGeneric<TemperatureUnitWrapper>(32.00018, new TemperatureUnitWrapper(TemperatureUnit.FAHRENHEIT));
+
+                Assert.IsTrue(Math.Abs(t1.Value - t2.ConvertTo(new TemperatureUnitWrapper(TemperatureUnit.CELSIUS)).Value) < 0.01);
+            }
+        }
 }
