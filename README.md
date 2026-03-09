@@ -28,8 +28,7 @@ Follows SOLID principles (DRY, SRP, Interface Segregation)
 Modular UC-wise branch development for maintainability
 
 Project Structure
-
-Project Structure: QuantityMeasurementApp
+QuantityMeasurementApp
 ├── QuantityMeasurementApp (Main Application)
 │   ├── Interface
 │   │   └── IQuantityMeasurementService.cs
@@ -41,19 +40,20 @@ Project Structure: QuantityMeasurementApp
 │   │   ├── LengthUnit.cs
 │   │   ├── WeightUnit.cs
 │   │   ├── VolumeUnit.cs
-│   │   ├── IMeasurable.cs
+│   │   ├── TemperatureUnit.cs
+│   │   ├── TemperatureQuantity.cs
+│   │   ├── TemperatureUnitWrapper.cs
 │   │   ├── Quantity.cs
 │   │   ├── QuantityGeneric.cs
 │   │   ├── QuantityWeight.cs
-│   │   ├── SupportsArithmetic.cs
-│   │   ├── TemperatureQuantity.cs
-│   │   ├── TemperatureUnit.cs
-│   │   └── TemperatureUnitWrapper.cs
+│   │   └── SupportsArithmetic.cs
 │   ├── Services
 │   │   └── QuantityMeasurementService.cs
 │   └── Program.cs
-└── QuantityMeasurementApp.Tests (Unit Tests)
-    └── QuantityMeasurementServiceTests.cs // All UCs test cases inside this
+├── QuantityMeasurementApp.Tests (Unit Tests)
+│   └── QuantityMeasurementServiceTests.cs
+│       └── All UC1–UC14 test cases
+└── README.md
 
 Branches and Features (UC1–UC14)
 
