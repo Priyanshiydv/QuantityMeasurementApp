@@ -28,6 +28,7 @@ Follows SOLID principles (DRY, SRP, Interface Segregation)
 Modular UC-wise branch development for maintainability
 
 Project Structure
+
 Project Structure: QuantityMeasurementApp
 ├── QuantityMeasurementApp (Main Application)
 │   ├── Interface
