@@ -1,456 +1,166 @@
-Quantity Measurement App
-Description
+## Quantity Measurement Application
+# Project Overview
 
-Quantity Measurement App is a C# Console Application used to compare and perform operations on different length measurements like Feet, Inches, Yards, and Centimeters.
+The Quantity Measurement Application is a C# console-based project designed to compare, convert, and perform arithmetic operations on different measurement units.
 
-The project is implemented using:
+The system currently supports:
 
-Object-Oriented Programming (OOP)
+Length: Feet, Inches, Yards, Centimeters
 
-Service Layer Architecture
+Weight: Kilograms, Grams, Pounds
 
-Refactoring Principles (Single Responsibility Principle)
+Volume: Liters, Milliliters, Gallons
 
-MSTest Unit Testing
+Temperature: Celsius, Fahrenheit, Kelvin
 
-UC-wise feature branch development
+# Key Features:
 
-Each User Case (UC) is implemented in separate feature branches as per requirement.
+Type-safe operations via generics
 
-UC1 – Feet Measurement Equality
-Objective
+Unit conversion across all categories
 
-Ability to compare two length values in Feet and check whether they are equal.
+Arithmetic operations with validation and selective support
 
-Implementation Details (UC1)
+Scalable architecture for new measurement types
 
-Created Feet model class
+Follows SOLID principles (DRY, SRP, Interface Segregation)
 
-Stored value using private readonly variable (Encapsulation)
-
-Overrode Equals() method for value-based comparison
-
-Overrode GetHashCode() method
-
-Created QuantityMeasurementService for comparison logic
-
-Added MSTest unit test cases for Feet equality
-
-Test Cases Covered (UC1)
-
-Same values should return True
-
-Different values should return False
-
-Null comparison should return False
-
-Same reference should return True
-
-Different object type should return False
-
-All UC1 test cases are passing successfully.
-
-UC2 – Inches Measurement Equality
-Objective
-
-Ability to compare two length values in Inches and check whether they are equal.
-
-Implementation Details (UC2)
-
-Created Inches model class
-
-Implemented Equals() method for Inches comparison
-
-Extended QuantityMeasurementService for Inches equality logic
-
-Followed Service Layer Architecture (Separation of Concerns)
-
-Added MSTest unit test cases for Inches equality
-
-Test Cases Covered (UC2)
-
-Same inch values should return True
-
-Different inch values should return False
-
-Null inch comparison should return False
-
-Same reference should return True
-
-Different object type should return False
-
-All UC2 test cases are passing successfully.
-
-UC3 – Generic Quantity Length Equality (Feet & Inches)
-Objective
-
-Ability to compare two length measurements with different units (Feet and Inches) using a generic Quantity model with unit conversion.
-
-Implementation Details (UC3)
-
-Created Quantity model class with:
-
-Value
-
-LengthUnit
-
-Created LengthUnit enum (Feet, Inches)
-
-Implemented generic equality using overridden Equals() method
-
-Added internal unit conversion logic (Feet ↔ Inches)
-
-Refactored service to use DRY principle (single comparison method)
-
-Updated Console Menu to support Generic Quantity comparison
-
-Reused existing Service Layer instead of duplicating logic
-
-Added MSTest unit test cases for generic quantity comparison
-
-Test Cases Covered (UC3)
-
-1 Feet == 12 Inches should return True
-
-Different unit unequal values should return False
-
-Same unit same value should return True
-
-Null quantity comparison should return False
-
-Cross-unit comparison using conversion should work correctly
-
-All UC3 test cases are passing successfully.
-
-UC4 – Extended Length Equality (Yards & Centimeters)
-Objective
-
-Ability to compare length measurements across multiple units including Feet, Inches, Yards, and Centimeters using a generic Quantity model with full unit conversion support.
-
-Implementation Details (UC4)
-
-Extended LengthUnit enum to include:
-
-YARDS
-
-CENTIMETERS
-
-Updated Quantity model to support additional conversion factors
-
-Implemented conversion logic:
-
-1 Yard = 3 Feet
-
-1 Yard = 36 Inches
-
-1 Inch = 2.54 Centimeters
-
-Ensured equality works across all unit combinations
-
-Maintained DRY principle by keeping conversion logic centralized
-
-No duplication in service layer
-
-Added comprehensive MSTest unit test cases for new units
-
-Ensured Reflexive, Symmetric, and Transitive properties are validated
-
-Test Cases Covered (UC4)
-
-Same Yard values should return True
-
-Different Yard values should return False
-
-1 Yard == 3 Feet should return True
-
-1 Yard == 36 Inches should return True
-
-1 Centimeter == 0.393701 Inches should return True
-
-Non-equivalent cross-unit values should return False
-
-Transitive property validation across Yards, Feet, and Inches
-
-Null unit handling validation
-
-Same reference should return True
-
-Comparison with null should return False
-
-Complex multi-unit equality scenarios
-
-All UC4 test cases are passing successfully.
-
-UC5 – Unit-to-Unit Conversion
-Objective
-
-Provide ability to explicitly convert a length value from one unit to another.
-
-Implementation Details (UC5)
-
-Added static conversion method in Quantity:
-
-Convert(value, sourceUnit, targetUnit)
-
-Added instance method:
-
-ConvertTo(targetUnit)
-
-Implemented Base Unit normalization (Feet as base unit)
-
-Centralized conversion logic
-
-Added validation for:
-
-NaN values
-
-Infinity
-
-Invalid unit
-
-Maintained immutability (returns new Quantity object)
-
-Added MSTest cases for conversion accuracy
-
-Test Cases Covered (UC5)
-
-Feet → Inches
-
-Inches → Feet
-
-Yards → Inches
-
-Centimeters → Feet
-
-Same unit conversion
-
-Zero value conversion
-
-Negative value conversion
-
-Large value conversion
-
-NaN should throw exception
-
-Infinity should throw exception
-
-All UC5 test cases are passing successfully.
-
-UC6 – Addition of Two Length Quantities
-Objective
-
-Allow addition of two Quantity objects and return result in the unit of the first operand.
-
-Example:
-1 Foot + 12 Inches = 2 Feet
-
-Implementation Details (UC6)
-
-Added Add(Quantity other) method
-
-Converted both operands to Base Unit (Feet)
-
-Added values
-
-Converted result back to first operand’s unit
-
-Maintained immutability
-
-Ensured commutative property validation
-
-Test Cases Covered (UC6)
-
-Same unit addition
-
-Cross-unit addition
-
-Adding zero
-
-Negative value addition
-
-Large value addition
-
-Null operand validation
-
-All UC6 test cases are passing successfully.
-
-UC7 – Addition with Explicit Target Unit
-Objective
-
-Allow addition of two quantities and return result in a specified target unit.
-
-Example:
-1 Foot + 12 Inches in Yards
-
-Implementation Details (UC7)
-
-Added overloaded method:
-
-Add(Quantity other, LengthUnit targetUnit)
-
-Converted both operands to Base Unit
-
-Added values
-
-Converted result into explicit target unit
-
-Maintained DRY principle
-
-Preserved backward compatibility
-
-Test Cases Covered (UC7)
-
-Result in first unit
-
-Result in second unit
-
-Result in third unit
-
-Zero addition with explicit unit
-
-Negative values
-
-Commutative property
-
-Target unit validation
-
-All UC7 test cases are passing successfully.
-
-UC8 – Refactoring LengthUnit to Standalone Responsibility
-Objective
-
-Refactor architecture to follow Single Responsibility Principle by shifting conversion responsibility from Quantity to LengthUnit.
-
-Implementation Details (UC8)
-
-Extracted LengthUnit into standalone file
-
-Implemented conversion logic inside LengthUnit using:
-
-ToBase(value)
-
-FromBase(baseValue)
-
-Removed conversion switch logic from Quantity
-
-Delegated conversion responsibility to enum
-
-Simplified Quantity class
-
-Maintained backward compatibility (UC1–UC7 still working)
-
-No changes required in public API
-
-All previous test cases passed without modification
-
-Benefits Achieved
-
-Single Responsibility Principle followed
-
-Reduced coupling
-
-Improved maintainability
-
-Cleaner architecture
-
-Easier future extension (Weight, Volume, etc.)
-
-No circular dependency risk
-
-All UC8 test cases and previous UC test cases are passing successfully.
+Modular UC-wise branch development for maintainability
 
 Project Structure
 QuantityMeasurementApp
 │
-├── QuantityMeasurementApp (Main Console Project)
-│   ├── Models
-│   │   ├── Feet.cs
-│   │   ├── Inches.cs
-│   │   ├── Quantity.cs
-│   │   ├── LengthUnit.cs
-│   │          ├──LengthUnitExtensions.cs
-│   │
-│   ├── Services
-│   │   └── QuantityMeasurementService.cs
+├── QuantityMeasurementApp (Main Application)
+│   ├── Interface
+│   │   └── IQuantityMeasurementService.cs
 │   │
 │   ├── Menu
 │   │   └── AppMenu.cs
 │   │
+│   ├── Models
+│   │   ├── Feet.cs
+│   │   ├── Inches.cs
+│   │   ├── LengthUnit.cs
+│   │   ├── WeightUnit.cs
+│   │   ├── VolumeUnit.cs
+│   │   ├── IMeasurable.cs
+│   │   ├── Quantity.cs
+│   │   ├── QuantityGeneric.cs
+│   │   ├── QuantityWeight.cs
+│   │   ├── SupportsArithmetic.cs
+│   │   ├── TemperatureQuantity.cs
+│   │   ├── TemperatureUnit.cs
+│   │   └── TemperatureUnitWrapper.cs
+│   │
+│   ├── Services
+│   │   └── QuantityMeasurementService.cs
+│   │
 │   └── Program.cs
 │
-└── QuantityMeasurementApp.Tests (MSTest Project)
+└── QuantityMeasurementApp.Tests (Unit Tests)
     ├── QuantityMeasurementServiceTests.cs //All UCs test case inside this
-   
-Features
 
-Compare Feet values (UC1)
+# Branches and Features (UC1–UC14)
+Branch	Use Case	Description
+feature/UC1-FeetMeasurementEquality	UC1	Compare equality between Feet quantities.
+feature/UC2-InchMeasurementEquality	UC2	Compare equality between Inch quantities.
+feature/UC3-GenericQuantityLength	UC3	Compare generic Length quantities (Feet & Inch).
+feature/UC4-ExtendedUnitSupport	UC4	Extend length comparison to Yards & Centimeters.
+feature/UC5-UnitToUnitConversion	UC5	Conversion between any supported length units.
+feature/UC6-UnitAddition	UC6	Add two quantities in first operand unit.
+feature/UC7-TargetUnitAddition	UC7	Add two quantities and return result in target unit.
+feature/UC8-StandaloneUnit	UC8	Refactor unit enums for SRP, maintain conversion logic.
+feature/UC9-WeightMeasurementSupport	UC9	Add Weight measurements: Kilogram, Gram, Pound with conversion & addition.
+feature/UC10-GenericMeasurementRefactor	UC10	Introduce generic class Quantity<U> for multi-category support.
+feature/UC11-VolumeMeasurementSupport	UC11	Add Volume measurements: Liters, Milliliters, Gallons.
+feature/UC12-QuantitySubtractionDivision	UC12	Add subtraction/division support for length, weight, and volume; temperature restricted.
+feature/UC13-ArithmeticValidation	UC13	Centralized arithmetic validation logic for all categories.
+feature/UC14-TemperatureMeasurementSupport	UC14	Add Temperature measurements: Celsius, Fahrenheit, Kelvin with selective arithmetic.
 
-Compare Inches values (UC2)
+#Use Case Details
+Length (UC1–UC8)
 
-Generic Quantity comparison with conversion (UC3)
+Equality and conversion between Feet, Inches, Yards, Centimeters
 
-Extended unit comparison (UC4)
+Supports addition, subtraction, and cross-unit conversions
 
-Explicit unit conversion (UC5)
+Weight (UC9)
 
-Addition of quantities (UC6)
+Equality, conversion, addition for Kilograms, Grams, Pounds
 
-Addition with explicit target unit (UC7)
+Prevents cross-category comparison with Length
 
-Refactored scalable architecture (UC8)
+Generic Refactor (UC10)
 
-Console-based interactive menu
+Introduces Quantity<U> generic class
 
-Clean layered architecture (Models, Services, Menu)
+Works for Length, Weight, Volume
 
-Unit Testing using MSTest
+Enforces type safety
 
-DRY Principle
+Volume (UC11)
 
-Encapsulation
+Supports Liters, Milliliters, Gallons
 
-Enum-based unit abstraction
+Equality, conversion, and arithmetic validated
 
-Immutability
+Base unit: Liters
 
-How to Run the Application
+Arithmetic Validation (UC12–UC13)
 
-Open terminal inside the main project folder and run:
+Centralized validation for addition, subtraction, division
 
+Quantity class checks for operation support
+
+Temperature excluded from unsupported operations
+
+Temperature (UC14)
+
+Supports Celsius, Fahrenheit, Kelvin
+
+Equality & conversion allowed
+
+Addition/subtraction restricted to temperature differences
+
+Unsupported operations throw descriptive exceptions
+
+IMeasurable interface refactored with:
+
+Functional interface for arithmetic support
+
+Default methods for selective operation validation
+
+# Testing
+
+MSTest framework
+
+Covers all UCs including:
+
+Equality & conversion accuracy
+
+Addition, subtraction, division for supported units
+
+Unsupported operation handling (temperature)
+
+Cross-category type safety
+
+Edge cases and rounding precision
+
+# How to Run
+cd QuantityMeasurementApp
 dotnet run
-How to Run Unit Tests
-
-From solution root folder:
-
+Run Unit Tests
 dotnet test
-Technologies Used
+Technologies
 
-C#
+C# | .NET 7+
 
-.NET Console Application
+Console Application
 
-MSTest Framework
+MSTest
 
-Object-Oriented Programming (OOP)
+Git & GitHub (Branch strategy for UC-wise development)
 
-Service Layer Architecture
-
-Refactoring (SRP, DRY)
-
-Git & GitHub (UC-wise Branching)
-
-Branch Naming Convention
-feature/UC1-FeetMeasurementEquality
-feature/UC2-InchMeasurementEquality
-feature/UC3-GenericQuantityLength
-feature/UC4-ExtendedUnitSupport
-feature/UC5-UnitToUnitConversion
-feature/UC6-UnitAddition
-feature/UC7-TargetUnitAddition
-feature/UC8-StandaloneUnit
-
-Each UC is developed in a separate feature branch and pushed independently as per project guidelines.
-
-Author
+# Author
 
 Priyanshi Yadav
