@@ -28,8 +28,7 @@ Follows SOLID principles (DRY, SRP, Interface Segregation)
 Modular UC-wise branch development for maintainability
 
 Project Structure
-QuantityMeasurementApp
-│
+Project Structure: QuantityMeasurementApp
 ├── QuantityMeasurementApp (Main Application)
 │   ├── Interface
 │   │   └── IQuantityMeasurementService.cs
@@ -52,9 +51,8 @@ QuantityMeasurementApp
 │   ├── Services
 │   │   └── QuantityMeasurementService.cs
 │   └── Program.cs
-│
 └── QuantityMeasurementApp.Tests (Unit Tests)
-    └── QuantityMeasurementServiceTests.cs //All UCs test case inside this
+    └── QuantityMeasurementServiceTests.cs // All UCs test cases inside this
 
 Branches and Features (UC1–UC14)
 
@@ -91,37 +89,55 @@ UC14: feature/UC14-TemperatureMeasurementSupport – Add Temperature measurement
 # Use Case Details
 
 Length (UC1–UC8)
+
 Equality and conversion between Feet, Inches, Yards, Centimeters
+
 Supports addition, subtraction, and cross-unit conversions
 
 Weight (UC9)
+
 Equality, conversion, addition for Kilograms, Grams, Pounds
+
 Prevents cross-category comparison with Length
 
 Generic Refactor (UC10)
+
 Introduces Quantity<U> generic class
+
 Works for Length, Weight, Volume
+
 Enforces type safety
 
 Volume (UC11)
+
 Supports Liters, Milliliters, Gallons
+
 Equality, conversion, and arithmetic validated
+
 Base unit: Liters
 
 Arithmetic Validation (UC12–UC13)
+
 Centralized validation for addition, subtraction, division
+
 Quantity class checks for operation support
+
 Temperature excluded from unsupported operations
 
 Temperature (UC14)
+
 Supports Celsius, Fahrenheit, Kelvin
+
 Equality & conversion allowed
+
 Addition/subtraction restricted to temperature differences
 
 Unsupported operations throw descriptive exceptions
 
 IMeasurable interface refactored with:
+
 Functional interface for arithmetic support
+
 Default methods for selective operation validation
 
 # Testing
