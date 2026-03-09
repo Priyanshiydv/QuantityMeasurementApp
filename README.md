@@ -25,22 +25,6 @@ The **Quantity Measurement Application** is a C# console-based project designed 
 
 
 ```text
-=======
-# Key Features:
-
-Type-safe operations via generics
-
-Unit conversion across all categories
-
-Arithmetic operations with validation and selective support
-
-Scalable architecture for new measurement types
-
-Follows SOLID principles (DRY, SRP, Interface Segregation)
-
-Modular UC-wise branch development for maintainability
-
-Project Structure
 
 QuantityMeasurementApp
 ├── QuantityMeasurementApp (Main Application)
@@ -68,10 +52,6 @@ QuantityMeasurementApp
 
      └── QuantityMeasurementServiceTests.cs
         └── All UC1–UC14 test cases
-=======
-    └── QuantityMeasurementServiceTests.cs
-        └── All UC1–UC14 test cases
-
 
 Branches and Features (UC1–UC14)
 
