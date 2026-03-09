@@ -1,34 +1,30 @@
-## Quantity Measurement Application
-# Project Overview
+# Quantity Measurement Application
 
-The Quantity Measurement Application is a C# console-based project designed to compare, convert, and perform arithmetic operations on different measurement units.
+## Project Overview
+The **Quantity Measurement Application** is a C# console-based project designed to compare, convert, and perform arithmetic operations on different measurement units.
 
-The system currently supports:
+**Supported Categories:**
+- **Length:** Feet, Inches, Yards, Centimeters
+- **Weight:** Kilograms, Grams, Pounds
+- **Volume:** Liters, Milliliters, Gallons
+- **Temperature:** Celsius, Fahrenheit, Kelvin
 
-Length: Feet, Inches, Yards, Centimeters
+---
 
-Weight: Kilograms, Grams, Pounds
+## Key Features
+- Type-safe operations via generics  
+- Unit conversion across all categories  
+- Arithmetic operations with validation and selective support  
+- Scalable architecture for new measurement types  
+- Follows SOLID principles (DRY, SRP, Interface Segregation)  
+- Modular UC-wise branch development for maintainability  
 
-Volume: Liters, Milliliters, Gallons
+---
 
-Temperature: Celsius, Fahrenheit, Kelvin
+## Project Structure
 
-# Key Features:
-
-Type-safe operations via generics
-
-Unit conversion across all categories
-
-Arithmetic operations with validation and selective support
-
-Scalable architecture for new measurement types
-
-Follows SOLID principles (DRY, SRP, Interface Segregation)
-
-Modular UC-wise branch development for maintainability
-
-Project Structure
-Project Structure: QuantityMeasurementApp
+```text
+QuantityMeasurementApp
 ├── QuantityMeasurementApp (Main Application)
 │   ├── Interface
 │   │   └── IQuantityMeasurementService.cs
@@ -40,54 +36,51 @@ Project Structure: QuantityMeasurementApp
 │   │   ├── LengthUnit.cs
 │   │   ├── WeightUnit.cs
 │   │   ├── VolumeUnit.cs
-│   │   ├── IMeasurable.cs
+│   │   ├── TemperatureUnit.cs
+│   │   ├── TemperatureQuantity.cs
+│   │   ├── TemperatureUnitWrapper.cs
 │   │   ├── Quantity.cs
 │   │   ├── QuantityGeneric.cs
 │   │   ├── QuantityWeight.cs
-│   │   ├── SupportsArithmetic.cs
-│   │   ├── TemperatureQuantity.cs
-│   │   ├── TemperatureUnit.cs
-│   │   └── TemperatureUnitWrapper.cs
+│   │   └── SupportsArithmetic.cs
 │   ├── Services
 │   │   └── QuantityMeasurementService.cs
 │   └── Program.cs
-└── QuantityMeasurementApp.Tests (Unit Tests)
-    └── QuantityMeasurementServiceTests.cs // All UCs test cases inside this
+├── QuantityMeasurementApp.Tests (Unit Tests)
+     └── QuantityMeasurementServiceTests.cs
+        └── All UC1–UC14 test cases
 
 Branches and Features (UC1–UC14)
 
-UC1: feature/UC1-FeetMeasurementEquality – Compare equality between Feet quantities.
+UC1: feature/UC1-FeetMeasurementEquality – Compare equality between Feet quantities
 
-UC2: feature/UC2-InchMeasurementEquality – Compare equality between Inch quantities.
+UC2: feature/UC2-InchMeasurementEquality – Compare equality between Inch quantities
 
-UC3: feature/UC3-GenericQuantityLength – Compare generic Length quantities (Feet & Inch).
+UC3: feature/UC3-GenericQuantityLength – Compare generic Length quantities (Feet & Inch)
 
-UC4: feature/UC4-ExtendedUnitSupport – Extend length comparison to Yards & Centimeters.
+UC4: feature/UC4-ExtendedUnitSupport – Extend length comparison to Yards & Centimeters
 
-UC5: feature/UC5-UnitToUnitConversion – Conversion between any supported length units.
+UC5: feature/UC5-UnitToUnitConversion – Conversion between any supported length units
 
-UC6: feature/UC6-UnitAddition – Add two quantities in the first operand unit.
+UC6: feature/UC6-UnitAddition – Add two quantities in the first operand unit
 
-UC7: feature/UC7-TargetUnitAddition – Add two quantities and return result in target unit.
+UC7: feature/UC7-TargetUnitAddition – Add two quantities and return result in target unit
 
-UC8: feature/UC8-StandaloneUnit – Refactor unit enums for SRP, maintain conversion logic.
+UC8: feature/UC8-StandaloneUnit – Refactor unit enums for SRP, maintain conversion logic
 
-UC9: feature/UC9-WeightMeasurementSupport – Add Weight measurements: Kilogram, Gram, Pound with conversion & addition.
+UC9: feature/UC9-WeightMeasurementSupport – Add Weight measurements: Kilogram, Gram, Pound
 
-UC10: feature/UC10-GenericMeasurementRefactor – Introduce generic class Quantity<U> for multi-category support.
+UC10: feature/UC10-GenericMeasurementRefactor – Introduce generic class Quantity for multi-category support
 
-UC11: feature/UC11-VolumeMeasurementSupport – Add Volume measurements: Liters, Milliliters, Gallons.
+UC11: feature/UC11-VolumeMeasurementSupport – Add Volume measurements: Liters, Milliliters, Gallons
 
-UC12: feature/UC12-QuantitySubtractionDivision – Add subtraction/division support for length, weight, and volume; temperature restricted.
+UC12: feature/UC12-QuantitySubtractionDivision – Add subtraction/division support for length, weight, and volume; temperature restricted
 
-UC13: feature/UC13-ArithmeticValidation – Centralized arithmetic validation logic for all categories.
+UC13: feature/UC13-ArithmeticValidation – Centralized arithmetic validation logic for all categories
 
-UC14: feature/UC14-TemperatureMeasurementSupport – Add Temperature measurements: Celsius, Fahrenheit, Kelvin with selective arithmetic.
+UC14: feature/UC14-TemperatureMeasurementSupport – Add Temperature measurements: Celsius, Fahrenheit, Kelvin with selective arithmetic
 
-
-
-# Use Case Details
-
+Use Case Details
 Length (UC1–UC8)
 
 Equality and conversion between Feet, Inches, Yards, Centimeters
@@ -102,7 +95,7 @@ Prevents cross-category comparison with Length
 
 Generic Refactor (UC10)
 
-Introduces Quantity<U> generic class
+Introduces Quantity generic class
 
 Works for Length, Weight, Volume
 
@@ -134,15 +127,15 @@ Addition/subtraction restricted to temperature differences
 
 Unsupported operations throw descriptive exceptions
 
-IMeasurable interface refactored with:
+IMeasurable Interface Refactor
 
 Functional interface for arithmetic support
 
 Default methods for selective operation validation
 
-# Testing
+Testing
 
-MSTest framework
+Framework: MSTest
 
 Covers all UCs including:
 
@@ -156,7 +149,7 @@ Cross-category type safety
 
 Edge cases and rounding precision
 
-# How to Run
+How to Run
 cd QuantityMeasurementApp
 dotnet run
 Run Unit Tests
@@ -169,8 +162,8 @@ Console Application
 
 MSTest
 
-Git & GitHub (Branch strategy for UC-wise development)
+Git & GitHub (UC-wise branch strategy)
 
-# Author
+Author
 
 Priyanshi Yadav
