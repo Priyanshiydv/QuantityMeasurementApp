@@ -12,107 +12,122 @@ namespace QuantityMeasurementApp.Menu
         {
             while (true)
             {
-                Console.WriteLine("\n===== QUANTITY MEASUREMENT APP =====");
-                Console.WriteLine("1. Length Equality");
-                Console.WriteLine("2. Length Conversion");
-                Console.WriteLine("3. Length Addition");
-                Console.WriteLine("4. Weight Equality");
-                Console.WriteLine("5. Weight Conversion");
-                Console.WriteLine("6. Weight Addition");
-                Console.WriteLine("7. Cross Category Equality");
-                Console.WriteLine("8. Generic Demonstration");
-                Console.WriteLine("9. Volume Equality");       
-                Console.WriteLine("10. Volume Conversion");    
-                Console.WriteLine("11. Volume Addition"); 
-                Console.WriteLine("12. Subtraction Operation");
-                Console.WriteLine("13. Division Operation"); 
-                Console.WriteLine("14. Cross Category Operations");
-                Console.WriteLine("15. Temperature Equality");
-                Console.WriteLine("16. Temperature Conversion");
-                Console.WriteLine("17. Temperature Arithmetic Test");
-                Console.WriteLine("0. Exit");
-                Console.Write("Select Option: ");
+                Console.WriteLine("\n========== QUANTITY MEASUREMENT APP ==========");
+                Console.WriteLine("1  - Length Operations");
+                Console.WriteLine("2  - Weight Operations");
+                Console.WriteLine("3  - Volume Operations");
+                Console.WriteLine("4  - Temperature Operations");
+                Console.WriteLine("5  - Subtraction Operation");
+                Console.WriteLine("6  - Division Operation");
+                Console.WriteLine("7  - Cross Category Equality");
+                Console.WriteLine("8  - Cross Category Operations");
+                Console.WriteLine("9  - Generic Demonstration");
+                Console.WriteLine("0  - Exit");
 
+                Console.Write("\nSelect Option: ");
                 string? choice = Console.ReadLine();
 
-                switch (choice)
+                try
                 {
-                    case "1":
-                        LengthEquality();
-                        break;
-
-                    case "2":
-                        LengthConversion();
-                        break;
-
-                    case "3":
-                        LengthAddition();
-                        break;
-
-                    case "4":
-                        WeightEquality();
-                        break;
-
-                    case "5":
-                        WeightConversion();
-                        break;
-
-                    case "6":
-                        WeightAddition();
-                        break;
-
-                    case "7":
-                        CrossCategoryEquality();
-                        break;
-
-                    case "8":
-                        GenericDemo();
-                        break;
-                    case "9":
-                        VolumeEquality();
-                        break;
-
-                    case "10":
-                        VolumeConversion();
-                        break;
-
-                    case "11":
-                        VolumeAddition();
-                        break;
-                    case "12":
-                        SubtractionDemo();
-                        break;
-
-                    case "13":
-                        DivisionDemo();
-                        break;
-                    case "14":
-                        CrossCategoryOperation();
-                        break;
-                    case "15":
-                        TemperatureEquality();
-                        break;
-
-                    case "16":
-                        TemperatureConversion();
-                        break;
-
-                    case "17":
-                        TemperatureArithmeticTest();
-                        break;
-
-                    case "0":
-                        Console.WriteLine("Exiting Application...");
-                        return;
-
-                    default:
-                        Console.WriteLine("Invalid choice.");
-                        break;
+                    switch (choice)
+                    {
+                        case "1": LengthMenu(); break;
+                        case "2": WeightMenu(); break;
+                        case "3": VolumeMenu(); break;
+                        case "4": TemperatureMenu(); break;
+                        case "5": SubtractionDemo(); break;
+                        case "6": DivisionDemo(); break;
+                        case "7": CrossCategoryEquality(); break;
+                        case "8": CrossCategoryOperation(); break;
+                        case "9": GenericDemo(); break;
+                        case "0":
+                            Console.WriteLine("Exiting Application...");
+                            return;
+                        default:
+                            Console.WriteLine("Invalid choice.");
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error: {ex.Message}");
                 }
             }
         }
 
-        // ---------------- LENGTH OPERATIONS ----------------
+        // ================= LENGTH MENU =================
+
+        private static void LengthMenu()
+        {
+            Console.WriteLine("\n---- LENGTH OPERATIONS ----");
+            Console.WriteLine("1 Equality");
+            Console.WriteLine("2 Conversion");
+            Console.WriteLine("3 Addition");
+
+            switch (Console.ReadLine())
+            {
+                case "1": LengthEquality(); break;
+                case "2": LengthConversion(); break;
+                case "3": LengthAddition(); break;
+                default: Console.WriteLine("Invalid choice"); break;
+            }
+        }
+
+        // ================= WEIGHT MENU =================
+
+        private static void WeightMenu()
+        {
+            Console.WriteLine("\n---- WEIGHT OPERATIONS ----");
+            Console.WriteLine("1 Equality");
+            Console.WriteLine("2 Conversion");
+            Console.WriteLine("3 Addition");
+
+            switch (Console.ReadLine())
+            {
+                case "1": WeightEquality(); break;
+                case "2": WeightConversion(); break;
+                case "3": WeightAddition(); break;
+                default: Console.WriteLine("Invalid choice"); break;
+            }
+        }
+
+        // ================= VOLUME MENU =================
+
+        private static void VolumeMenu()
+        {
+            Console.WriteLine("\n---- VOLUME OPERATIONS ----");
+            Console.WriteLine("1 Equality");
+            Console.WriteLine("2 Conversion");
+            Console.WriteLine("3 Addition");
+
+            switch (Console.ReadLine())
+            {
+                case "1": VolumeEquality(); break;
+                case "2": VolumeConversion(); break;
+                case "3": VolumeAddition(); break;
+                default: Console.WriteLine("Invalid choice"); break;
+            }
+        }
+
+        // ================= TEMPERATURE MENU =================
+
+        private static void TemperatureMenu()
+        {
+            Console.WriteLine("\n---- TEMPERATURE OPERATIONS ----");
+            Console.WriteLine("1 Equality");
+            Console.WriteLine("2 Conversion");
+            Console.WriteLine("3 Arithmetic Test");
+
+            switch (Console.ReadLine())
+            {
+                case "1": TemperatureEquality(); break;
+                case "2": TemperatureConversion(); break;
+                case "3": TemperatureArithmeticTest(); break;
+                default: Console.WriteLine("Invalid choice"); break;
+            }
+        }
+
+        // ---------------- LENGTH ----------------
 
         private static void LengthEquality()
         {
@@ -122,247 +137,289 @@ namespace QuantityMeasurementApp.Menu
             Console.WriteLine("\nEnter Second Length");
             var q2 = ReadLength();
 
-            bool result = service.AreEqual(q1, q2);
-
-            Console.WriteLine($"Result: {result}");
+            Console.WriteLine($"Result: {service.AreEqual(q1, q2)}");
         }
 
         private static void LengthConversion()
         {
-            Console.WriteLine("\nEnter Length to Convert");
-            var quantity = ReadLength();
+            Console.WriteLine("\nEnter Length");
+            var length = ReadLength();
 
             Console.WriteLine("Convert To Unit:");
             LengthUnit target = ReadLengthUnit();
 
-            var result = quantity.ConvertTo(target);
-
-            Console.WriteLine($"Converted: {result}");
+            Console.WriteLine($"Converted: {length.ConvertTo(target)}");
         }
-
-        // ---------------- LENGTH ADDITION ----------------
 
         private static void LengthAddition()
         {
-            Console.WriteLine("\nEnter First Length");
             var q1 = ReadLength();
-
-            Console.WriteLine("\nEnter Second Length");
             var q2 = ReadLength();
 
-            Console.WriteLine("\nChoose Addition Type:");
-            Console.WriteLine("1. Use First Operand Unit (Implicit)");
-            Console.WriteLine("2. Choose Target Unit (Explicit)");
-            Console.Write("Choice: ");
+            Console.WriteLine("1. Implicit Unit");
+            Console.WriteLine("2. Explicit Unit");
 
-            string? choice = Console.ReadLine();
-
-            if (choice == "1")
-            {
-                // Implicit addition (result in first operand unit)
-                var result = q1.Add(q2);
-
-                Console.WriteLine($"Addition Result: {result}");
-            }
-            else if (choice == "2")
-            {
-                Console.WriteLine("Select Result Unit:");
-                LengthUnit resultUnit = ReadLengthUnit();
-
-                var result = q1.Add(q2, resultUnit);
-
-                Console.WriteLine($"Addition Result: {result}");
-            }
+            if (Console.ReadLine() == "1")
+                Console.WriteLine($"Result: {q1.Add(q2)}");
             else
-            {
-                Console.WriteLine("Invalid choice.");
-            }
+                Console.WriteLine($"Result: {q1.Add(q2, ReadLengthUnit())}");
         }
 
-        // ---------------- WEIGHT OPERATIONS ----------------
+        // ---------------- WEIGHT ----------------
 
         private static void WeightEquality()
         {
-            Console.WriteLine("\nEnter First Weight");
             var w1 = ReadWeight();
-
-            Console.WriteLine("\nEnter Second Weight");
             var w2 = ReadWeight();
 
-            bool result = service.AreEqual(w1, w2);
-
-            Console.WriteLine($"Result: {result}");
+            Console.WriteLine($"Result: {service.AreEqual(w1, w2)}");
         }
 
         private static void WeightConversion()
         {
-            Console.WriteLine("\nEnter Weight to Convert");
             var weight = ReadWeight();
 
             Console.WriteLine("Convert To Unit:");
-            WeightUnit target = ReadWeightUnit();
-
-            var result = weight.ConvertTo(target);
-
-            Console.WriteLine($"Converted: {result}");
+            Console.WriteLine($"Converted: {weight.ConvertTo(ReadWeightUnit())}");
         }
-
-        // ---------------- WEIGHT ADDITION ----------------
 
         private static void WeightAddition()
         {
-            Console.WriteLine("\nEnter First Weight");
             var w1 = ReadWeight();
-
-            Console.WriteLine("\nEnter Second Weight");
             var w2 = ReadWeight();
 
-            Console.WriteLine("\nChoose Addition Type:");
-            Console.WriteLine("1. Use First Operand Unit (Implicit)");
-            Console.WriteLine("2. Choose Target Unit (Explicit)");
-            Console.Write("Choice: ");
+            Console.WriteLine("1. Implicit Unit");
+            Console.WriteLine("2. Explicit Unit");
+
+            if (Console.ReadLine() == "1")
+                Console.WriteLine($"Result: {w1.Add(w2)}");
+            else
+                Console.WriteLine($"Result: {w1.Add(w2, ReadWeightUnit())}");
+        }
+
+        // ---------------- VOLUME ----------------
+
+        private static void VolumeEquality()
+        {
+            var v1 = ReadVolume();
+            var v2 = ReadVolume();
+
+            Console.WriteLine($"Result: {service.AreEqual(v1, v2)}");
+        }
+
+        private static void VolumeConversion()
+        {
+            var v = ReadVolume();
+            Console.WriteLine($"Converted: {v.ConvertTo(ReadVolumeUnit())}");
+        }
+
+        private static void VolumeAddition()
+        {
+            var v1 = ReadVolume();
+            var v2 = ReadVolume();
+
+            Console.WriteLine("1. Implicit Unit");
+            Console.WriteLine("2. Explicit Unit");
+
+            if (Console.ReadLine() == "1")
+                Console.WriteLine($"Result: {v1.Add(v2)}");
+            else
+                Console.WriteLine($"Result: {v1.Add(v2, ReadVolumeUnit())}");
+        }
+
+        // ---------------- SUBTRACTION ----------------
+
+        private static void SubtractionDemo()
+        {
+            Console.WriteLine("\nSelect Category");
+            Console.WriteLine("1 Length");
+            Console.WriteLine("2 Weight");
+            Console.WriteLine("3 Volume");
+
+            string? choice = Console.ReadLine();
+
+            dynamic q1 = ReadQuantity(choice);
+            dynamic q2 = ReadQuantity(choice);
+
+            Console.WriteLine($"Result: {q1.Subtract(q2)}");
+        }
+
+        // ---------------- DIVISION ----------------
+
+        private static void DivisionDemo()
+        {
+            Console.WriteLine("\nSelect Category");
+            Console.WriteLine("1 Length");
+            Console.WriteLine("2 Weight");
+            Console.WriteLine("3 Volume");
+
+            string? choice = Console.ReadLine();
+
+            dynamic q1 = ReadQuantity(choice);
+            dynamic q2 = ReadQuantity(choice);
+
+            Console.WriteLine($"Division Result: {q1.Divide(q2)}");
+        }
+
+        // ---------------- GENERIC DEMO ----------------
+
+        private static void GenericDemo()
+        {
+            Console.WriteLine("1 Length");
+            Console.WriteLine("2 Weight");
+            Console.WriteLine("3 Volume");
 
             string? choice = Console.ReadLine();
 
             if (choice == "1")
-            {
-                // Implicit addition
-                var result = w1.Add(w2);
-
-                Console.WriteLine($"Addition Result: {result}");
-            }
+                DemonstrateEquality(ReadLength(), ReadLength());
             else if (choice == "2")
-            {
-                Console.WriteLine("Select Result Unit:");
-                WeightUnit resultUnit = ReadWeightUnit();
-
-                var result = w1.Add(w2, resultUnit);
-
-                Console.WriteLine($"Addition Result: {result}");
-            }
+                DemonstrateEquality(ReadWeight(), ReadWeight());
             else
-            {
-                Console.WriteLine("Invalid choice.");
-            }
+                DemonstrateEquality(ReadVolume(), ReadVolume());
+        }
+
+        private static void DemonstrateEquality<T>(QuantityGeneric<T> q1, QuantityGeneric<T> q2)
+            where T : IMeasurable
+        {
+            Console.WriteLine($"Q1: {q1}");
+            Console.WriteLine($"Q2: {q2}");
+            Console.WriteLine($"Equal: {q1.Equals(q2)}");
         }
 
         // ---------------- CROSS CATEGORY ----------------
 
         private static void CrossCategoryEquality()
         {
-            Console.WriteLine("\nSelect First Quantity Category:");
-            Console.WriteLine("1. Length");
-            Console.WriteLine("2. Weight");
-            Console.WriteLine("3. Volume");
-            Console.WriteLine("4. Temperature");
-            Console.Write("Choice: ");
+            dynamic q1 = ReadAnyCategoryQuantity("First");
+            dynamic q2 = ReadAnyCategoryQuantity("Second");
 
-            string? choice1 = Console.ReadLine();
-
-            object q1 = choice1 switch
-            {
-                "1" => ReadLength(),
-                "2" => ReadWeight(),
-                "3" => ReadVolume(),
-                "4" => ReadTemperature(),
-                _ => throw new ArgumentException("Invalid category")
-            };
-
-            Console.WriteLine("\nSelect Second Quantity Category:");
-            Console.WriteLine("1. Length");
-            Console.WriteLine("2. Weight");
-            Console.WriteLine("3. Volume");
-            Console.WriteLine("4. Temperature");
-            Console.Write("Choice: ");
-
-            string? choice2 = Console.ReadLine();
-
-            object q2 = choice2 switch
-            {
-                "1" => ReadLength(),
-                "2" => ReadWeight(),
-                "3" => ReadVolume(),
-                "4" => ReadTemperature(),
-                _ => throw new ArgumentException("Invalid category")
-            };
             if (q1.GetType() != q2.GetType())
-            {
-                Console.WriteLine("\nResult: False (Different Categories)");
-            }
+                Console.WriteLine("Result: False (Different Categories)");
             else
-            {
-                Console.WriteLine("\nSame Category Selected. Use Specific Equality Option.");
-            }
+                Console.WriteLine("Same Category. Use specific equality option.");
         }
 
-
-        // ---------------- GENERIC DEMO ----------------
-
-        private static void GenericDemo()
+        private static void CrossCategoryOperation()
         {
-            Console.WriteLine("\n1. Length Generic Equality");
-            Console.WriteLine("2. Weight Generic Equality");
-            Console.WriteLine("3. Volume Generic Equality");
-            Console.Write("Choose: ");
+            dynamic q1 = ReadAnyCategoryQuantity("First");
+            dynamic q2 = ReadAnyCategoryQuantity("Second");
 
-            string? choice = Console.ReadLine();
+            Console.WriteLine("1 Subtract");
+            Console.WriteLine("2 Divide");
 
-            if (choice == "1")
-            {
-                var q1 = ReadLength();
-                var q2 = ReadLength();
-                DemonstrateEquality(q1, q2);
-            }
-            else if (choice == "2")
-            {
-                var w1 = ReadWeight();
-                var w2 = ReadWeight();
-                DemonstrateEquality(w1, w2);
-            }
-             else if (choice == "3")
-            {
-                var v1 = ReadVolume();
-                var v2 = ReadVolume();
-                DemonstrateEquality(v1, v2);
-            }
+            if (Console.ReadLine() == "1")
+                Console.WriteLine($"Result: {q1.Subtract(q2)}");
             else
+                Console.WriteLine($"Division Result: {q1.Divide(q2)}");
+        }
+
+        // ---------------- TEMPERATURE ----------------
+
+        private static void TemperatureEquality()
+        {
+            var t1 = ReadTemperature();
+            var t2 = ReadTemperature();
+
+            Console.WriteLine($"Result: {t1.Equals(t2)}");
+        }
+
+        private static void TemperatureConversion()
+        {
+            var temp = ReadTemperature();
+            var target = new TemperatureUnitWrapper(ReadTemperatureUnit());
+
+            Console.WriteLine($"Converted: {temp.ConvertTo(target)}");
+        }
+
+        private static void TemperatureArithmeticTest()
+        {
+            try
             {
-                Console.WriteLine("Invalid choice.");
+                var t1 = ReadTemperature();
+                var t2 = ReadTemperature();
+
+                Console.WriteLine(t1.Add(t2));
+            }
+            catch (NotSupportedException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
-        // ---------------- GENERIC METHOD ----------------
+        // ================= INPUT METHODS =================
 
-        private static void DemonstrateEquality<T>(QuantityGeneric<T> q1, QuantityGeneric<T> q2)
-            where T : IMeasurable
+        private static double ReadValue()
         {
-            Console.WriteLine("\n---- Generic Equality Demonstration ----");
-            Console.WriteLine($"Quantity 1: {q1}");
-            Console.WriteLine($"Quantity 2: {q2}");
-            Console.WriteLine($"Are Equal? {q1.Equals(q2)}");
+            double value;
+            while (!double.TryParse(Console.ReadLine(), out value))
+                Console.WriteLine("Invalid number. Enter again:");
+            return value;
         }
-
-        // ---------------- INPUT HELPERS ----------------
 
         private static QuantityGeneric<LengthUnit> ReadLength()
         {
             Console.Write("Enter Value: ");
-            double value = Convert.ToDouble(Console.ReadLine());
-
-            LengthUnit unit = ReadLengthUnit();
-
-            return new QuantityGeneric<LengthUnit>(value, unit);
+            double value = ReadValue();
+            return new QuantityGeneric<LengthUnit>(value, ReadLengthUnit());
         }
+
+        private static QuantityGeneric<WeightUnit> ReadWeight()
+        {
+            Console.Write("Enter Value: ");
+            double value = ReadValue();
+            return new QuantityGeneric<WeightUnit>(value, ReadWeightUnit());
+        }
+
+        private static QuantityGeneric<VolumeUnit> ReadVolume()
+        {
+            Console.Write("Enter Value: ");
+            double value = ReadValue();
+            return new QuantityGeneric<VolumeUnit>(value, ReadVolumeUnit());
+        }
+
+        private static QuantityGeneric<TemperatureUnitWrapper> ReadTemperature()
+        {
+            Console.Write("Enter Value: ");
+            double value = ReadValue();
+            return new QuantityGeneric<TemperatureUnitWrapper>(value,
+                new TemperatureUnitWrapper(ReadTemperatureUnit()));
+        }
+
+        private static dynamic ReadQuantity(string? category)
+        {
+            return category switch
+            {
+                "1" => ReadLength(),
+                "2" => ReadWeight(),
+                "3" => ReadVolume(),
+                _ => throw new ArgumentException("Invalid category")
+            };
+        }
+
+        private static dynamic ReadAnyCategoryQuantity(string label)
+        {
+            Console.WriteLine($"\nSelect {label} Category");
+            Console.WriteLine("1 Length");
+            Console.WriteLine("2 Weight");
+            Console.WriteLine("3 Volume");
+            Console.WriteLine("4 Temperature");
+
+            return Console.ReadLine() switch
+            {
+                "1" => ReadLength(),
+                "2" => ReadWeight(),
+                "3" => ReadVolume(),
+                "4" => ReadTemperature(),
+                _ => throw new ArgumentException("Invalid category")
+            };
+        }
+
+        // ================= UNIT SELECTION =================
 
         private static LengthUnit ReadLengthUnit()
         {
-            Console.WriteLine("Select Length Unit:");
-            Console.WriteLine("1. FEET");
-            Console.WriteLine("2. INCHES");
-            Console.WriteLine("3. YARDS");
-            Console.WriteLine("4. CENTIMETERS");
-            Console.Write("Choice: ");
-
+            Console.WriteLine("1 FEET  2 INCHES  3 YARDS  4 CENTIMETERS");
             return Console.ReadLine() switch
             {
                 "1" => LengthUnit.FEET,
@@ -373,24 +430,9 @@ namespace QuantityMeasurementApp.Menu
             };
         }
 
-        private static QuantityGeneric<WeightUnit> ReadWeight()
-        {
-            Console.Write("Enter Value: ");
-            double value = Convert.ToDouble(Console.ReadLine());
-
-            WeightUnit unit = ReadWeightUnit();
-
-            return new QuantityGeneric<WeightUnit>(value, unit);
-        }
-
         private static WeightUnit ReadWeightUnit()
         {
-            Console.WriteLine("Select Weight Unit:");
-            Console.WriteLine("1. KILOGRAM");
-            Console.WriteLine("2. GRAM");
-            Console.WriteLine("3. POUND");
-            Console.Write("Choice: ");
-
+            Console.WriteLine("1 KILOGRAM  2 GRAM  3 POUND");
             return Console.ReadLine() switch
             {
                 "1" => WeightUnit.KILOGRAM,
@@ -400,90 +442,9 @@ namespace QuantityMeasurementApp.Menu
             };
         }
 
-        // ---------------- VOLUME OPERATIONS ----------------
-
-        private static void VolumeEquality()
-        {
-            Console.WriteLine("\nEnter First Volume");
-            var v1 = ReadVolume();
-
-            Console.WriteLine("\nEnter Second Volume");
-            var v2 = ReadVolume();
-
-            bool result = service.AreEqual(v1, v2);
-
-            Console.WriteLine($"Result: {result}");
-        }
-
-        private static void VolumeConversion()
-        {
-            Console.WriteLine("\nEnter Volume to Convert");
-            var volume = ReadVolume();
-
-            Console.WriteLine("Convert To Unit:");
-            VolumeUnit target = ReadVolumeUnit();
-
-            var result = volume.ConvertTo(target);
-
-            Console.WriteLine($"Converted: {result}");
-        }
-
-        // ---------------- VOLUME ADDITION ----------------
-
-    private static void VolumeAddition()
-    {
-        Console.WriteLine("\nEnter First Volume");
-        var v1 = ReadVolume();
-
-        Console.WriteLine("\nEnter Second Volume");
-        var v2 = ReadVolume();
-
-        Console.WriteLine("\nChoose Addition Type:");
-        Console.WriteLine("1. Use First Operand Unit (Implicit)");
-        Console.WriteLine("2. Choose Target Unit (Explicit)");
-        Console.Write("Choice: ");
-
-        string? choice = Console.ReadLine();
-
-        if (choice == "1")
-        {
-            var result = v1.Add(v2);
-
-            Console.WriteLine($"Addition Result: {result}");
-        }
-        else if (choice == "2")
-        {
-            Console.WriteLine("Select Result Unit:");
-            VolumeUnit resultUnit = ReadVolumeUnit();
-
-            var result = v1.Add(v2, resultUnit);
-
-            Console.WriteLine($"Addition Result: {result}");
-        }
-        else
-        {
-            Console.WriteLine("Invalid choice.");
-        }
-    }
-
-        private static QuantityGeneric<VolumeUnit> ReadVolume()
-        {
-            Console.Write("Enter Value: ");
-            double value = Convert.ToDouble(Console.ReadLine());
-
-            VolumeUnit unit = ReadVolumeUnit();
-
-            return new QuantityGeneric<VolumeUnit>(value, unit);
-        }
-
         private static VolumeUnit ReadVolumeUnit()
         {
-            Console.WriteLine("Select Volume Unit:");
-            Console.WriteLine("1. LITRE");
-            Console.WriteLine("2. MILLILITRE");
-            Console.WriteLine("3. GALLON");
-            Console.Write("Choice: ");
-
+            Console.WriteLine("1 LITRE  2 MILLILITRE  3 GALLON");
             return Console.ReadLine() switch
             {
                 "1" => VolumeUnit.LITRE,
@@ -493,281 +454,9 @@ namespace QuantityMeasurementApp.Menu
             };
         }
 
-//==========================Subtraction Demonstration============================
-        private static void SubtractionDemo()
-        {
-            Console.WriteLine("\nSelect Category:");
-            Console.WriteLine("1. Length");
-            Console.WriteLine("2. Weight");
-            Console.WriteLine("3. Volume");
-            Console.Write("Choice: ");
-
-            string? choice = Console.ReadLine();
-            try
-            {
-                if (choice == "1")
-                {
-                    var q1 = ReadLength();
-                    var q2 = ReadLength();
-
-                    Console.WriteLine("1. Implicit Unit");
-                    Console.WriteLine("2. Explicit Unit");
-
-                    string? type = Console.ReadLine();
-
-                    if (type == "1")
-                    {
-                        var result = q1.Subtract(q2);
-                        Console.WriteLine($"Result: {result}");
-                    }
-                    else if (type == "2")
-                    {
-                        LengthUnit target = ReadLengthUnit();
-                        var result = q1.Subtract(q2, target);
-                        Console.WriteLine($"Result: {result}");
-                    }
-                }
-
-                else if (choice == "2")
-                {
-                    var w1 = ReadWeight();
-                    var w2 = ReadWeight();
-
-                    Console.WriteLine("1. Implicit Unit");
-                    Console.WriteLine("2. Explicit Unit");
-
-                    string? type = Console.ReadLine();
-
-                    if (type == "1")
-                    {
-                        var result = w1.Subtract(w2);
-                        Console.WriteLine($"Result: {result}");
-                    }
-                    else if (type == "2")
-                    {
-                        WeightUnit target = ReadWeightUnit();
-                        var result = w1.Subtract(w2, target);
-                        Console.WriteLine($"Result: {result}");
-                    }
-                }
-
-                else if (choice == "3")
-                {
-                    var v1 = ReadVolume();
-                    var v2 = ReadVolume();
-
-                    Console.WriteLine("1. Implicit Unit");
-                    Console.WriteLine("2. Explicit Unit");
-
-                    string? type = Console.ReadLine();
-
-                    if (type == "1")
-                    {
-                        var result = v1.Subtract(v2);
-                        Console.WriteLine($"Result: {result}");
-                    }
-                    else if (type == "2")
-                    {
-                        VolumeUnit target = ReadVolumeUnit();
-                        var result = v1.Subtract(v2, target);
-                        Console.WriteLine($"Result: {result}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid choice.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid choice.");
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-//==============================Division Demonstration===========================
-        private static void DivisionDemo()
-        {
-            Console.WriteLine("\nSelect Category:");
-            Console.WriteLine("1. Length");
-            Console.WriteLine("2. Weight");
-            Console.WriteLine("3. Volume");
-            Console.Write("Choice: ");
-
-            string? choice = Console.ReadLine();
-
-            try
-            {
-                if (choice == "1")
-                {
-                    var q1 = ReadLength();
-                    var q2 = ReadLength();
-
-                    double result = q1.Divide(q2);
-
-                    Console.WriteLine($"Division Result: {result:F1}");
-                }
-
-                else if (choice == "2")
-                {
-                    var w1 = ReadWeight();
-                    var w2 = ReadWeight();
-
-                    double result = w1.Divide(w2);
-
-                    Console.WriteLine($"Division Result: {result:F1}");
-                }
-
-                else if (choice == "3")
-                {
-                    var v1 = ReadVolume();
-                    var v2 = ReadVolume();
-
-                    double result = v1.Divide(v2);
-
-                    Console.WriteLine($"Division Result: {result:F1}");
-                }
-                else
-                {
-                    Console.WriteLine("Invalid choice.");
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (ArithmeticException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-//================Cross Category Operations===============================
-        private static void CrossCategoryOperation()
-        {
-            Console.WriteLine("\n--- Cross Category Operations ---");
-            Console.WriteLine("1. Cross Category Subtraction");
-            Console.WriteLine("2. Cross Category Division");
-            Console.Write("Choice: ");
-
-            string? operationChoice = Console.ReadLine();
-
-            try
-            {
-                var q1 = ReadAnyCategoryQuantity("First Quantity");
-                var q2 = ReadAnyCategoryQuantity("Second Quantity");
-
-                dynamic d1 = q1;
-                dynamic d2 = q2;
-
-                if (operationChoice == "1")
-                {
-                    var result = d1.Subtract(d2);
-                    Console.WriteLine($"Result: {result}");
-                }
-                else if (operationChoice == "2")
-                {
-                    double result = d1.Divide(d2);
-                    Console.WriteLine($"Division Result: {result:F2}");
-                }
-                else
-                {
-                    Console.WriteLine("Invalid choice.");
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-            catch (ArithmeticException ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-        private static object ReadAnyCategoryQuantity(string label)
-        {
-            Console.WriteLine($"\nSelect {label} Category:");
-            Console.WriteLine("1. Length");
-            Console.WriteLine("2. Weight");
-            Console.WriteLine("3. Volume");
-            Console.WriteLine("4. Temperature");
-            Console.Write("Choice: ");
-
-            string? choice = Console.ReadLine();
-
-            return choice switch
-            {
-                "1" => ReadLength(),
-                "2" => ReadWeight(),
-                "3" => ReadVolume(),
-                "4" => ReadTemperature(),
-                _ => throw new ArgumentException("Invalid category")
-            };
-        }
-
-        private static void TemperatureEquality()
-        {
-            Console.WriteLine("\nEnter First Temperature");
-            var t1 = ReadTemperature();
-
-            Console.WriteLine("\nEnter Second Temperature");
-            var t2 = ReadTemperature();
-
-            bool result = t1.Equals(t2);
-
-            Console.WriteLine($"Result: {result}");
-        }
-
-        private static void TemperatureConversion()
-        {
-            Console.WriteLine("\nEnter Temperature to Convert");
-            var temp = ReadTemperature();
-
-            Console.WriteLine("Convert To Unit:");
-            TemperatureUnit targetUnit = ReadTemperatureUnit();
-            TemperatureUnitWrapper target = new TemperatureUnitWrapper(targetUnit);
-            var result = temp.ConvertTo(target);
-            Console.WriteLine($"Converted: {result}");
-        }
-
-        private static void TemperatureArithmeticTest()
-        {
-            try
-            {
-                Console.WriteLine("\nEnter First Temperature");
-                var t1 = ReadTemperature();
-
-                Console.WriteLine("\nEnter Second Temperature");
-                var t2 = ReadTemperature();
-
-                var result = t1.Add(t2);   // should throw exception
-
-                Console.WriteLine(result);
-            }
-            catch (NotSupportedException ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
-        private static QuantityGeneric<TemperatureUnitWrapper> ReadTemperature()
-        {
-            Console.Write("Enter Value: ");
-            double value = Convert.ToDouble(Console.ReadLine());
-
-            TemperatureUnit unit = ReadTemperatureUnit();
-
-            return new QuantityGeneric<TemperatureUnitWrapper>(value, new TemperatureUnitWrapper(unit));
-        }
         private static TemperatureUnit ReadTemperatureUnit()
         {
-            Console.WriteLine("Select Temperature Unit:");
-            Console.WriteLine("1. CELSIUS");
-            Console.WriteLine("2. FAHRENHEIT");
-            Console.WriteLine("3. KELVIN");
-            Console.Write("Choice: ");
-
+            Console.WriteLine("1 CELSIUS  2 FAHRENHEIT  3 KELVIN");
             return Console.ReadLine() switch
             {
                 "1" => TemperatureUnit.CELSIUS,
@@ -778,4 +467,3 @@ namespace QuantityMeasurementApp.Menu
         }
     }
 }
-

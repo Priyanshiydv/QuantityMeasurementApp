@@ -1,6 +1,6 @@
 using QuantityMeasurementApp.Models;
 
-namespace QuantityMeasurementApp.Services
+namespace QuantityMeasurementApp.Interface
 {
     /// <summary>
     /// Service contract for generic quantity operations.
