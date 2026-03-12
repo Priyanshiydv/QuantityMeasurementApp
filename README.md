@@ -53,6 +53,30 @@ QuantityMeasurementApp
      └── QuantityMeasurementServiceTests.cs
         └── All UC1–UC14 test cases
 
+├── QuantityMeasurement.Models
+│   ├── DTOs
+│   │   ├── QuantityDTO.cs
+│   │   ├── QuantityModel.cs
+│   │   ├── MeasurementTypeDTO.cs
+│   │   ├── LengthUnitDTO.cs
+│   │   ├── WeightUnitDTO.cs
+│   │   ├── VolumeUnitDTO.cs
+│   │   └── TemperatureUnitDTO.cs
+│   ├── Entities
+│   │   └── QuantityMeasurementEntity.cs
+│   └── Exceptions
+│       └── QuantityMeasurementException.cs
+├── QuantityMeasurement.Repository
+│   ├── Interfaces
+│   │   └── IQuantityMeasurementRepository.cs
+│   └── Implementations
+│       └── QuantityMeasurementCacheRepository.cs
+├── QuantityMeasurement.Service
+│   ├── Interfaces
+│   │   └── IQuantityMeasurementService.cs
+│   └── Implementations
+│       └── QuantityMeasurementServiceImpl.cs
+
 Branches and Features (UC1–UC14)
 
 UC1: feature/UC1-FeetMeasurementEquality – Compare equality between Feet quantities
@@ -82,6 +106,7 @@ UC12: feature/UC12-QuantitySubtractionDivision – Add subtraction/division supp
 UC13: feature/UC13-ArithmeticValidation – Centralized arithmetic validation logic for all categories
 
 UC14: feature/UC14-TemperatureMeasurementSupport – Add Temperature measurements: Celsius, Fahrenheit, Kelvin with selective arithmetic
+
 
 Use Case Details
 Length (UC1–UC8)
@@ -135,6 +160,73 @@ IMeasurable Interface Refactor
 Functional interface for arithmetic support
 
 Default methods for selective operation validation
+
+
+UC15: feature/UC15-NTierArchitectureRefactoring – Refactor monolithic app into N-Tier Architecture with Controller, Service, Repository, and Model layers
+
+## N-Tier Architecture (UC15)
+
+### New Projects Added:
+- **QuantityMeasurement.Models** – DTOs, Entities, Exceptions
+- **QuantityMeasurement.Repo** – Repository interface and cache implementation
+- **QuantityMeasurement.Service** – Service interface and business logic
+
+### Design Patterns Used:
+- **Singleton** – QuantityMeasurementCacheRepository
+- **Dependency Injection** – Service injected into Controller
+- **Factory** – Program.cs creates instances
+- **Facade** – Controller hides service complexity
+- **Interface Segregation Principle (ISP)**
+
+### Data Flow:
+```
+User Input
+    ↓
+NTierMenu (Console)
+    ↓
+QuantityMeasurementController
+    ↓
+IQuantityMeasurementService
+    ↓
+QuantityMeasurementServiceImpl
+    ↓
+IQuantityMeasurementRepository
+    ↓
+QuantityMeasurementCacheRepository (Singleton + JSON Disk)
+```
+
+### New Classes:
+| Class | Layer | Purpose |
+|---|---|---|
+| QuantityDTO | Models/DTOs | Input/Output data transfer |
+| QuantityModel | Models/DTOs | Internal service processing |
+| MeasurementTypeDTO | Models/DTOs | Measurement type constants |
+| LengthUnitDTO | Models/DTOs | Length unit constants |
+| WeightUnitDTO | Models/DTOs | Weight unit constants |
+| VolumeUnitDTO | Models/DTOs | Volume unit constants |
+| TemperatureUnitDTO | Models/DTOs | Temperature unit constants |
+| QuantityMeasurementEntity | Models/Entities | Operation history storage |
+| QuantityMeasurementException | Models/Exceptions | Custom exception handling |
+| IQuantityMeasurementRepository | Repo/Interfaces | Repository contract |
+| QuantityMeasurementCacheRepository | Repo/Implementations | In-memory + JSON persistence |
+| IQuantityMeasurementService | Service/Interfaces | Service contract |
+| QuantityMeasurementServiceImpl | Service/Implementations | Business logic |
+| QuantityMeasurementController | App | Controller layer |
+| NTierMenu | App | Menu driven N-Tier app |
+
+### Supported Operations (UC15):
+- Compare two quantities
+- Convert quantity to target unit
+- Add two quantities (implicit/explicit unit)
+- Subtract two quantities
+- Divide two quantities
+- Temperature arithmetic prevention
+- Cross category prevention
+
+### Testing (UC15):
+- 29 new test cases added
+- All UC1-UC14 tests still passing
+- Total: 213 tests passing
 
 Testing
 
