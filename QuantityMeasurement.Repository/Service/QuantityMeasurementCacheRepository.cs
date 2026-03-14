@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using QuantityMeasurement.Models.Entities;
 using QuantityMeasurement.Repository.Interfaces;
@@ -18,6 +19,7 @@ namespace QuantityMeasurement.Repository.Service
 
         private static QuantityMeasurementCacheRepository? _instance;
         private static readonly object _lock = new object();
+        
 
         /// <summary>
         /// Returns the single instance of this repository.
@@ -160,6 +162,79 @@ namespace QuantityMeasurement.Repository.Service
             {
                 Console.WriteLine($"Warning: Could not load from disk. {ex.Message}");
             }
+        }
+
+        // ─── UC16 New Query Methods ───────────────────────────
+
+        /// <summary>
+        /// Returns measurements filtered by operation type.
+        /// e.g. "COMPARE", "ADD", "SUBTRACT", "DIVIDE", "CONVERT"
+        /// Uses LINQ to filter in-memory cache.
+        /// </summary>
+        public List<QuantityMeasurementEntity>
+            GetMeasurementsByOperationType(string operationType)
+        {
+            return _cache
+                .FindAll(entity => entity.OperationType
+                    .Equals(operationType,
+                             StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Returns measurements filtered by measurement type.
+        /// e.g. "Length", "Weight", "Volume", "Temperature"
+        /// Uses LINQ to filter in-memory cache.
+        /// </summary>
+        public List<QuantityMeasurementEntity>
+            GetMeasurementsByMeasurementType(string measurementType)
+        {
+            return _cache
+                .FindAll(entity => entity.MeasurementType != null &&
+                    entity.MeasurementType
+                        .Equals(measurementType,
+                                 StringComparison.OrdinalIgnoreCase));
+        }
+
+        /// <summary>
+        /// Returns total count of measurements in cache.
+        /// Useful for monitoring and reporting purposes.
+        /// </summary>
+        public int GetTotalCount()
+        {
+            return _cache.Count;
+        }
+
+        /// <summary>
+        /// Deletes all measurements and returns count deleted.
+        /// Same as ClearAll but returns deleted record count.
+        /// </summary>
+        public int DeleteAllMeasurements()
+        {
+            int count = _cache.Count;
+            ClearAll();
+            return count;
+        }
+
+        /// <summary>
+        /// Returns cache statistics.
+        /// Overrides default interface method.
+        /// </summary>
+        public string GetPoolStatistics()
+        {
+            return $"CacheRepository Statistics: " +
+                   $"[TotalRecords: {_cache.Count}, " +
+                   $"FilePath: {_filePath}]";
+        }
+
+        /// <summary>
+        /// Releases cache resources.
+        /// Saves final state to disk before releasing.
+        /// </summary>
+        public void ReleaseResources()
+        {
+            SaveToDisk();
+            Console.WriteLine(
+                "[CacheRepository] Resources released.");
         }
 
         // ─── ToString ─────────────────────────────────────────

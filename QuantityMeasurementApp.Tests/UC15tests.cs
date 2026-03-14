@@ -69,7 +69,8 @@ namespace QuantityMeasurementApp.Tests
                 "1 FEET",
                 "12 INCHES",
                 QuantityMeasurementEntity.Operations.ADD,
-                "2.00 FEET"
+                "2.00 FEET",
+                "LENGTH"
             );
 
             Assert.AreEqual("1 FEET",    entity.FirstOperand);

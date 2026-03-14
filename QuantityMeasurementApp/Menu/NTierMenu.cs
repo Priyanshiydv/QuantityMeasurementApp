@@ -2,6 +2,8 @@ using System;
 using QuantityMeasurement.Models.DTOs;
 using QuantityMeasurement.Models.Exceptions;
 using QuantityMeasurement.Repository.Service;
+using QuantityMeasurement.Repository.Interfaces;
+using QuantityMeasurement.Repository.Utilities;
 using QuantityMeasurement.Service.Service;
 using QuantityMeasurementApp.Controllers;
 
@@ -10,23 +12,76 @@ namespace QuantityMeasurementApp.Menu
     /// <summary>
     /// Menu driven application for UC15.
     /// Uses Controller -> Service -> Repository layers.
+    /// Updated in UC16 to support both Cache and Database
+    /// repositories based on appsettings.json configuration.
+    /// UC15, UC16
     /// </summary>
     public static class NTierMenu
     {
+        /// <summary>
+        /// Controller for handling all quantity operations.
+        /// </summary>
         private static QuantityMeasurementController? _controller;
+
+        /// <summary>
+        /// Repository reference.
+        /// Added in UC16 for configuration based switching.
+        /// </summary>
+        private static IQuantityMeasurementRepository? _repository;
 
         // ─── Initialize ───────────────────────────────────────
 
         public static void Initialize()
         {
-            // Step 1: Create Repository (Singleton)
-            var repository = QuantityMeasurementCacheRepository.GetInstance();
+            // Step 1: Load application configuration
+            // Reads appsettings.json to determine repository type
+            ApplicationConfig config =
+                ApplicationConfig.GetInstance();
 
-            // Step 2: Create Service (Dependency Injection)
-            var service = new QuantityMeasurementServiceImpl(repository);
+            Console.WriteLine(
+                $"\n[NTierMenu] Initializing..." +
+                $"\n[NTierMenu] Environment  : {config.GetEnvironment()}" +
+                $"\n[NTierMenu] Repository   : {config.GetRepositoryType()}");
 
-            // Step 3: Create Controller (Dependency Injection)
-            _controller = new QuantityMeasurementController(service);
+            // Step 2: Create repository based on configuration
+            // If "database" in appsettings.json → use DatabaseRepository
+            // If "cache"    in appsettings.json → use CacheRepository
+            if (config.IsDatabaseRepository())
+            {
+                // Create connection pool (Singleton)
+                ConnectionPool connectionPool =
+                    ConnectionPool.GetInstance();
+
+                // Create database repository with connection pool
+                _repository =
+                    new QuantityMeasurementDatabaseRepository(
+                        connectionPool,
+                        "QuantityMeasurementDB");
+
+                Console.WriteLine(
+                    "[NTierMenu] Using Database Repository ✓");
+            }
+            else
+            {
+                // Fallback to in-memory cache repository
+                _repository =
+                    QuantityMeasurementCacheRepository.GetInstance();
+
+                Console.WriteLine(
+                    "[NTierMenu] Using Cache Repository ✓");
+            }
+            // Step 3: Create Service (Dependency Injection)
+            // Service does not know which repository is injected
+            QuantityMeasurementServiceImpl service =
+                new QuantityMeasurementServiceImpl(_repository);
+
+            // Step 4: Create Controller (Dependency Injection)
+            // Controller does not know which service is injected
+            _controller =
+                new QuantityMeasurementController(service);
+
+            Console.WriteLine(
+                "[NTierMenu] Initialization complete ✓");
         }
 
         // ─── Main Menu ────────────────────────────────────────
@@ -39,6 +94,7 @@ namespace QuantityMeasurementApp.Menu
             {
                 Console.WriteLine("\n========================================");
                 Console.WriteLine("   QUANTITY MEASUREMENT APP - UC15");
+                Console.WriteLine($"   Repository: " + $"{ApplicationConfig.GetInstance().GetRepositoryType().ToUpper()}");
                 Console.WriteLine("========================================");
                 Console.WriteLine("1.  Length Operations");
                 Console.WriteLine("2.  Weight Operations");
@@ -46,7 +102,12 @@ namespace QuantityMeasurementApp.Menu
                 Console.WriteLine("4.  Temperature Operations");
                 Console.WriteLine("5.  Cross Category Operations");
                 Console.WriteLine("6.  Run All Demonstrations");
-                Console.WriteLine("0.  Exit UC15");
+                Console.WriteLine("7.  View All History"); //UC16
+                Console.WriteLine("8.  View By Operation Type");
+                Console.WriteLine("9.  View By Measurement Type");
+                Console.WriteLine("10. View Statistics");
+                Console.WriteLine("11. Clear All Records");
+                Console.WriteLine("0.  Exit ");
                 Console.WriteLine("========================================");
                 Console.Write("Select Option: ");
 
@@ -61,7 +122,18 @@ namespace QuantityMeasurementApp.Menu
                     case "5": CrossCategoryMenu();    break;
                     case "6": _controller!
                                 .RunAllDemonstrations(); break;
-                    case "0": return;
+                    case "7":  ViewAllHistory();         break;
+                    case "8":  ViewByOperationType();    break;
+                    case "9":  ViewByMeasurementType();  break;
+                    case "10": ViewStatistics();         break;
+                    case "11": ClearAllRecords();        break;
+                    case "0": 
+                          // Release resources on exit
+                        _repository!.ReleaseResources();
+                        Console.WriteLine(
+                            "[NTierMenu] Resources released. " +
+                            "Exiting...");
+                        return;
                     default:
                         Console.WriteLine("Invalid choice.");
                         break;
@@ -448,5 +520,153 @@ namespace QuantityMeasurementApp.Menu
                 _   => throw new ArgumentException("Invalid category")
             };
         }
+
+        // ─── UC16 History Menu Options ────────────────────────
+
+        /// <summary>
+        /// Displays all operation history from repository.
+        /// Works for both cache and database repository.
+        /// </summary>
+        private static void ViewAllHistory()
+        {
+            Console.WriteLine(
+                "\n--- All Measurement History ---");
+
+            var measurements =
+                _repository!.GetAllMeasurements();
+
+            if (measurements.Count == 0)
+            {
+                Console.WriteLine("No records found.");
+                return;
+            }
+
+            Console.WriteLine(
+                $"Total Records: {measurements.Count}\n");
+
+            foreach (var entity in measurements)
+            {
+                Console.WriteLine(entity.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Displays measurements filtered by operation type.
+        /// e.g. COMPARE, ADD, SUBTRACT, DIVIDE, CONVERT
+        /// </summary>
+        private static void ViewByOperationType()
+        {
+            Console.WriteLine(
+                "\n--- View By Operation Type ---");
+            Console.WriteLine("1. COMPARE");
+            Console.WriteLine("2. CONVERT");
+            Console.WriteLine("3. ADD");
+            Console.WriteLine("4. SUBTRACT");
+            Console.WriteLine("5. DIVIDE");
+            Console.Write("Choice: ");
+
+            string operationType = Console.ReadLine() switch
+            {
+                "1" => "COMPARE",
+                "2" => "CONVERT",
+                "3" => "ADD",
+                "4" => "SUBTRACT",
+                "5" => "DIVIDE",
+                _   => "COMPARE"
+            };
+
+            var measurements =
+                _repository!.GetMeasurementsByOperationType(
+                    operationType);
+
+            Console.WriteLine(
+                $"\n{operationType} Records: " +
+                $"{measurements.Count}\n");
+
+            foreach (var entity in measurements)
+            {
+                Console.WriteLine(entity.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Displays measurements filtered by measurement type.
+        /// e.g. Length, Weight, Volume, Temperature
+        /// </summary>
+        private static void ViewByMeasurementType()
+        {
+            Console.WriteLine(
+                "\n--- View By Measurement Type ---");
+            Console.WriteLine("1. Length");
+            Console.WriteLine("2. Weight");
+            Console.WriteLine("3. Volume");
+            Console.WriteLine("4. Temperature");
+            Console.Write("Choice: ");
+
+            string measurementType = Console.ReadLine() switch
+            {
+                "1" => "Length",
+                "2" => "Weight",
+                "3" => "Volume",
+                "4" => "Temperature",
+                _   => "Length"
+            };
+
+            var measurements =
+                _repository!.GetMeasurementsByMeasurementType(
+                    measurementType);
+
+            Console.WriteLine(
+                $"\n{measurementType} Records: " +
+                $"{measurements.Count}\n");
+
+            foreach (var entity in measurements)
+            {
+                Console.WriteLine(entity.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Displays repository statistics.
+        /// Shows pool stats for database, cache stats for cache.
+        /// </summary>
+        private static void ViewStatistics()
+        {
+            Console.WriteLine(
+                "\n--- Repository Statistics ---");
+            Console.WriteLine(
+                _repository!.GetPoolStatistics());
+            Console.WriteLine(
+                $"Total Records: " +
+                $"{_repository.GetTotalCount()}");
+        }
+
+        /// <summary>
+        /// Clears all records from repository.
+        /// Asks for confirmation before deleting.
+        /// </summary>
+        private static void ClearAllRecords()
+        {
+            Console.WriteLine(
+                "\n--- Clear All Records ---");
+            Console.Write(
+                "Are you sure? (yes/no): ");
+
+            string? confirm = Console.ReadLine();
+
+            if (confirm?.ToLower() == "yes")
+            {
+                int deleted =
+                    _repository!.DeleteAllMeasurements();
+
+                Console.WriteLine(
+                    $"Deleted {deleted} records successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Operation cancelled.");
+            }
+        }
+
     }
 }

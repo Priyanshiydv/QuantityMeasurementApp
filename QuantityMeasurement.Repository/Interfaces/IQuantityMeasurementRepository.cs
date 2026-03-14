@@ -35,5 +35,58 @@ namespace QuantityMeasurement.Repository.Interfaces
         /// Clears all stored measurements.
         /// </summary>
         void ClearAll();
+
+        // ─── UC16 New Query Methods ───────────────────────────
+
+        /// <summary>
+        /// Returns all measurements filtered by operation type.
+        /// e.g. "COMPARE", "ADD", "SUBTRACT", "DIVIDE", "CONVERT"
+        /// </summary>
+        List<QuantityMeasurementEntity> GetMeasurementsByOperationType(
+            string operationType);
+
+        /// <summary>
+        /// Returns all measurements filtered by measurement type.
+        /// e.g. "Length", "Weight", "Volume", "Temperature"
+        /// </summary>
+        List<QuantityMeasurementEntity> GetMeasurementsByMeasurementType(
+            string measurementType);
+
+        /// <summary>
+        /// Returns total count of measurements in repository.
+        /// Useful for monitoring and reporting purposes.
+        /// </summary>
+        int GetTotalCount();
+
+        /// <summary>
+        /// Deletes all measurements from repository.
+        /// Same as ClearAll but returns count of deleted records.
+        /// </summary>
+        int DeleteAllMeasurements();
+
+        // ─── UC16 Default Methods ─────────────────────────────
+
+        /// <summary>
+        /// Returns pool statistics for database repositories.
+        /// Default implementation returns basic info.
+        /// Override in database repository for detailed stats.
+        /// </summary>
+        string GetPoolStatistics()
+        {
+            return "Pool statistics not available " +
+                   "for this repository type.";
+        }
+
+        /// <summary>
+        /// Releases all resources held by the repository.
+        /// Called when application is shutting down.
+        /// Default implementation does nothing.
+        /// Override in database repository to close connections.
+        /// </summary>
+        void ReleaseResources()
+        {
+            // Default: do nothing
+            // Database repository will override this
+        }
     }
 }

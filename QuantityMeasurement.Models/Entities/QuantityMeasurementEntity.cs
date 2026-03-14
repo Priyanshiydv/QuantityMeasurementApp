@@ -33,7 +33,7 @@ namespace QuantityMeasurement.Models.Entities
         /// Operation type.
         /// e.g. "COMPARE", "CONVERT", "ADD", "SUBTRACT", "DIVIDE"
         /// </summary>
-        public string OperationType { get; set; }
+        public string OperationType { get; set; } = string.Empty;
 
         /// <summary>
         /// Result of the operation as string.
@@ -55,6 +55,15 @@ namespace QuantityMeasurement.Models.Entities
         /// Timestamp when operation was performed.
         /// </summary>
         public DateTime Timestamp { get; set; }
+
+        /// <summary>
+        /// Type of measurement category.
+        /// e.g. "Length", "Weight", "Volume", "Temperature"
+        /// Added in UC16 for query filtering support.
+        /// </summary>
+        public string? MeasurementType { get; set; }
+
+        
 
         // ─── Operation Type Constants ──────────────────────────
 
@@ -87,7 +96,8 @@ namespace QuantityMeasurement.Models.Entities
         public QuantityMeasurementEntity(
             string firstOperand,
             string operationType,
-            string result)
+            string result,
+            string? measurementType = null)
         {
             Id            = Guid.NewGuid().ToString();
             FirstOperand  = firstOperand;
@@ -95,6 +105,7 @@ namespace QuantityMeasurement.Models.Entities
             Result        = result;
             HasError      = false;
             Timestamp     = DateTime.Now;
+            MeasurementType = measurementType;
         }
 
         /// <summary>
@@ -105,7 +116,8 @@ namespace QuantityMeasurement.Models.Entities
             string firstOperand,
             string secondOperand,
             string operationType,
-            string result)
+            string result,
+            string? measurementType = null)
         {
             Id             = Guid.NewGuid().ToString();
             FirstOperand   = firstOperand;
@@ -114,6 +126,7 @@ namespace QuantityMeasurement.Models.Entities
             Result         = result;
             HasError       = false;
             Timestamp      = DateTime.Now;
+            MeasurementType = measurementType;
         }
 
         /// <summary>
@@ -122,13 +135,15 @@ namespace QuantityMeasurement.Models.Entities
         public QuantityMeasurementEntity(
             string operationType,
             string errorMessage,
-            bool hasError)
+            bool hasError,
+            string? measurementType = null)
         {
             Id            = Guid.NewGuid().ToString();
             OperationType = operationType;
             ErrorMessage  = errorMessage;
             HasError      = hasError;
             Timestamp     = DateTime.Now;
+            MeasurementType = measurementType;
         }
 
         // ─── ToString ─────────────────────────────────────────

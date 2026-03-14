@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.5" />
     <PackageReference Include="MSTest.TestAdapter" Version="4.1.0" />
     <PackageReference Include="MSTest.TestFramework" Version="4.1.0" />
   </ItemGroup>
@@ -16,6 +21,12 @@
     <ProjectReference Include="..\QuantityMeasurement.Models\QuantityMeasurement.Models.csproj" />
     <ProjectReference Include="..\QuantityMeasurement.Repository\QuantityMeasurement.Repository.csproj" />
     <ProjectReference Include="..\QuantityMeasurement.Service\QuantityMeasurement.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+  <Content Include="appsettings.json">
+    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+  </Content>
   </ItemGroup>
 
 

@@ -1,0 +1,13 @@
+[
+  {
+    "Id": "33ea034a-3612-4c22-9ea2-4c277ec3dfd5",
+    "FirstOperand": "1 FEET (Length)",
+    "SecondOperand": "12 INCHES (Length)",
+    "OperationType": "COMPARE",
+    "Result": "True",
+    "HasError": false,
+    "ErrorMessage": null,
+    "Timestamp": "2026-03-13T15:13:22.1901745+05:30",
+    "MeasurementType": "Length"
+  }
+]

@@ -56,7 +56,8 @@ namespace QuantityMeasurement.Service.Service
                     model1.ToString(),
                     model2.ToString(),
                     QuantityMeasurementEntity.Operations.COMPARE,
-                    isEqual.ToString()
+                    isEqual.ToString(),
+                    model1.MeasurementType
                 );
                 _repository.Save(entity);
 
@@ -111,7 +112,8 @@ namespace QuantityMeasurement.Service.Service
                 var entity = new QuantityMeasurementEntity(
                     model.ToString(),
                     QuantityMeasurementEntity.Operations.CONVERT,
-                    $"{convertedValue:F2} {targetUnit}"
+                    $"{convertedValue:F2} {targetUnit}",
+                    model.MeasurementType
                 );
                 _repository.Save(entity);
 
@@ -174,7 +176,8 @@ namespace QuantityMeasurement.Service.Service
                     model1.ToString(),
                     model2.ToString(),
                     QuantityMeasurementEntity.Operations.ADD,
-                    $"{finalValue:F2} {targetUnit}"
+                    $"{finalValue:F2} {targetUnit}",
+                    model1.MeasurementType
                 );
                 _repository.Save(entity);
 
@@ -234,7 +237,8 @@ namespace QuantityMeasurement.Service.Service
                     model1.ToString(),
                     model2.ToString(),
                     QuantityMeasurementEntity.Operations.SUBTRACT,
-                    $"{finalValue:F2} {model1.Unit}"
+                    $"{finalValue:F2} {model1.Unit}",
+                    model1.MeasurementType
                 );
                 _repository.Save(entity);
 
@@ -294,7 +298,8 @@ namespace QuantityMeasurement.Service.Service
                     model1.ToString(),
                     model2.ToString(),
                     QuantityMeasurementEntity.Operations.DIVIDE,
-                    $"{result:F2}"
+                    $"{result:F2}",
+                    model1.MeasurementType
                 );
                 _repository.Save(entity);
 
