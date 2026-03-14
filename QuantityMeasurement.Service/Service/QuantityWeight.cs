@@ -1,6 +1,7 @@
 using System;
+using QuantityMeasurement.Service.Interfaces;
 
-namespace QuantityMeasurementApp.Models
+namespace QuantityMeasurement.Service.Service
 {
     /// <summary>
     /// Wrapper class for weight (UC9 backward compatibility)

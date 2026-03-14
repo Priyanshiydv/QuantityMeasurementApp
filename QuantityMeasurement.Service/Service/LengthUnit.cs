@@ -1,6 +1,6 @@
-using System;
+using QuantityMeasurement.Service.Interfaces;
 
-namespace QuantityMeasurementApp.Models
+namespace QuantityMeasurement.Service.Service
 {
     /// <summary>
     /// Represents supported length units.

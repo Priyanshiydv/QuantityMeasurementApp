@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QuantityMeasurementApp.Models;
 using QuantityMeasurementApp.Services;
+using QuantityMeasurement.Service.Service;      // ← Quantity, LengthUnit, WeightUnit, VolumeUnit
+using QuantityMeasurement.Service.Interfaces;   // ← IMeasurable
 
 namespace QuantityMeasurementApp.Tests
 {
@@ -9,6 +11,8 @@ namespace QuantityMeasurementApp.Tests
     {
         private const double EPSILON = 0.000001; //UC5
         private QuantityMeasurementService service = null!;
+
+        private Quantity _quantity = new Quantity(0, LengthUnit.FEET);
 
         // runs before each test
         [TestInitialize]
@@ -435,7 +439,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenFeet_WhenConvertedToInches_ShouldReturnCorrectValue()
         {
-            double result = Quantity.Convert(1.0, LengthUnit.FEET, LengthUnit.INCHES);
+            double result = _quantity.Convert(1.0, LengthUnit.FEET, LengthUnit.INCHES);
             
             Assert.AreEqual(12.0, result, EPSILON);
         }
@@ -444,7 +448,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenInches_WhenConvertedToFeet_ShouldReturnCorrectValue()
         {
-            double result = Quantity.Convert(24.0, LengthUnit.INCHES, LengthUnit.FEET);
+            double result = _quantity.Convert(24.0, LengthUnit.INCHES, LengthUnit.FEET);
             
             Assert.AreEqual(2.0, result, EPSILON);
         }
@@ -453,7 +457,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenYards_WhenConvertedToInches_ShouldReturnCorrectValue()
         {
-            double result = Quantity.Convert(1.0, LengthUnit.YARDS, LengthUnit.INCHES);
+            double result = _quantity.Convert(1.0, LengthUnit.YARDS, LengthUnit.INCHES);
             
             Assert.AreEqual(36.0, result, EPSILON);
         }
@@ -462,7 +466,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenInches_WhenConvertedToYards_ShouldReturnCorrectValue()
         {
-            double result = Quantity.Convert(72.0, LengthUnit.INCHES, LengthUnit.YARDS);
+            double result = _quantity.Convert(72.0, LengthUnit.INCHES, LengthUnit.YARDS);
             
             Assert.AreEqual(2.0, result, EPSILON);
         }
@@ -471,7 +475,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenCentimeter_WhenConvertedToInches_ShouldReturnApproxOne()
         {
-            double result = Quantity.Convert(2.54, LengthUnit.CENTIMETERS, LengthUnit.INCHES);
+            double result = _quantity.Convert(2.54, LengthUnit.CENTIMETERS, LengthUnit.INCHES);
             
             Assert.AreEqual(1.0, result, EPSILON);
         }
@@ -480,7 +484,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenFeet_WhenConvertedToYards_ShouldReturnCorrectValue()
         {
-            double result = Quantity.Convert(6.0, LengthUnit.FEET, LengthUnit.YARDS);
+            double result = _quantity.Convert(6.0, LengthUnit.FEET, LengthUnit.YARDS);
             
             Assert.AreEqual(2.0, result, EPSILON);
         }
@@ -491,8 +495,8 @@ namespace QuantityMeasurementApp.Tests
         {
             double original = 5.5;
 
-            double toInches = Quantity.Convert(original, LengthUnit.FEET, LengthUnit.INCHES);
-            double backToFeet = Quantity.Convert(toInches, LengthUnit.INCHES, LengthUnit.FEET);
+            double toInches = _quantity.Convert(original, LengthUnit.FEET, LengthUnit.INCHES);
+            double backToFeet = _quantity.Convert(toInches, LengthUnit.INCHES, LengthUnit.FEET);
 
             Assert.AreEqual(original, backToFeet, EPSILON);
         }
@@ -501,7 +505,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenZeroValue_WhenConverted_ShouldReturnZero()
         {
-            double result = Quantity.Convert(0.0, LengthUnit.FEET, LengthUnit.INCHES);
+            double result = _quantity.Convert(0.0, LengthUnit.FEET, LengthUnit.INCHES);
             
             Assert.AreEqual(0.0, result, EPSILON);
         }
@@ -510,7 +514,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenNegativeValue_WhenConverted_ShouldPreserveSign()
         {
-            double result = Quantity.Convert(-1.0, LengthUnit.FEET, LengthUnit.INCHES);
+            double result = _quantity.Convert(-1.0, LengthUnit.FEET, LengthUnit.INCHES);
             
             Assert.AreEqual(-12.0, result, EPSILON);
         }
@@ -519,7 +523,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenSameUnit_WhenConverted_ShouldReturnSameValue()
         {
-            double result = Quantity.Convert(5.0, LengthUnit.FEET, LengthUnit.FEET);
+            double result = _quantity.Convert(5.0, LengthUnit.FEET, LengthUnit.FEET);
             
             Assert.AreEqual(5.0, result, EPSILON);
         }
@@ -528,7 +532,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenLargeValue_WhenConverted_ShouldMaintainPrecision()
         {
-            double result = Quantity.Convert(1000000.0, LengthUnit.FEET, LengthUnit.INCHES);
+            double result = _quantity.Convert(1000000.0, LengthUnit.FEET, LengthUnit.INCHES);
             
             Assert.AreEqual(12000000.0, result, EPSILON);
         }
@@ -537,7 +541,7 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void GivenSmallValue_WhenConverted_ShouldMaintainPrecision()
         {
-            double result = Quantity.Convert(0.0001, LengthUnit.FEET, LengthUnit.INCHES);
+            double result = _quantity.Convert(0.0001, LengthUnit.FEET, LengthUnit.INCHES);
             
             Assert.AreEqual(0.0012, result, EPSILON);
         }
@@ -548,7 +552,7 @@ namespace QuantityMeasurementApp.Tests
         {
             try
             {
-                Quantity.Convert(double.NaN, LengthUnit.FEET, LengthUnit.INCHES);
+                _quantity.Convert(double.NaN, LengthUnit.FEET, LengthUnit.INCHES);
                 Assert.Fail("Expected ArgumentException was not thrown.");
             }
             catch (ArgumentException)
@@ -564,7 +568,7 @@ namespace QuantityMeasurementApp.Tests
         {            
             try
             {
-                Quantity.Convert(double.PositiveInfinity, LengthUnit.FEET, LengthUnit.INCHES);
+                _quantity.Convert(double.PositiveInfinity, LengthUnit.FEET, LengthUnit.INCHES);
                 Assert.Fail("Expected ArgumentException was not thrown.");
             }
             catch (ArgumentException)
@@ -581,9 +585,9 @@ namespace QuantityMeasurementApp.Tests
         {
             double original = 2.0;
 
-            double toFeet = Quantity.Convert(original, LengthUnit.YARDS, LengthUnit.FEET);
-            double toCm = Quantity.Convert(toFeet, LengthUnit.FEET, LengthUnit.CENTIMETERS);
-            double backToYard = Quantity.Convert(toCm, LengthUnit.CENTIMETERS, LengthUnit.YARDS);
+            double toFeet = _quantity.Convert(original, LengthUnit.YARDS, LengthUnit.FEET);
+            double toCm = _quantity.Convert(toFeet, LengthUnit.FEET, LengthUnit.CENTIMETERS);
+            double backToYard = _quantity.Convert(toCm, LengthUnit.CENTIMETERS, LengthUnit.YARDS);
 
             Assert.AreEqual(original, backToYard, EPSILON);
         }

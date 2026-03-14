@@ -1,6 +1,9 @@
 using System;
+using QuantityMeasurementApp.Models;
+using QuantityMeasurement.Models;
+using QuantityMeasurement.Service.Interfaces;
 
-namespace QuantityMeasurementApp.Models
+namespace QuantityMeasurement.Service.Service
 {
     /// <summary>
     /// Generic Quantity class supporting multiple measurement categories.
@@ -13,16 +16,6 @@ namespace QuantityMeasurementApp.Models
 
         public double Value { get; }
         public U Unit { get; }
-
-        /// <summary>
-        /// Arithmetic operations enum
-        /// </summary>
-        private enum ArithmeticOperation
-        {
-            ADD,
-            SUBTRACT,
-            DIVIDE
-        }
 
         /// <summary>
         /// Constructor validation
@@ -95,9 +88,9 @@ namespace QuantityMeasurementApp.Models
                 throw new ArgumentException("Target unit cannot be null.");
 
             // UC14 Temperature restriction
-            if (Unit is TemperatureUnit temp)
+            if (Unit is TemperatureUnitWrapper tempWrapper)
             {
-                temp.ValidateOperationSupport("arithmetic");
+                tempWrapper.ValidateOperationSupport("arithmetic");
             }
         }
 

@@ -16,7 +16,7 @@ namespace QuantityMeasurementApp.Menu
     /// repositories based on appsettings.json configuration.
     /// UC15, UC16
     /// </summary>
-    public static class NTierMenu
+    public class NTierMenu
     {
         /// <summary>
         /// Controller for handling all quantity operations.
@@ -31,7 +31,7 @@ namespace QuantityMeasurementApp.Menu
 
         // ─── Initialize ───────────────────────────────────────
 
-        public static void Initialize()
+        public void Initialize()
         {
             // Step 1: Load application configuration
             // Reads appsettings.json to determine repository type
@@ -86,7 +86,7 @@ namespace QuantityMeasurementApp.Menu
 
         // ─── Main Menu ────────────────────────────────────────
 
-        public static void Start()
+        public void Start()
         {
             Initialize();
 

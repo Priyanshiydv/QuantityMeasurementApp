@@ -1,14 +1,16 @@
 using System;
 using QuantityMeasurementApp.Models;
 using QuantityMeasurementApp.Services;
+using QuantityMeasurement.Service.Service;
+using QuantityMeasurement.Service.Interfaces;
 
 namespace QuantityMeasurementApp.Menu
 {
-    public static class AppMenu
+    public class AppMenu
     {
         private static readonly QuantityMeasurementService service = new QuantityMeasurementService();
 
-        public static void Start()
+        public void Start()
         {
             while (true)
             {

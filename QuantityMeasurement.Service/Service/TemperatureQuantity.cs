@@ -1,5 +1,7 @@
 using System;
-namespace QuantityMeasurementApp.Models
+using QuantityMeasurementApp.Models;
+
+namespace QuantityMeasurement.Service.Service
 {
     public class TemperatureQuantity
     {

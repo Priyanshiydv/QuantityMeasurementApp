@@ -1,6 +1,6 @@
 using System;
-
-namespace QuantityMeasurementApp.Models
+using QuantityMeasurement.Service.Interfaces;
+namespace QuantityMeasurement.Service.Service
 {
     /// <summary>
     /// Wrapper class to maintain backward compatibility (UC1–UC9).
@@ -12,7 +12,7 @@ namespace QuantityMeasurementApp.Models
             : base(value, unit)
         {
         }
-        public static double Convert(double value, LengthUnit from, LengthUnit to)
+        public double Convert(double value, LengthUnit from, LengthUnit to)
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
                 throw new ArgumentException("Invalid numeric value");

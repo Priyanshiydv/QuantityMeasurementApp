@@ -4,41 +4,51 @@ namespace QuantityMeasurementApp.Models
 {
     /// <summary>
     /// Represents measurement in Inches.
+    /// Pure model class - no business logic.
+    /// UC2
     /// </summary>
     public class Inches
     {
-        private readonly double value;
+        // ─── Properties ───────────────────────────────────────
+
+        /// <summary>
+        /// Value of the inches measurement.
+        /// </summary>
+        public double Value { get; }
+
+        // ─── Constructor ──────────────────────────────────────
 
         /// <summary>
         /// Initializes Inches object.
         /// </summary>
         public Inches(double value)
         {
-            this.value = value;
+            Value = value;
         }
 
+        // ─── ToString ─────────────────────────────────────────
+
+        public override string ToString()
+        {
+            return $"{Value} INCHES";
+        }
+        // ─── Equality ─────────────────────────────────────────
+
         /// <summary>
-        /// Checks equality between two Inches objects.
+        /// Value based equality comparison.
+        /// Two Inches are equal if values are within 0.0001.
         /// </summary>
         public override bool Equals(object? obj)
         {
-            if (obj == null)
-                return false;
+            if (obj == null)    return false;
+            if (obj is not Inches other) return false;
 
-            if (!(obj is Inches))
-                return false;
-
-            Inches other = (Inches)obj;
-
-            return Math.Abs(this.value - other.value) < 0.0001;
+            return Math.Abs(Value - other.Value) < 0.0001;
         }
 
-        /// <summary>
-        /// Returns hash code.
-        /// </summary>
         public override int GetHashCode()
         {
-            return value.GetHashCode();
+            return Value.GetHashCode();
         }
     }
 }

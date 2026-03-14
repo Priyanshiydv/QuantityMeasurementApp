@@ -20,7 +20,10 @@ namespace QuantityMeasurementApp
                 string? choice = Console.ReadLine();
 
                 if (choice == "1")
-                    AppMenu.Start();
+                {
+                    AppMenu appMenu = new AppMenu();
+                    appMenu.Start();
+                }
                 else if (choice == "2")
                 {
                     // UC16 - Ask user which repository to use
@@ -60,7 +63,10 @@ namespace QuantityMeasurementApp
                             "Using config from appsettings.json.");
                     }
 
-                    NTierMenu.Start();
+                    NTierMenu nTierMenu = new NTierMenu();
+                       nTierMenu.Start();
+
+                    
                 }
 
                 else if (choice == "0")

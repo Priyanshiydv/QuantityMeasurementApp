@@ -1,6 +1,8 @@
 using System;
 using QuantityMeasurementApp.Models;
 using QuantityMeasurementApp.Interface;
+using QuantityMeasurement.Service.Service;
+using QuantityMeasurement.Service.Interfaces;
 
 namespace QuantityMeasurementApp.Services
 {
@@ -8,7 +10,7 @@ namespace QuantityMeasurementApp.Services
     /// Service implementation for generic quantity operations.
     /// Handles Length, Weight, and any future measurable category.
     /// </summary>
-    public class QuantityMeasurementService : IQuantityMeasurementService
+    public class QuantityMeasurementService : ILegacyQuantityMeasurementService
     {
         /// <summary>
         /// Generic equality comparison.

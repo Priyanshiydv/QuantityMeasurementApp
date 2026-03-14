@@ -4,41 +4,52 @@ namespace QuantityMeasurementApp.Models
 {
     /// <summary>
     /// Represents measurement in Feet.
+    /// Pure model class - no business logic.
+    /// UC1
     /// </summary>
     public class Feet
     {
-        private readonly double value;
+        // ─── Properties ───────────────────────────────────────
+
+        /// <summary>
+        /// Value of the feet measurement.
+        /// </summary>
+        public double Value { get; }
+
+        // ─── Constructor ──────────────────────────────────────
 
         /// <summary>
         /// Initializes Feet object.
         /// </summary>
         public Feet(double value)
         {
-            this.value = value;
+            Value = value;
         }
 
+        // ─── ToString ─────────────────────────────────────────
+
+        public override string ToString()
+        {
+            return $"{Value} FEET";
+        }
+
+         // ─── Equality ─────────────────────────────────────────
+
         /// <summary>
-        /// Checks equality between two Feet objects.
+        /// Value based equality comparison.
+        /// Two Feet are equal if values are within 0.0001.
         /// </summary>
         public override bool Equals(object? obj)
         {
-            if (obj == null)
-                return false;
+            if (obj == null)    return false;
+            if (obj is not Feet other) return false;
 
-            if (!(obj is Feet))
-                return false;
-
-            Feet other = (Feet)obj;
-
-            return Math.Abs(this.value - other.value) < 0.0001;
+            return Math.Abs(Value - other.Value) < 0.0001;
         }
 
-        /// <summary>
-        /// Returns hash code.
-        /// </summary>
         public override int GetHashCode()
         {
-            return value.GetHashCode();
+            return Value.GetHashCode();
         }
     }
 }

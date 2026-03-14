@@ -9,5 +9,16 @@
     "ErrorMessage": null,
     "Timestamp": "2026-03-13T15:13:22.1901745+05:30",
     "MeasurementType": "Length"
+  },
+  {
+    "Id": "1f645b7e-7267-4691-bff3-85e72bf1218c",
+    "FirstOperand": "1 FEET (Length)",
+    "SecondOperand": "1 FEET (Length)",
+    "OperationType": "COMPARE",
+    "Result": "True",
+    "HasError": false,
+    "ErrorMessage": null,
+    "Timestamp": "2026-03-14T11:30:57.4456139+05:30",
+    "MeasurementType": "Length"
   }
 ]

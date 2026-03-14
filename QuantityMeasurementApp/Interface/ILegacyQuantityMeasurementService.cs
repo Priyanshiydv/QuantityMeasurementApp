@@ -1,4 +1,6 @@
 using QuantityMeasurementApp.Models;
+using QuantityMeasurement.Service.Service;
+using QuantityMeasurement.Service.Interfaces;
 
 namespace QuantityMeasurementApp.Interface
 {
@@ -6,7 +8,7 @@ namespace QuantityMeasurementApp.Interface
     /// Service contract for generic quantity operations.
     /// UC10 - Generic Measurement Support
     /// </summary>
-    public interface IQuantityMeasurementService
+    public interface ILegacyQuantityMeasurementService
     {
         /// <summary>
         /// Checks equality between two quantities of same measurable type.
