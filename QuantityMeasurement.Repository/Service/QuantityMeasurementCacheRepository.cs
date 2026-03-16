@@ -11,15 +11,17 @@ namespace QuantityMeasurement.Repository.Service
     /// <summary>
     /// Singleton in-memory cache repository for quantity measurements.
     /// Also persists data to disk using JSON serialization.
-    /// UC15
+    /// Updated in UC16 to sync old records to database on startup.
+    /// Only keeps today's records in JSON file.
+    /// UC15, UC16
     /// </summary>
-    public class QuantityMeasurementCacheRepository : IQuantityMeasurementRepository
+    public class QuantityMeasurementCacheRepository
+        : IQuantityMeasurementRepository
     {
         // ─── Singleton Instance ───────────────────────────────
 
         private static QuantityMeasurementCacheRepository? _instance;
         private static readonly object _lock = new object();
-        
 
         /// <summary>
         /// Returns the single instance of this repository.
@@ -33,7 +35,8 @@ namespace QuantityMeasurement.Repository.Service
                 {
                     if (_instance == null)
                     {
-                        _instance = new QuantityMeasurementCacheRepository();
+                        _instance =
+                            new QuantityMeasurementCacheRepository();
                     }
                 }
             }
@@ -43,7 +46,9 @@ namespace QuantityMeasurement.Repository.Service
         // ─── Fields ───────────────────────────────────────────
 
         /// <summary>
-        /// In-memory cache of all measurement entities.
+        /// In-memory cache of today's measurement entities only.
+        /// Old records moved to database on startup.
+        /// UC15, UC16
         /// </summary>
         private readonly List<QuantityMeasurementEntity> _cache;
 
@@ -52,21 +57,89 @@ namespace QuantityMeasurement.Repository.Service
         /// </summary>
         private readonly string _filePath;
 
+        /// <summary>
+        /// Database repository for syncing old records.
+        /// Set via SetDatabaseRepository() method.
+        /// NULL until SetDatabaseRepository() is called.
+        /// UC16
+        /// </summary>
+        private IQuantityMeasurementRepository? _databaseRepository;
+
+        /// <summary>
+        /// Stores old records temporarily until
+        /// database repository is set via SetDatabaseRepository().
+        /// These records will be synced to database
+        /// as soon as database repository is available.
+        /// UC16
+        /// </summary>
+        private readonly List<QuantityMeasurementEntity>
+            _pendingSyncRecords;
+
         // ─── Private Constructor (Singleton) ──────────────────
 
         private QuantityMeasurementCacheRepository()
         {
-            _filePath = "quantity_measurements.json";
-            _cache    = new List<QuantityMeasurementEntity>();
+            _filePath           = "quantity_measurements.json";
+            _cache              = new List<QuantityMeasurementEntity>();
+            _pendingSyncRecords = new List<QuantityMeasurementEntity>();
 
             // Load existing data from disk on startup
+            // Old records stored in _pendingSyncRecords
+            // Today's records stored in _cache
             LoadFromDisk();
+        }
+
+        // ─── UC16 Database Sync Setup ─────────────────────────
+
+        /// <summary>
+        /// Sets database repository for syncing old records.
+        /// Called from NTierMenu when cache repository selected.
+        /// Immediately syncs pending old records to database.
+        /// UC16
+        /// </summary>
+        public void SetDatabaseRepository(
+            IQuantityMeasurementRepository databaseRepository)
+        {
+            _databaseRepository = databaseRepository;
+
+            Console.WriteLine(
+                "[CacheRepository] Database sync enabled ✓");
+
+            // Sync pending old records now that DB is available
+            if (_pendingSyncRecords.Count > 0)
+            {
+                Console.WriteLine(
+                    $"[CacheRepository] Syncing " +
+                    $"{_pendingSyncRecords.Count} " +
+                    $"pending old records to database...");
+
+                int syncedCount = 0;
+
+                foreach (var entity in _pendingSyncRecords)
+                {
+                    SyncToDatabase(entity);
+                    syncedCount++;
+                }
+
+                // Clear pending list after sync
+                _pendingSyncRecords.Clear();
+
+                Console.WriteLine(
+                    $"[CacheRepository] Successfully synced " +
+                    $"{syncedCount} old records to database ✓");
+            }
+            else
+            {
+                Console.WriteLine(
+                    "[CacheRepository] No pending records to sync.");
+            }
         }
 
         // ─── Interface Methods ────────────────────────────────
 
         /// <summary>
         /// Saves entity to in-memory cache and persists to disk.
+        /// UC15, UC16
         /// </summary>
         public void Save(QuantityMeasurementEntity entity)
         {
@@ -75,10 +148,14 @@ namespace QuantityMeasurement.Repository.Service
 
             _cache.Add(entity);
             SaveToDisk();
+
+            Console.WriteLine(
+                $"[CacheRepository] Saved entity: {entity.Id}");
         }
 
         /// <summary>
         /// Returns all saved measurement entities.
+        /// Returns copy to prevent external modification.
         /// </summary>
         public List<QuantityMeasurementEntity> GetAllMeasurements()
         {
@@ -121,24 +198,37 @@ namespace QuantityMeasurement.Repository.Service
 
         /// <summary>
         /// Saves entire cache to disk as JSON.
+        /// Only today's records saved to JSON.
+        /// Old records removed after sync to database.
+        /// UC15, UC16
         /// </summary>
         private void SaveToDisk()
         {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                string json = JsonSerializer.Serialize(_cache, options);
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                };
+                string json = JsonSerializer.Serialize(
+                    _cache, options);
                 File.WriteAllText(_filePath, json);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Warning: Could not save to disk. {ex.Message}");
+                Console.WriteLine(
+                    $"[CacheRepository] Warning: " +
+                    $"Could not save to disk. {ex.Message}");
             }
         }
 
         /// <summary>
         /// Loads existing data from disk into cache.
-        /// Called once during initialization.
+        /// Separates today's records from old records.
+        /// Today's records → _cache (kept in JSON)
+        /// Old records → _pendingSyncRecords (waiting for DB)
+        /// Old records synced to DB when SetDatabaseRepository() called.
+        /// UC15, UC16
         /// </summary>
         private void LoadFromDisk()
         {
@@ -154,13 +244,84 @@ namespace QuantityMeasurement.Repository.Service
                             <List<QuantityMeasurementEntity>>(json);
 
                         if (loaded != null)
-                            _cache.AddRange(loaded);
+                        {
+                            // Get today's date for comparison
+                            DateTime today = DateTime.Today;
+
+                            foreach (var entity in loaded)
+                            {
+                                // Check if record is from today
+                                if (entity.Timestamp.Date == today)
+                                {
+                                    // Keep today's records in cache
+                                    _cache.Add(entity);
+                                }
+                                else
+                                {
+                                    // Old record - store in pending list
+                                    // Will sync to DB when
+                                    // SetDatabaseRepository() is called
+                                    _pendingSyncRecords.Add(entity);
+                                }
+                            }
+
+                            Console.WriteLine(
+                                $"[CacheRepository] Loaded " +
+                                $"{_cache.Count} today's records. " +
+                                $"{_pendingSyncRecords.Count} old " +
+                                $"records pending DB sync.");
+
+                            // Save updated cache to disk
+                            // Only today's records remain in JSON
+                            // Old records removed from JSON
+                            SaveToDisk();
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Warning: Could not load from disk. {ex.Message}");
+                Console.WriteLine(
+                    $"[CacheRepository] Warning: " +
+                    $"Could not load from disk. {ex.Message}");
+            }
+        }
+
+        // ─── UC16 Database Sync Methods ───────────────────────
+
+        /// <summary>
+        /// Syncs a single entity to database.
+        /// Called for each pending old record.
+        /// Skips if database repository not set.
+        /// UC16
+        /// </summary>
+        private void SyncToDatabase(
+            QuantityMeasurementEntity entity)
+        {
+            try
+            {
+                if (_databaseRepository != null)
+                {
+                    _databaseRepository.Save(entity);
+
+                    Console.WriteLine(
+                        $"[CacheRepository] Synced to DB: " +
+                        $"{entity.Id}");
+                }
+                else
+                {
+                    Console.WriteLine(
+                        $"[CacheRepository] Warning: " +
+                        $"Database not set. " +
+                        $"Cannot sync record: {entity.Id}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"[CacheRepository] Warning: " +
+                    $"Could not sync to database. " +
+                    $"{ex.Message}");
             }
         }
 
@@ -217,13 +378,17 @@ namespace QuantityMeasurement.Repository.Service
 
         /// <summary>
         /// Returns cache statistics.
-        /// Overrides default interface method.
+        /// Shows pending sync count and DB sync status.
+        /// UC15, UC16
         /// </summary>
         public string GetPoolStatistics()
         {
             return $"CacheRepository Statistics: " +
                    $"[TotalRecords: {_cache.Count}, " +
-                   $"FilePath: {_filePath}]";
+                   $"PendingSync: {_pendingSyncRecords.Count}, " +
+                   $"FilePath: {_filePath}, " +
+                   $"DatabaseSync: " +
+                   $"{(_databaseRepository != null ? "Enabled" : "Disabled")}]";
         }
 
         /// <summary>
@@ -242,7 +407,10 @@ namespace QuantityMeasurement.Repository.Service
         public override string ToString()
         {
             return $"QuantityMeasurementCacheRepository " +
-                   $"[{_cache.Count} records]";
+                   $"[{_cache.Count} records, " +
+                   $"Pending: {_pendingSyncRecords.Count}, " +
+                   $"DB Sync: " +
+                   $"{(_databaseRepository != null ? "ON" : "OFF")}]";
         }
     }
 }

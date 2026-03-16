@@ -63,12 +63,36 @@ namespace QuantityMeasurementApp.Menu
             }
             else
             {
-                // Fallback to in-memory cache repository
-                _repository =
+                // Step 2a: Create connection pool for DB sync
+                ConnectionPool connectionPool =
+                    ConnectionPool.GetInstance();
+
+                // Step 2b: Create database repository for syncing
+                // This is used ONLY for syncing old cache records
+                // Not used as main repository
+                IQuantityMeasurementRepository dbRepository =
+                    new QuantityMeasurementDatabaseRepository(
+                        connectionPool,
+                        "QuantityMeasurementDB");
+
+                // Step 2c: Get cache repository (Singleton)
+                QuantityMeasurementCacheRepository cacheRepo =
                     QuantityMeasurementCacheRepository.GetInstance();
+
+                // Step 2d: Set database repository for syncing
+                // Old records from JSON will be synced to database
+                // JSON will only keep today's records
+                cacheRepo.SetDatabaseRepository(dbRepository);
+
+                 // Step 2e: Use cache as main repository
+                _repository = cacheRepo;
 
                 Console.WriteLine(
                     "[NTierMenu] Using Cache Repository ✓");
+                Console.WriteLine(
+                    "[NTierMenu] Old records synced to DB ✓");
+                Console.WriteLine(
+                    "[NTierMenu] JSON keeps today's records only ✓");
             }
             // Step 3: Create Service (Dependency Injection)
             // Service does not know which repository is injected
