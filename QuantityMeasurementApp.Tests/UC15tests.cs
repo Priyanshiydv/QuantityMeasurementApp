@@ -11,7 +11,7 @@ namespace QuantityMeasurementApp.Tests
 {
     [TestClass]
     [DoNotParallelize]
-    public class UC15Tests
+    public class UC15tests
     {
         // ─── Fields ───────────────────────────────────────────
 

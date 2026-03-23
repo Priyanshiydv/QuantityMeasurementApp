@@ -375,8 +375,38 @@ namespace QuantityMeasurement.Repository.Service
             ClearAll();
             return count;
         }
+        
+        /// <summary>
+        /// Returns all error measurements from cache.
+        /// UC17
+        /// </summary>
+        public List<QuantityMeasurementEntity> GetErrorMeasurements()
+        {
+            return _cache.FindAll(entity => entity.HasError);
+        }
 
         /// <summary>
+        /// Returns count by operation type from cache.
+        /// UC17
+        /// </summary>
+        public int GetCountByOperationType(string operationType)
+        {
+            return _cache.FindAll(entity => entity.OperationType
+                .Equals(operationType,
+                    StringComparison.OrdinalIgnoreCase)).Count;
+        }
+
+        /// <summary>
+        /// Returns measurements after date from cache.
+        /// UC17
+        /// </summary>
+        public List<QuantityMeasurementEntity>
+            GetMeasurementsAfterDate(DateTime date)
+        {
+            return _cache
+                .FindAll(entity => entity.Timestamp >= date);
+        }
+        
         /// Returns cache statistics.
         /// Shows pending sync count and DB sync status.
         /// UC15, UC16

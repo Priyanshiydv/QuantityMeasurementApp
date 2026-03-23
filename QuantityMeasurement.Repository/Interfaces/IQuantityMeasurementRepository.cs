@@ -63,6 +63,25 @@ namespace QuantityMeasurement.Repository.Interfaces
         /// Same as ClearAll but returns count of deleted records.
         /// </summary>
         int DeleteAllMeasurements();
+        
+        /// <summary>
+        /// Returns all error measurements.
+        /// Added in UC17.
+        /// </summary>
+        List<QuantityMeasurementEntity> GetErrorMeasurements();
+
+        /// <summary>
+        /// Returns count by operation type.
+        /// Added in UC17.
+        /// </summary>
+        int GetCountByOperationType(string operationType);
+
+        /// <summary>
+        /// Returns measurements after specific date.
+        /// Added in UC17.
+        /// </summary>
+        List<QuantityMeasurementEntity> GetMeasurementsAfterDate(
+            DateTime date);
 
         // ─── UC16 Default Methods ─────────────────────────────
 

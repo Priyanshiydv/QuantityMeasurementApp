@@ -551,6 +551,154 @@ namespace QuantityMeasurement.Repository.Service
                 _connectionPool.ReleaseConnection(connection);
             }
         }
+        /// <summary>
+        /// Returns all error measurements from database.
+        /// Uses parameterized query to filter HasError = true.
+        /// UC17
+        /// </summary>
+        public List<QuantityMeasurementEntity> GetErrorMeasurements()
+        {
+            SqlConnection connection =
+                _connectionPool.AcquireConnection();
+
+            try
+            {
+                List<QuantityMeasurementEntity> measurements =
+                    new List<QuantityMeasurementEntity>();
+
+                string query =
+                    @"SELECT Id, FirstOperand, SecondOperand,
+                            OperationType, Result, HasError,
+                            ErrorMessage, MeasurementType, Timestamp
+                    FROM QuantityMeasurementEntity
+                    WHERE HasError = 1
+                    ORDER BY Timestamp DESC";
+
+                using SqlCommand command =
+                    new SqlCommand(query, connection);
+
+                using SqlDataReader reader =
+                    command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    measurements.Add(MapReaderToEntity(reader));
+                }
+
+                return measurements;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new DatabaseException(
+                    "Failed to get error measurements.",
+                    DatabaseException.DatabaseErrorCodes.SELECT_FAILED,
+                    sqlEx,
+                    "GetErrorMeasurements",
+                    _databaseName);
+            }
+            finally
+            {
+                _connectionPool.ReleaseConnection(connection);
+            }
+        }
+
+        /// <summary>
+        /// Returns count of measurements by operation type.
+        /// Uses parameterized query for SQL injection prevention.
+        /// UC17
+        /// </summary>
+        public int GetCountByOperationType(string operationType)
+        {
+            SqlConnection connection =
+                _connectionPool.AcquireConnection();
+
+            try
+            {
+                string query =
+                    @"SELECT COUNT(*)
+                    FROM QuantityMeasurementEntity
+                    WHERE OperationType = @OperationType";
+
+                using SqlCommand command =
+                    new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue(
+                    "@OperationType", operationType);
+
+                object? result = command.ExecuteScalar();
+
+                return result != null
+                    ? Convert.ToInt32(result)
+                    : 0;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new DatabaseException(
+                    $"Failed to get count for: {operationType}",
+                    DatabaseException.DatabaseErrorCodes.SELECT_FAILED,
+                    sqlEx,
+                    "GetCountByOperationType",
+                    _databaseName);
+            }
+            finally
+            {
+                _connectionPool.ReleaseConnection(connection);
+            }
+        }
+
+        /// <summary>
+        /// Returns measurements after specific date.
+        /// Uses parameterized query for date filtering.
+        /// UC17
+        /// </summary>
+        public List<QuantityMeasurementEntity>
+            GetMeasurementsAfterDate(DateTime date)
+        {
+            SqlConnection connection =
+                _connectionPool.AcquireConnection();
+
+            try
+            {
+                List<QuantityMeasurementEntity> measurements =
+                    new List<QuantityMeasurementEntity>();
+
+                string query =
+                    @"SELECT Id, FirstOperand, SecondOperand,
+                            OperationType, Result, HasError,
+                            ErrorMessage, MeasurementType, Timestamp
+                    FROM QuantityMeasurementEntity
+                    WHERE Timestamp >= @Date
+                    ORDER BY Timestamp DESC";
+
+                using SqlCommand command =
+                    new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Date", date);
+
+                using SqlDataReader reader =
+                    command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    measurements.Add(MapReaderToEntity(reader));
+                }
+
+                return measurements;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new DatabaseException(
+                    $"Failed to get measurements after: {date}",
+                    DatabaseException.DatabaseErrorCodes.SELECT_FAILED,
+                    sqlEx,
+                    "GetMeasurementsAfterDate",
+                    _databaseName);
+            }
+            finally
+            {
+                _connectionPool.ReleaseConnection(connection);
+            }
+        }
 
         // ─── UC16 Override Default Methods ───────────────────
 

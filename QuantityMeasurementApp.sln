@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuantityMeasurement.Reposit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuantityMeasurement.Service", "QuantityMeasurement.Service\QuantityMeasurement.Service.csproj", "{16498358-2C66-4DB7-AF29-7905E4BE043B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuantityMeasurement.WebAPI", "QuantityMeasurement.WebAPI\QuantityMeasurement.WebAPI.csproj", "{2A59E9D7-A560-4717-B58B-7C1A603841D9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{16498358-2C66-4DB7-AF29-7905E4BE043B}.Release|x64.Build.0 = Release|Any CPU
 		{16498358-2C66-4DB7-AF29-7905E4BE043B}.Release|x86.ActiveCfg = Release|Any CPU
 		{16498358-2C66-4DB7-AF29-7905E4BE043B}.Release|x86.Build.0 = Release|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Debug|x64.Build.0 = Debug|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Debug|x86.Build.0 = Debug|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Release|x64.ActiveCfg = Release|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Release|x64.Build.0 = Release|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Release|x86.ActiveCfg = Release|Any CPU
+		{2A59E9D7-A560-4717-B58B-7C1A603841D9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
