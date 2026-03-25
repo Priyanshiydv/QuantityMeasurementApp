@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using QuantityMeasurement.Models.Entities;
 using QuantityMeasurement.Repository.Interfaces;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace QuantityMeasurement.Repository.Service
 {
@@ -75,6 +76,13 @@ namespace QuantityMeasurement.Repository.Service
         private readonly List<QuantityMeasurementEntity>
             _pendingSyncRecords;
 
+        /// <summary>
+        /// Distributed cache (Redis or Memory fallback).
+        /// Set via SetDistributedCache() from DI.
+        /// UC18
+        /// </summary>
+        private IDistributedCache? _distributedCache;
+
         // ─── Private Constructor (Singleton) ──────────────────
 
         private QuantityMeasurementCacheRepository()
@@ -135,6 +143,17 @@ namespace QuantityMeasurement.Repository.Service
             }
         }
 
+        /// <summary>
+        /// Sets distributed cache (Redis or Memory fallback).
+        /// Called from DependencyInjectionConfig on startup.
+        /// UC18
+        /// </summary>
+        public void SetDistributedCache(IDistributedCache cache)
+        {
+            _distributedCache = cache;
+            Console.WriteLine("[CacheRepository] Distributed cache set ✓");
+        }
+
         // ─── Interface Methods ────────────────────────────────
 
         /// <summary>
@@ -148,6 +167,31 @@ namespace QuantityMeasurement.Repository.Service
 
             _cache.Add(entity);
             SaveToDisk();
+
+            // UC18: Also save to Redis/distributed cache
+            if (_distributedCache != null)
+            {
+                try
+                {
+                    string key  = $"measurement:{entity.Id}";
+                    string json = JsonSerializer.Serialize(entity);
+
+                    _distributedCache.SetString(key, json,
+                        new DistributedCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow =
+                                TimeSpan.FromMinutes(30)
+                        });
+
+                    Console.WriteLine(
+                        $"[CacheRepository] Saved to Redis: {key}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(
+                        $"[CacheRepository] Redis save failed: {ex.Message}");
+                }
+            }
 
             Console.WriteLine(
                 $"[CacheRepository] Saved entity: {entity.Id}");
@@ -430,6 +474,41 @@ namespace QuantityMeasurement.Repository.Service
             SaveToDisk();
             Console.WriteLine(
                 "[CacheRepository] Resources released.");
+        }
+
+        /// <summary>
+        /// Retrieves a measurement from Redis by ID.
+        /// Returns null if not found in cache.
+        /// UC18
+        /// </summary>
+        public QuantityMeasurementEntity? GetFromCache(string id)
+        {
+            if (_distributedCache == null) return null;
+
+            try
+            {
+                string key  = $"measurement:{id}";
+                string? json = _distributedCache.GetString(key);
+
+                if (json == null)
+                {
+                    Console.WriteLine(
+                        $"[CacheRepository] Redis MISS: {key}");
+                    return null;
+                }
+
+                Console.WriteLine(
+                    $"[CacheRepository] Redis HIT: {key}");
+
+                return JsonSerializer
+                    .Deserialize<QuantityMeasurementEntity>(json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(
+                    $"[CacheRepository] Redis get failed: {ex.Message}");
+                return null;
+            }
         }
 
         // ─── ToString ─────────────────────────────────────────

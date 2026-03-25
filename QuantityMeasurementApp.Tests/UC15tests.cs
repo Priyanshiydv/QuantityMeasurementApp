@@ -572,13 +572,13 @@ namespace QuantityMeasurementApp.Tests
         [TestMethod]
         public void TestDTO_StoresValuesCorrectly()
         {
-            var dto = new QuantityDTO(10,
+            var DTO = new QuantityDTO(10,
                           LengthUnitDTO.FEET,
                           MeasurementTypeDTO.LENGTH);
 
-            Assert.AreEqual(10,                      dto.Value);
-            Assert.AreEqual(LengthUnitDTO.FEET,      dto.Unit);
-            Assert.AreEqual(MeasurementTypeDTO.LENGTH, dto.MeasurementType);
+            Assert.AreEqual(10,                      DTO.Value);
+            Assert.AreEqual(LengthUnitDTO.FEET,      DTO.Unit);
+            Assert.AreEqual(MeasurementTypeDTO.LENGTH, DTO.MeasurementType);
         }
 
         /// <summary>

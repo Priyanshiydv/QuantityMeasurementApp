@@ -326,12 +326,12 @@ namespace QuantityMeasurement.Service.Service
         /// Converts QuantityDTO to QuantityModel for internal use.
         /// This is the key bridge between external and internal representation.
         /// </summary>
-        private QuantityModel ToModel(QuantityDTO dto)
+        private QuantityModel ToModel(QuantityDTO DTO)
         {
             return new QuantityModel(
-                dto.Value,
-                dto.Unit,
-                dto.MeasurementType
+                DTO.Value,
+                DTO.Unit,
+                DTO.MeasurementType
             );
         }
 
@@ -349,27 +349,27 @@ namespace QuantityMeasurement.Service.Service
 
         // ─── Validation Helpers ───────────────────────────────
 
-        private void ValidateDTO(QuantityDTO dto, string label)
+        private void ValidateDTO(QuantityDTO DTO, string label)
         {
-            if (dto == null)
+            if (DTO == null)
                 throw new QuantityMeasurementException(
                     $"{label} cannot be null.",
                     QuantityMeasurementException.ErrorCodes.NULL_QUANTITY
                 );
 
-            if (string.IsNullOrWhiteSpace(dto.Unit))
+            if (string.IsNullOrWhiteSpace(DTO.Unit))
                 throw new QuantityMeasurementException(
                     $"{label} unit cannot be empty.",
                     QuantityMeasurementException.ErrorCodes.INVALID_UNIT
                 );
 
-            if (string.IsNullOrWhiteSpace(dto.MeasurementType))
+            if (string.IsNullOrWhiteSpace(DTO.MeasurementType))
                 throw new QuantityMeasurementException(
                     $"{label} measurement type cannot be empty.",
                     QuantityMeasurementException.ErrorCodes.INVALID_CATEGORY
                 );
 
-            if (double.IsNaN(dto.Value) || double.IsInfinity(dto.Value))
+            if (double.IsNaN(DTO.Value) || double.IsInfinity(DTO.Value))
                 throw new QuantityMeasurementException(
                     $"{label} has invalid numeric value.",
                     QuantityMeasurementException.ErrorCodes.INVALID_VALUE

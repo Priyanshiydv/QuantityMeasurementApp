@@ -39,6 +39,9 @@ namespace QuantityMeasurement.Repository.Context
         public DbSet<QuantityMeasurementEntity>
             QuantityMeasurements { get; set; }
 
+        // UC18 — Users table
+        public DbSet<UserEntity> Users { get; set; }
+
         // ─── Model Configuration ──────────────────────────────
 
         /// <summary>
@@ -124,6 +127,24 @@ namespace QuantityMeasurement.Repository.Context
 
             Console.WriteLine(
                 "[DbContext] Entity mappings configured ✓");
+
+            // UC18 — Configure Users table
+            modelBuilder.Entity<UserEntity>(entity =>
+            {
+                entity.ToTable("Users");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Username).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.Email).HasMaxLength(200).IsRequired();
+                entity.Property(e => e.PasswordHash).HasMaxLength(256).IsRequired();
+                entity.Property(e => e.Role).HasMaxLength(50).HasDefaultValue("User");
+                entity.Property(e => e.RefreshToken).HasMaxLength(512);
+                entity.Property(e => e.GoogleId).HasMaxLength(200);
+                entity.Property(e => e.GoogleEmail).HasMaxLength(200);
+                entity.HasIndex(e => e.Username).IsUnique();
+                entity.HasIndex(e => e.Email).IsUnique();
+            });
+
+            Console.WriteLine("[DbContext] Users table configured ✓");
         }
 
         // ─── Override SaveChanges ─────────────────────────────

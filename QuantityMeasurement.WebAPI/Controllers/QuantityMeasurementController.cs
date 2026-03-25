@@ -16,7 +16,7 @@ namespace QuantityMeasurement.WebAPI.Controllers
     [ApiController]
     [Route("api/v1/quantities")]
     [Produces("application/json")]
-    [SwaggerTag("Quantity Measurement Operations - Compare, Convert, Add, Subtract, Divide")]
+    [Tags("② Quantity Measurement")]
     public class QuantityMeasurementController : ControllerBase
     {
         // ─── Fields ───────────────────────────────────────────

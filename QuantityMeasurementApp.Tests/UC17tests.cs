@@ -15,6 +15,7 @@ using QuantityMeasurement.Service.Service;
 using QuantityMeasurement.WebAPI.Controllers;
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace QuantityMeasurementApp.Tests
 {
@@ -57,9 +58,12 @@ namespace QuantityMeasurementApp.Tests
 
             _controllerLogger = new Mock<ILogger<QuantityMeasurementController>>().Object;
 
+            
+            var mockCache = new Mock<IDistributedCache>().Object;
+
             // Create EF Repository
             _repository = new EFQuantityMeasurementRepository(
-                _dbContext, _repoLogger);
+                _dbContext, mockCache, _repoLogger);
 
             // Create Service
             _service = new QuantityMeasurementServiceImpl(

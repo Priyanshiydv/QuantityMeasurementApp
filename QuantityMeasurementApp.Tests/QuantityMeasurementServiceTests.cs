@@ -437,7 +437,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC1: Feet → Inches
         [TestMethod]
-        public void GivenFeet_WhenConvertedToInches_ShouldReturnCorrectValue()
+        public void GivenFeet_WhenConverteDTOInches_ShouldReturnCorrectValue()
         {
             double result = _quantity.Convert(1.0, LengthUnit.FEET, LengthUnit.INCHES);
             
@@ -446,7 +446,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC2: Inches → Feet
         [TestMethod]
-        public void GivenInches_WhenConvertedToFeet_ShouldReturnCorrectValue()
+        public void GivenInches_WhenConverteDTOFeet_ShouldReturnCorrectValue()
         {
             double result = _quantity.Convert(24.0, LengthUnit.INCHES, LengthUnit.FEET);
             
@@ -455,7 +455,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC3: Yards → Inches
         [TestMethod]
-        public void GivenYards_WhenConvertedToInches_ShouldReturnCorrectValue()
+        public void GivenYards_WhenConverteDTOInches_ShouldReturnCorrectValue()
         {
             double result = _quantity.Convert(1.0, LengthUnit.YARDS, LengthUnit.INCHES);
             
@@ -464,7 +464,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC4: Inches → Yards
         [TestMethod]
-        public void GivenInches_WhenConvertedToYards_ShouldReturnCorrectValue()
+        public void GivenInches_WhenConverteDTOYards_ShouldReturnCorrectValue()
         {
             double result = _quantity.Convert(72.0, LengthUnit.INCHES, LengthUnit.YARDS);
             
@@ -473,7 +473,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC5: Centimeter → Inches
         [TestMethod]
-        public void GivenCentimeter_WhenConvertedToInches_ShouldReturnApproxOne()
+        public void GivenCentimeter_WhenConverteDTOInches_ShouldReturnApproxOne()
         {
             double result = _quantity.Convert(2.54, LengthUnit.CENTIMETERS, LengthUnit.INCHES);
             
@@ -482,7 +482,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC6: Feet → Yards
         [TestMethod]
-        public void GivenFeet_WhenConvertedToYards_ShouldReturnCorrectValue()
+        public void GivenFeet_WhenConverteDTOYards_ShouldReturnCorrectValue()
         {
             double result = _quantity.Convert(6.0, LengthUnit.FEET, LengthUnit.YARDS);
             
@@ -967,7 +967,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC1: FEET to Base should return same value
         [TestMethod]
-        public void GivenFeet_WhenConvertedToBase_ShouldReturnSameValue()
+        public void GivenFeet_WhenConverteDTOBase_ShouldReturnSameValue()
         {
             double result = LengthUnit.FEET.ToBase(5.0);
 
@@ -976,7 +976,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC2: INCHES to Base conversion
         [TestMethod]
-        public void GivenInches_WhenConvertedToBase_ShouldReturnFeetValue()
+        public void GivenInches_WhenConverteDTOBase_ShouldReturnFeetValue()
         {
             double result = LengthUnit.INCHES.ToBase(12.0);
 
@@ -985,7 +985,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC3: YARDS to Base conversion
         [TestMethod]
-        public void GivenYards_WhenConvertedToBase_ShouldReturnFeetValue()
+        public void GivenYards_WhenConverteDTOBase_ShouldReturnFeetValue()
         {
             double result = LengthUnit.YARDS.ToBase(2.0);
 
@@ -994,7 +994,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC4: CENTIMETERS to Base conversion
         [TestMethod]
-        public void GivenCentimeters_WhenConvertedToBase_ShouldReturnFeetValue()
+        public void GivenCentimeters_WhenConverteDTOBase_ShouldReturnFeetValue()
         {
             double result = LengthUnit.CENTIMETERS.ToBase(30.48);
 
@@ -1003,7 +1003,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC5: Base to INCHES conversion
         [TestMethod]
-        public void GivenBaseValue_WhenConvertedToInches_ShouldReturnCorrectValue()
+        public void GivenBaseValue_WhenConverteDTOInches_ShouldReturnCorrectValue()
         {
             double result = LengthUnit.INCHES.FromBase(1.0);
 
@@ -1012,7 +1012,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC6: Base to YARDS conversion
         [TestMethod]
-        public void GivenBaseValue_WhenConvertedToYards_ShouldReturnCorrectValue()
+        public void GivenBaseValue_WhenConverteDTOYards_ShouldReturnCorrectValue()
         {
             double result = LengthUnit.YARDS.FromBase(6.0);
 
@@ -1021,7 +1021,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC7: Base to CENTIMETERS conversion
         [TestMethod]
-        public void GivenBaseValue_WhenConvertedToCentimeters_ShouldReturnCorrectValue()
+        public void GivenBaseValue_WhenConverteDTOCentimeters_ShouldReturnCorrectValue()
         {
             double result = LengthUnit.CENTIMETERS.FromBase(1.0);
 
@@ -1030,7 +1030,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC8: Invalid numeric value should throw exception (ToBase)
         [TestMethod]
-        public void GivenInvalidValue_WhenConvertedToBase_ShouldThrowException()
+        public void GivenInvalidValue_WhenConverteDTOBase_ShouldThrowException()
         {
             try
             {
@@ -1144,7 +1144,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC9: Pound to Kilogram Conversion
         [TestMethod]
-        public void TC9_GivenPound_WhenConvertedToKilogram_ShouldReturnOne()
+        public void TC9_GivenPound_WhenConverteDTOKilogram_ShouldReturnOne()
         {
             QuantityWeight w = new QuantityWeight(2.20462, WeightUnit.POUND);
             QuantityWeight result = w.ConvertTo(WeightUnit.KILOGRAM);
@@ -1154,7 +1154,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC10: Kilogram to Pound Conversion
         [TestMethod]
-        public void TC10_GivenKilogram_WhenConvertedToPound_ShouldReturnCorrectValue()
+        public void TC10_GivenKilogram_WhenConverteDTOPound_ShouldReturnCorrectValue()
         {
             QuantityWeight w = new QuantityWeight(1.0, WeightUnit.KILOGRAM);
             QuantityWeight result = w.ConvertTo(WeightUnit.POUND);
@@ -1335,7 +1335,7 @@ namespace QuantityMeasurementApp.Tests
         //====================== GENERIC CONVERSION TESTS ======================
         // TC5: Length Conversion (Feet to Inch)
         [TestMethod]
-        public void TC5_GivenFeet_WhenConvertedToInch_ShouldReturnTwelve()
+        public void TC5_GivenFeet_WhenConverteDTOInch_ShouldReturnTwelve()
         {
             QuantityGeneric<LengthUnit> q = new QuantityGeneric<LengthUnit>(1.0, LengthUnit.FEET);
             QuantityGeneric<LengthUnit> result = q.ConvertTo(LengthUnit.INCHES);
@@ -1345,7 +1345,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC6: Weight Conversion (Kilogram to Gram)
         [TestMethod]
-        public void TC6_GivenKilogram_WhenConvertedToGram_ShouldReturnThousand()
+        public void TC6_GivenKilogram_WhenConverteDTOGram_ShouldReturnThousand()
         {
             QuantityGeneric<WeightUnit> q = new QuantityGeneric<WeightUnit>(1.0, WeightUnit.KILOGRAM);
             QuantityGeneric<WeightUnit> result = q.ConvertTo(WeightUnit.GRAM);
@@ -1506,7 +1506,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC7: Litre to Millilitre
         [TestMethod]
-        public void TC7_GivenLitre_WhenConvertedToMillilitre_ShouldReturnThousand()
+        public void TC7_GivenLitre_WhenConverteDTOMillilitre_ShouldReturnThousand()
         {
             QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.LITRE);
 
@@ -1517,7 +1517,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC8: Millilitre to Litre
         [TestMethod]
-        public void TC8_GivenMillilitre_WhenConvertedToLitre_ShouldReturnOne()
+        public void TC8_GivenMillilitre_WhenConverteDTOLitre_ShouldReturnOne()
         {
             QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1000.0, VolumeUnit.MILLILITRE);
 
@@ -1528,7 +1528,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC9: Gallon to Litre
         [TestMethod]
-        public void TC9_GivenGallon_WhenConvertedToLitre_ShouldReturnCorrectValue()
+        public void TC9_GivenGallon_WhenConverteDTOLitre_ShouldReturnCorrectValue()
         {
             QuantityGeneric<VolumeUnit> v = new QuantityGeneric<VolumeUnit>(1.0, VolumeUnit.GALLON);
 
@@ -1923,7 +1923,7 @@ namespace QuantityMeasurementApp.Tests
 
         // TC3: Subtraction Result Rounded To Two Decimals
         [TestMethod]
-        public void TC3_GivenDecimalSubtraction_ShouldRoundToTwoDecimals()
+        public void TC3_GivenDecimalSubtraction_ShouldRounDTOTwoDecimals()
         {
             QuantityGeneric<LengthUnit> q1 = new QuantityGeneric<LengthUnit>(10.25, LengthUnit.FEET);
             QuantityGeneric<LengthUnit> q2 = new QuantityGeneric<LengthUnit>(5.13, LengthUnit.FEET);
