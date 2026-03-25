@@ -1,4 +1,4 @@
-using QuantityMeasurement.Models.DTOs;
+using QuantityMeasurement.Models.UnitDTOs;
 
 namespace QuantityMeasurement.Service.Interfaces
 {

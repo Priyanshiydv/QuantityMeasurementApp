@@ -1,4 +1,4 @@
-namespace QuantityMeasurement.Models
+namespace QuantityMeasurement.Enums
 {
     /// <summary>
     /// Enum representing supported arithmetic operations.

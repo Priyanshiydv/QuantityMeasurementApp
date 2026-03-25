@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QuantityMeasurementApp.Enums;
 using QuantityMeasurementApp.Models;
 using QuantityMeasurementApp.Services;
 using QuantityMeasurement.Service.Service;      // ← Quantity, LengthUnit, WeightUnit, VolumeUnit

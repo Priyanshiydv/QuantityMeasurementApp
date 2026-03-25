@@ -1,4 +1,4 @@
-namespace QuantityMeasurement.Models.DTOs
+namespace QuantityMeasurement.Models.Enums
 {
     /// <summary>
     /// Enum representing supported operation types.
@@ -6,7 +6,7 @@ namespace QuantityMeasurement.Models.DTOs
     /// Provides type safety for operation types.
     /// UC17
     /// </summary>
-    public enum OperationTypeDTO
+    public enum OperationType
     {
         /// <summary>
         /// Compare two quantities for equality.

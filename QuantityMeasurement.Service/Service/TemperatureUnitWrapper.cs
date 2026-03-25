@@ -1,5 +1,5 @@
 using System;
-using QuantityMeasurementApp.Models;
+using QuantityMeasurementApp.Enums;
 using QuantityMeasurement.Service.Interfaces;
 
 namespace QuantityMeasurement.Service.Service

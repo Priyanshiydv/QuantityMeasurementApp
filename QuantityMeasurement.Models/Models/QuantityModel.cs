@@ -1,4 +1,4 @@
-namespace QuantityMeasurement.Models.DTOs
+namespace QuantityMeasurement.Models.Models
 {
     /// <summary>
     /// Internal model class used within the service layer.

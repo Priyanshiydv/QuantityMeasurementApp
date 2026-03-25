@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using QuantityMeasurement.Models.Enums;
 
 namespace QuantityMeasurement.Models.DTOs
 {
@@ -81,6 +82,6 @@ namespace QuantityMeasurement.Models.DTOs
         /// Operation type to perform.
         /// e.g. COMPARE, CONVERT, ADD, SUBTRACT, DIVIDE
         /// </summary>
-        public OperationTypeDTO? OperationType { get; set; }
+        public OperationType? OperationType { get; set; }
     }
 }

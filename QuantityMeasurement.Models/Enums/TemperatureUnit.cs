@@ -1,6 +1,6 @@
 using System;
 
-namespace QuantityMeasurementApp.Models
+namespace QuantityMeasurementApp.Enums
 {
     /// <summary>
     /// Temperature measurement units.

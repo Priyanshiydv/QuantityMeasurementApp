@@ -1,4 +1,4 @@
-namespace QuantityMeasurement.Models.DTOs
+namespace QuantityMeasurement.Models.UnitDTOs
 {
     /// <summary>
     /// Constants for Length units.

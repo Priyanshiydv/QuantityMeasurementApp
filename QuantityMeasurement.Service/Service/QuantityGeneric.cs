@@ -1,6 +1,6 @@
 using System;
-using QuantityMeasurementApp.Models;
-using QuantityMeasurement.Models;
+using QuantityMeasurementApp.Enums;
+using QuantityMeasurement.Enums;
 using QuantityMeasurement.Service.Interfaces;
 
 namespace QuantityMeasurement.Service.Service
