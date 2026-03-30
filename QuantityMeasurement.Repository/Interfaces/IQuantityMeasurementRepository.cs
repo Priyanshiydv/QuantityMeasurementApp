@@ -83,6 +83,12 @@ namespace QuantityMeasurement.Repository.Interfaces
         List<QuantityMeasurementEntity> GetMeasurementsAfterDate(
             DateTime date);
 
+        /// <summary>
+        /// Returns measurements for a specific user.
+        /// UC19
+        /// </summary>
+        List<QuantityMeasurementEntity> GetMeasurementsByUserId(int userId);
+
         // ─── UC16 Default Methods ─────────────────────────────
 
         /// <summary>

@@ -314,5 +314,31 @@ namespace QuantityMeasurement.Repository.Service
                     "{Msg}", ex.Message);
             }
         }
+
+       public List<QuantityMeasurementEntity>
+            GetMeasurementsByUserId(int userId)
+        {
+            string key = $"qm:user:{userId}";
+            var cached = TryGetFromCache<List<QuantityMeasurementEntity>>(key);
+
+            if (cached != null)
+            {
+                _logger.LogInformation(
+                    "[EFRepository] Cache HIT: {Key}", key);
+                return cached;
+            }
+
+            _logger.LogInformation(
+                "[EFRepository] Cache MISS: {Key} → querying SQL Server", key);
+
+            var list = _context.QuantityMeasurements
+                .Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.Timestamp)
+                .ToList();
+
+            SetCache(key, list);
+            return list;
+        }
+           
     }
 }
