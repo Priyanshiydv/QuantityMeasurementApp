@@ -1,331 +1,239 @@
 # Quantity Measurement Application
 
 ## Project Overview
-The Quantity Measurement Application is a C# console-based project designed to compare, convert, and perform arithmetic operations on different measurement units.
+The Quantity Measurement Application is a full-stack C# project that supports comparing, converting, and performing arithmetic operations on measurement units. It follows clean N-Tier Architecture and exposes a REST API with JWT authentication, Redis caching, and a modern frontend.
 
-## Supported Categories:
+## Supported Categories
 - **Length:** Feet, Inches, Yards, Centimeters
 - **Weight:** Kilograms, Grams, Pounds
 - **Volume:** Liters, Milliliters, Gallons
 - **Temperature:** Celsius, Fahrenheit, Kelvin
 
-## Key Features
-- Type-safe operations via generics
-- Unit conversion across all categories
-- Arithmetic operations with validation and selective support
-- Scalable architecture for new measurement types
-- Follows SOLID principles (DRY, SRP, Interface Segregation)
-- Modular UC-wise branch development for maintainability
-- N-Tier Architecture with Controller, Service, Repository layers
-- Database integration with ADO.NET and MS SQL Server
-- Connection pooling for efficient database resource management
-- Configuration management via appsettings.json
+---
 
 ## Project Structure
 ```
 QuantityMeasurementApp
-├── QuantityMeasurementApp (Main Application)
-│   ├── Controllers
-│   │   └── QuantityMeasurementController.cs
-│   ├── Interface
-│   │   └── IQuantityMeasurementService.cs
-│   ├── Menu
-│   │   ├── AppMenu.cs
-│   │   └── NTierMenu.cs
-│   ├── Models
-│   │   ├── Feet.cs
-│   │   ├── Inches.cs
-│   │   ├── LengthUnit.cs
-│   │   ├── WeightUnit.cs
-│   │   ├── VolumeUnit.cs
-│   │   ├── TemperatureUnit.cs
-│   │   ├── TemperatureQuantity.cs
-│   │   ├── TemperatureUnitWrapper.cs
-│   │   ├── Quantity.cs
-│   │   ├── QuantityGeneric.cs
-│   │   ├── QuantityWeight.cs
-│   │   └── SupportsArithmetic.cs
-│   ├── Services
-│   │   └── QuantityMeasurementService.cs
-│   ├── appsettings.json
-│   └── Program.cs
-├── QuantityMeasurementApp.Tests (Unit Tests)
-│   ├── QuantityMeasurementServiceTests.cs
-│   ├── UC15Tests.cs
-│   └── UC16Tests.cs
-├── QuantityMeasurement.Models
-│   ├── DTOs
-│   │   ├── QuantityDTO.cs
-│   │   ├── QuantityModel.cs
-│   │   ├── MeasurementTypeDTO.cs
-│   │   ├── LengthUnitDTO.cs
-│   │   ├── WeightUnitDTO.cs
-│   │   ├── VolumeUnitDTO.cs
-│   │   └── TemperatureUnitDTO.cs
-│   ├── Entities
-│   │   └── QuantityMeasurementEntity.cs
-│   └── Exceptions
-│       ├── QuantityMeasurementException.cs
-│       └── DatabaseException.cs
-├── QuantityMeasurement.Repository
-│   ├── Interfaces
-│   │   └── IQuantityMeasurementRepository.cs
-│   ├── Implementations
-│   │   ├── QuantityMeasurementCacheRepository.cs
-│   │   └── QuantityMeasurementDatabaseRepository.cs
-│   └── Utilities
-│       ├── ApplicationConfig.cs
-│       └── ConnectionPool.cs
-└── QuantityMeasurement.Service
-    ├── Interfaces
-    │   └── IQuantityMeasurementService.cs
-    └── Implementations
-        └── QuantityMeasurementServiceImpl.cs
+├── QuantityMeasurementApp              ← Console App (UC1–UC14)
+├── QuantityMeasurementApp.Tests        ← Unit Tests (MSTest)
+├── QuantityMeasurement.Models          ← DTOs, Entities, Exceptions
+├── QuantityMeasurement.Repository      ← EF Core, ADO.NET, Redis
+├── QuantityMeasurement.Service         ← Business Logic, Auth, Encryption
+└── QuantityMeasurement.WebAPI          ← ASP.NET Core REST API
 ```
 
-## Branches and Features (UC1–UC16)
+---
 
-UC1: feature/UC1-FeetMeasurementEquality – Compare equality between Feet quantities
+## Branches and Use Cases
 
-UC2: feature/UC2-InchMeasurementEquality – Compare equality between Inch quantities
+| UC | Branch | Description |
+|----|--------|-------------|
+| UC1 | `feature/UC1-FeetMeasurementEquality` | Compare equality between Feet quantities |
+| UC2 | `feature/UC2-InchMeasurementEquality` | Compare equality between Inch quantities |
+| UC3 | `feature/UC3-GenericQuantityLength` | Generic Length comparison (Feet & Inch) |
+| UC4 | `feature/UC4-ExtendedUnitSupport` | Extend to Yards & Centimeters |
+| UC5 | `feature/UC5-UnitToUnitConversion` | Conversion between length units |
+| UC6 | `feature/UC6-UnitAddition` | Add two quantities in first operand unit |
+| UC7 | `feature/UC7-TargetUnitAddition` | Add and return result in target unit |
+| UC8 | `feature/UC8-StandaloneUnit` | Refactor unit enums for SRP |
+| UC9 | `feature/UC9-WeightMeasurementSupport` | Weight: Kilogram, Gram, Pound |
+| UC10 | `feature/UC10-GenericMeasurementRefactor` | Generic Quantity class for multi-category |
+| UC11 | `feature/UC11-VolumeMeasurementSupport` | Volume: Liters, Milliliters, Gallons |
+| UC12 | `feature/UC12-QuantitySubtractionDivision` | Subtraction and Division support |
+| UC13 | `feature/UC13-ArithmeticValidation` | Centralized arithmetic validation |
+| UC14 | `feature/UC14-TemperatureMeasurementSupport` | Temperature with selective arithmetic |
+| UC15 | `feature/UC15-NTierArchitectureRefactoring` | N-Tier Architecture refactoring |
+| UC16 | `feature/UC16-DatabaseIntegrationWithADONet` | ADO.NET + MS SQL Server integration |
+| UC17 | `feature/UC17-ASPNETFrameworkIntegration` | ASP.NET Core REST API + EF Core |
+| UC18 | `feature/UC18-JWTAuthentication` | JWT Auth, BCrypt, AES Encryption, Redis, Google OAuth |
 
-UC3: feature/UC3-GenericQuantityLength – Compare generic Length quantities (Feet & Inch)
+---
 
-UC4: feature/UC4-ExtendedUnitSupport – Extend length comparison to Yards & Centimeters
+## Key Features
 
-UC5: feature/UC5-UnitToUnitConversion – Conversion between any supported length units
+### UC1–UC14: Core Measurement Logic
+- Type-safe operations via generics and interfaces
+- Unit conversion across all 4 categories
+- Arithmetic operations with validation
+- Selective arithmetic (Temperature restricted)
+- Follows SOLID principles — DRY, SRP, ISP
+- Custom exception hierarchy
 
-UC6: feature/UC6-UnitAddition – Add two quantities in the first operand unit
+### UC15: N-Tier Architecture
+- **Controller** → **Service** → **Repository** → **Model** layers
+- Singleton cache repository with JSON disk persistence
+- Dependency Injection pattern
+- 29 new test cases — Total: 213 tests
 
-UC7: feature/UC7-TargetUnitAddition – Add two quantities and return result in target unit
+### UC16: Database Integration
+- ADO.NET with MS SQL Server (SSMS)
+- Connection pooling for efficient resource management
+- Parameterized queries for SQL injection prevention
+- Transaction management — atomic saves
+- Audit trail via History table
+- Runtime repository switching — Cache or Database
+- 29 new test cases — Total: 242 tests
 
-UC8: feature/UC8-StandaloneUnit – Refactor unit enums for SRP, maintain conversion logic
+### UC17: ASP.NET Core REST API
+- Full REST API with ASP.NET Core + EF Core
+- SQL Server with EF Core migrations
+- Swagger UI with annotations
+- NLog structured logging
+- Global exception middleware
+- CORS support
+- 5 endpoints: Compare, Convert, Add, Subtract, Divide
+- History, filter, count endpoints
 
-UC9: feature/UC9-WeightMeasurementSupport – Add Weight measurements: Kilogram, Gram, Pound
-
-UC10: feature/UC10-GenericMeasurementRefactor – Introduce generic class Quantity for multi-category support
-
-UC11: feature/UC11-VolumeMeasurementSupport – Add Volume measurements: Liters, Milliliters, Gallons
-
-UC12: feature/UC12-QuantitySubtractionDivision – Add subtraction/division support for length, weight, and volume; temperature restricted
-
-UC13: feature/UC13-ArithmeticValidation – Centralized arithmetic validation logic for all categories
-
-UC14: feature/UC14-TemperatureMeasurementSupport – Add Temperature measurements: Celsius, Fahrenheit, Kelvin with selective arithmetic
-
-UC15: feature/UC15-NTierArchitectureRefactoring – Refactor monolithic app into N-Tier Architecture with Controller, Service, Repository, and Model layers
-
-UC16: feature/UC16-DatabaseIntegrationWithADONet – Database integration with ADO.NET and MS SQL Server for persistent storage
-
-## Use Case Details
-
-### Length (UC1–UC8)
-- Equality and conversion between Feet, Inches, Yards, Centimeters
-- Supports addition, subtraction, and cross-unit conversions
-
-### Weight (UC9)
-- Equality, conversion, addition for Kilograms, Grams, Pounds
-- Prevents cross-category comparison with Length
-
-### Generic Refactor (UC10)
-- Introduces Quantity generic class
-- Works for Length, Weight, Volume
-- Enforces type safety
-
-### Volume (UC11)
-- Supports Liters, Milliliters, Gallons
-- Equality, conversion, and arithmetic validated
-- Base unit: Liters
-
-### Arithmetic Validation (UC12–UC13)
-- Centralized validation for addition, subtraction, division
-- Quantity class checks for operation support
-- Temperature excluded from unsupported operations
-
-### Temperature (UC14)
-- Supports Celsius, Fahrenheit, Kelvin
-- Equality & conversion allowed
-- Addition/subtraction restricted to temperature differences
-- Unsupported operations throw descriptive exceptions
-
-### IMeasurable Interface Refactor
-- Functional interface for arithmetic support
-- Default methods for selective operation validation
-
-## N-Tier Architecture (UC15)
-
-### New Projects Added:
-- **QuantityMeasurement.Models** – DTOs, Entities, Exceptions
-- **QuantityMeasurement.Repository** – Repository interface and cache implementation
-- **QuantityMeasurement.Service** – Service interface and business logic
-
-### Design Patterns Used:
-- **Singleton** – QuantityMeasurementCacheRepository
-- **Dependency Injection** – Service injected into Controller
-- **Factory** – Program.cs creates instances
-- **Facade** – Controller hides service complexity
-- **Interface Segregation Principle (ISP)**
-
-### Data Flow (UC15):
+**API Endpoints:**
 ```
-User Input
-    ↓
-NTierMenu (Console)
-    ↓
-QuantityMeasurementController
-    ↓
-IQuantityMeasurementService
-    ↓
-QuantityMeasurementServiceImpl
-    ↓
-IQuantityMeasurementRepository
-    ↓
-QuantityMeasurementCacheRepository (Singleton + JSON Disk)
+POST /api/v1/quantities/compare
+POST /api/v1/quantities/convert
+POST /api/v1/quantities/add
+POST /api/v1/quantities/subtract
+POST /api/v1/quantities/divide
+GET  /api/v1/quantities/history
+GET  /api/v1/quantities/history/operation/{type}
+GET  /api/v1/quantities/history/measurement/{type}
+GET  /api/v1/quantities/count
+GET  /api/v1/quantities/count/{operationType}
 ```
 
-### New Classes (UC15):
-| Class | Layer | Purpose |
-|---|---|---|
-| QuantityDTO | Models/DTOs | Input/Output data transfer |
-| QuantityModel | Models/DTOs | Internal service processing |
-| MeasurementTypeDTO | Models/DTOs | Measurement type constants |
-| LengthUnitDTO | Models/DTOs | Length unit constants |
-| WeightUnitDTO | Models/DTOs | Weight unit constants |
-| VolumeUnitDTO | Models/DTOs | Volume unit constants |
-| TemperatureUnitDTO | Models/DTOs | Temperature unit constants |
-| QuantityMeasurementEntity | Models/Entities | Operation history storage |
-| QuantityMeasurementException | Models/Exceptions | Custom exception handling |
-| IQuantityMeasurementRepository | Repo/Interfaces | Repository contract |
-| QuantityMeasurementCacheRepository | Repo/Implementations | In-memory + JSON persistence |
-| IQuantityMeasurementService | Service/Interfaces | Service contract |
-| QuantityMeasurementServiceImpl | Service/Implementations | Business logic |
-| QuantityMeasurementController | App | Controller layer |
-| NTierMenu | App | Menu driven N-Tier app |
+### UC18: Security — JWT, BCrypt, AES, Redis, Google OAuth
+- **JWT Authentication** — HMAC-SHA256, 60 min expiry, Bearer token
+- **BCrypt Hashing + Salting** — work factor 12, salt auto-embedded in hash
+- **Refresh Token** — 256-bit cryptographic, 7 day expiry, rotates on every use
+- **AES-256-GCM Encryption/Decryption** — random nonce per encryption
+- **Redis Caching** — 5 min TTL, Cache HIT/MISS logging, auto fallback to memory
+- **Google OAuth 2.0** — auto-register new Google users
+- **Users table** in SQL Server with BCrypt password hash
 
-### Supported Operations (UC15):
-- Compare two quantities
-- Convert quantity to target unit
-- Add two quantities (implicit/explicit unit)
-- Subtract two quantities
-- Divide two quantities
-- Temperature arithmetic prevention
-- Cross category prevention
+**Auth Endpoints:**
+```
+POST /api/v1/users/register
+POST /api/v1/users/login
+POST /api/v1/users/refresh
+POST /api/v1/users/google-login
+GET  /api/v1/users/profile
+GET  /api/v1/quantities/history/my
+```
 
-### Testing (UC15):
-- 29 new test cases added
-- All UC1-UC14 tests still passing
-- Total: 213 tests passing
+**Redis Cache Keys:**
+```
+QM:qm:all              → All measurements (5 min TTL)
+QM:qm:op:{OPERATION}   → By operation type
+QM:qm:cat:{CATEGORY}   → By category
+QM:qm:user:{userId}    → By user
+```
 
-## Database Integration (UC16)
+---
 
-### New Classes Added:
-| Class | Layer | Purpose |
-|---|---|---|
-| ApplicationConfig | Repo/Utilities | Loads appsettings.json configuration |
-| ConnectionPool | Repo/Utilities | Manages reusable SQL connections |
-| DatabaseException | Models/Exceptions | Database specific exception handling |
-| QuantityMeasurementDatabaseRepository | Repo/Implementations | ADO.NET SQL Server persistence |
+## Architecture Overview
+```
+Frontend (HTML/CSS/JS)
+        ↓
+QuantityMeasurement.WebAPI (ASP.NET Core)
+        ↓
+QuantityMeasurement.Service (Business Logic + Auth + Encryption)
+        ↓
+QuantityMeasurement.Repository (EF Core + Redis + ADO.NET)
+        ↓
+MS SQL Server + Redis Cache
+```
 
-### Database Schema:
+## Data Flow (UC17–UC18)
+```
+HTTP Request
+    ↓
+JWT Middleware (Auth)
+    ↓
+Controller (QuantityMeasurementController / UserController)
+    ↓
+Service (QuantityMeasurementServiceImpl / AuthService)
+    ↓
+Repository (EFQuantityMeasurementRepository)
+    ↓
+Redis Cache → HIT: return cached data
+           → MISS: query SQL Server → cache result
+```
+
+---
+
+## Database Schema
 ```sql
--- Production Database
 QuantityMeasurementDB
-├── QuantityMeasurementEntity   (Current records)
-└── QuantityMeasurementHistory  (Audit trail)
-
--- Test Database
-QuantityMeasurementTestDB
-├── QuantityMeasurementEntity   (Test records)
-└── QuantityMeasurementHistory  (Test audit trail)
+├── QuantityMeasurementEntity   ← Operations history with UserId
+├── Users                       ← User accounts with BCrypt hash
+└── __EFMigrationsHistory       ← EF Core migration tracking
 ```
 
-### Data Flow (UC16):
-```
-User Input
-    ↓
-NTierMenu (Console)
-    ↓
-QuantityMeasurementController
-    ↓
-IQuantityMeasurementService
-    ↓
-QuantityMeasurementServiceImpl
-    ↓
-IQuantityMeasurementRepository
-    ↓
-QuantityMeasurementDatabaseRepository
-    ↓
-ConnectionPool (ADO.NET)
-    ↓
-MS SQL Server (SSMS)
-```
+---
 
-### Key Concepts Implemented (UC16):
-- **ADO.NET** – SqlConnection, SqlCommand, SqlDataReader
-- **Connection Pooling** – Reusable connections, Min/Max pool size
-- **Parameterized Queries** – SQL injection prevention
-- **Transaction Management** – Entity + History saved atomically
-- **Resource Management** – using statements, connection release
-- **Configuration Management** – appsettings.json, environment variables
-- **Exception Hierarchy** – DatabaseException extends QuantityMeasurementException
-- **Audit Trail** – History table tracks all operations
-- **Test Isolation** – Separate TestDB, clean state per test
-- **Repository Switching** – Cache or Database from menu at runtime
+## Technologies
 
-### Repository Selection:
-```
-Main Menu → Choose 2 (NTierMenu)
-    ↓
-SELECT REPOSITORY TYPE
-1. Cache Repository    → In-Memory + JSON file
-2. Database Repository → MS SQL Server
-```
+| Technology | Purpose |
+|-----------|---------|
+| C# / .NET 10 | Core language and runtime |
+| ASP.NET Core | REST API framework |
+| Entity Framework Core | ORM for SQL Server |
+| MS SQL Server | Primary database |
+| ADO.NET | Low-level DB access (UC16) |
+| Redis (StackExchange) | Distributed caching |
+| BCrypt.Net | Password hashing + salting |
+| JWT (HMAC-SHA256) | Authentication tokens |
+| AES-256-GCM | Encryption/Decryption |
+| Google OAuth 2.0 | Social login |
+| NLog | Structured logging |
+| MSTest + Moq | Unit testing |
+| Swagger / OpenAPI | API documentation |
+| Git + GitHub | UC-wise branch strategy |
 
-### Testing (UC16):
-- 29 new test cases added
-- ApplicationConfig tests (TC1-TC4)
-- ConnectionPool tests (TC5-TC8)
-- DatabaseRepository CRUD tests (TC9-TC15)
-- DatabaseException tests (TC16-TC17)
-- Service with Database tests (TC18-TC22)
-- Pool Statistics tests (TC23-TC25)
-- Data Persistence tests (TC26-TC27)
-- Parameterized Query tests (TC28-TC29)
-- All UC1-UC15 tests still passing
-- Total: 242 tests passing
-
-## Testing
-
-- **Framework:** MSTest
-- **Covers all UCs including:**
-  - Equality & conversion accuracy
-  - Addition, subtraction, division for supported units
-  - Unsupported operation handling (temperature)
-  - Cross-category type safety
-  - Edge cases and rounding precision
-  - Database CRUD operations
-  - Connection pool management
-  - SQL injection prevention
-  - Transaction rollback scenarios
+---
 
 ## How to Run
+
+### Prerequisites
+- .NET 10 SDK
+- MS SQL Server Express (SSMS)
+- Redis (localhost:6379)
+
+### Backend API
+```bash
+cd QuantityMeasurement.WebAPI
+dotnet run
+```
+Swagger UI → `http://localhost:5092/swagger`
+
+### Console App
 ```bash
 cd QuantityMeasurementApp
 dotnet run
 ```
 
-## Run Unit Tests
+### Unit Tests
 ```bash
 dotnet test
 ```
 
-## Technologies
-- C# | .NET 10
-- Console Application
-- MS SQL Server Express
-- ADO.NET
-- MSTest
-- Git & GitHub (UC-wise branch strategy)
+### Update Database
+```bash
+dotnet ef database update --project QuantityMeasurement.Repository --startup-project QuantityMeasurement.WebAPI
+```
+
+---
+
+## Testing
+
+- **Framework:** MSTest + Moq
+- **Total Tests:** 242+
+- **Coverage:** UC1–UC18 including API integration tests
+- Equality, conversion, arithmetic accuracy
+- Cross-category type safety
+- Database CRUD operations
+- JWT token generation and validation
+- Redis cache HIT/MISS scenarios
+- BCrypt hash verification
+
+---
 
 ## Author
-Priyanshi Yadav
+**Priyanshi Yadav**
