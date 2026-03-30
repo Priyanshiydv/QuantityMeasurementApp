@@ -131,6 +131,8 @@ namespace QuantityMeasurement.Models.DTOs
                 {
                     Operation    = e.OperationType,
                     ResultString = e.Result,
+                    FirstUnit    = e.FirstOperand  ?? string.Empty,
+                    SecondUnit   = e.SecondOperand ?? string.Empty,
                     ErrorMessage = e.ErrorMessage,
                     HasError     = e.HasError,
                     FirstMeasurementType =

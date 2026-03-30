@@ -63,6 +63,12 @@ namespace QuantityMeasurement.Models.Entities
         /// </summary>
         public string? MeasurementType { get; set; }
 
+        /// <summary>
+        /// UC19: UserId of the user who performed this operation.
+        /// Links measurement to user for user-specific history.
+        /// </summary>
+        public int? UserId { get; set; }
+
         
 
         // ─── Operation Type Constants ──────────────────────────

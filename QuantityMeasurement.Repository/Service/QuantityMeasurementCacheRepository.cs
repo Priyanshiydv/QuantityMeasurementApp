@@ -511,6 +511,17 @@ namespace QuantityMeasurement.Repository.Service
             }
         }
 
+        /// <summary>
+        /// Returns measurements filtered by UserId from cache.
+        /// UC19
+        /// </summary>
+        public List<QuantityMeasurementEntity>
+            GetMeasurementsByUserId(int userId)
+        {
+            return _cache
+                .FindAll(entity => entity.UserId == userId);
+        }
+
         // ─── ToString ─────────────────────────────────────────
 
         public override string ToString()

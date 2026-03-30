@@ -853,5 +853,17 @@ namespace QuantityMeasurement.Repository.Service
                    $"[Database: {_databaseName}, " +
                    $"{GetPoolStatistics()}]";
         }
+
+        /// <summary>
+        /// Returns measurements filtered by UserId from database.
+        /// UC19
+        /// </summary>
+        public List<QuantityMeasurementEntity>
+            GetMeasurementsByUserId(int userId)
+        {
+            return GetAllMeasurements()
+                .Where(e => e.UserId == userId)
+                .ToList();
+        }
     }
 }

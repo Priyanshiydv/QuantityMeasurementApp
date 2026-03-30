@@ -5,6 +5,8 @@ using QuantityMeasurement.Repository.Interfaces;
 using QuantityMeasurement.Service.Interfaces;
 using QuantityMeasurement.Models.Exceptions;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuantityMeasurement.WebAPI.Controllers
 {
@@ -58,6 +60,20 @@ namespace QuantityMeasurement.WebAPI.Controllers
 
             _logger.LogInformation(
                 "[Controller] Initialized ✓");
+        }
+
+        // ─── Get UserId from JWT ──────────────────────────
+
+        /// <summary>
+        /// Extracts UserId from JWT claims.
+        /// Returns null if not authenticated.
+        /// UC19
+        /// </summary>
+        private int? GetUserId()
+        {
+            var claim = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+            return int.TryParse(claim, out int id) ? id : null;
         }
 
         // ─── Compare Endpoint ─────────────────────────────────
@@ -468,6 +484,36 @@ namespace QuantityMeasurement.WebAPI.Controllers
             int count = _repository.GetTotalCount();
 
             return Ok(new { TotalCount = count });
+        }
+
+        /// <summary>
+        /// Returns history for logged in user only.
+        /// GET /api/v1/quantities/history/my
+        /// UC19
+        /// </summary>
+        [HttpGet("history/my")]
+        [Authorize]
+        [ProducesResponseType(
+            typeof(List<QuantityResponseDTO>),
+            StatusCodes.Status200OK)]
+        [SwaggerOperation(
+            Summary     = "Get my history",
+            Description = "Returns history for currently logged in user only")]
+        public IActionResult GetMyHistory()
+        {
+            _logger.LogInformation(
+                "[Controller] GetMyHistory called.");
+
+            int? userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var entities = _repository
+                .GetMeasurementsByUserId(userId.Value);
+            var response =
+                QuantityResponseDTO.FromEntityList(entities);
+
+            return Ok(response);
         }
     }
 }
