@@ -32,7 +32,7 @@ namespace QuantityMeasurement.Service.Service
 
         // ─── Compare ──────────────────────────────────────────
 
-        public QuantityDTO Compare(QuantityDTO first, QuantityDTO second)
+        public QuantityDTO Compare(QuantityDTO first, QuantityDTO second, int? userId = null)
         {
             try
             {
@@ -59,7 +59,8 @@ namespace QuantityMeasurement.Service.Service
                     QuantityMeasurementEntity.Operations.COMPARE,
                     isEqual.ToString(),
                     model1.MeasurementType
-                );
+                )
+                { UserId = userId };
                 _repository.Save(entity);
 
                 // Step 6: Return result as QuantityDTO
@@ -85,7 +86,7 @@ namespace QuantityMeasurement.Service.Service
 
         // ─── Convert ──────────────────────────────────────────
 
-        public QuantityDTO Convert(QuantityDTO quantity, string targetUnit)
+        public QuantityDTO Convert(QuantityDTO quantity, string targetUnit, int? userId = null)
         {
             try
             {
@@ -115,7 +116,8 @@ namespace QuantityMeasurement.Service.Service
                     QuantityMeasurementEntity.Operations.CONVERT,
                     $"{convertedValue:F2} {targetUnit}",
                     model.MeasurementType
-                );
+                )
+                { UserId = userId };
                 _repository.Save(entity);
 
                 // Step 5: Return result as QuantityDTO
@@ -141,12 +143,12 @@ namespace QuantityMeasurement.Service.Service
 
         // ─── Add ──────────────────────────────────────────────
 
-        public QuantityDTO Add(QuantityDTO first, QuantityDTO second)
+        public QuantityDTO Add(QuantityDTO first, QuantityDTO second, int? userId = null)
         {
             return Add(first, second, first.Unit);
         }
 
-        public QuantityDTO Add(QuantityDTO first, QuantityDTO second, string targetUnit)
+        public QuantityDTO Add(QuantityDTO first, QuantityDTO second, string targetUnit, int? userId = null)
         {
             try
             {
@@ -179,7 +181,8 @@ namespace QuantityMeasurement.Service.Service
                     QuantityMeasurementEntity.Operations.ADD,
                     $"{finalValue:F2} {targetUnit}",
                     model1.MeasurementType
-                );
+                )
+                { UserId = userId };
                 _repository.Save(entity);
 
                 // Step 6: Return result as QuantityDTO
@@ -205,7 +208,7 @@ namespace QuantityMeasurement.Service.Service
 
         // ─── Subtract ─────────────────────────────────────────
 
-        public QuantityDTO Subtract(QuantityDTO first, QuantityDTO second)
+        public QuantityDTO Subtract(QuantityDTO first, QuantityDTO second, int? userId = null)
         {
             try
             {
@@ -240,7 +243,8 @@ namespace QuantityMeasurement.Service.Service
                     QuantityMeasurementEntity.Operations.SUBTRACT,
                     $"{finalValue:F2} {model1.Unit}",
                     model1.MeasurementType
-                );
+                )
+                { UserId = userId };
                 _repository.Save(entity);
 
                 // Step 6: Return result as QuantityDTO
@@ -249,6 +253,7 @@ namespace QuantityMeasurement.Service.Service
                     model1.Unit,
                     model1.MeasurementType
                 );
+                
             }
             catch (QuantityMeasurementException)
             {
@@ -266,7 +271,7 @@ namespace QuantityMeasurement.Service.Service
 
         // ─── Divide ───────────────────────────────────────────
 
-        public QuantityDTO Divide(QuantityDTO first, QuantityDTO second)
+        public QuantityDTO Divide(QuantityDTO first, QuantityDTO second, int? userId = null)
         {
             try
             {
@@ -301,7 +306,8 @@ namespace QuantityMeasurement.Service.Service
                     QuantityMeasurementEntity.Operations.DIVIDE,
                     $"{result:F2}",
                     model1.MeasurementType
-                );
+                )
+                { UserId = userId };
                 _repository.Save(entity);
 
                 // Step 6: Return scalar result as QuantityDTO

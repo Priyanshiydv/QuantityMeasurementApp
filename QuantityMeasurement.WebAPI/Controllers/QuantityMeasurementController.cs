@@ -107,7 +107,7 @@ namespace QuantityMeasurement.WebAPI.Controllers
                 input.SecondUnit,
                 input.SecondMeasurementType);
 
-            QuantityDTO result = _service.Compare(first, second);
+            QuantityDTO result = _service.Compare(first, second, GetUserId());
 
             QuantityResponseDTO response = new QuantityResponseDTO
             {
@@ -154,8 +154,7 @@ namespace QuantityMeasurement.WebAPI.Controllers
                 input.FirstUnit,
                 input.FirstMeasurementType);
 
-            QuantityDTO result = _service.Convert(
-                quantity, targetUnit);
+            QuantityDTO result = _service.Convert(quantity, targetUnit, GetUserId());
 
             QuantityResponseDTO response = new QuantityResponseDTO
             {
@@ -207,7 +206,7 @@ namespace QuantityMeasurement.WebAPI.Controllers
                 input.SecondMeasurementType);
 
             QuantityDTO result = input.TargetUnit != null
-                ? _service.Add(first, second, input.TargetUnit)
+                ? _service.Add(first, second, input.TargetUnit, GetUserId())
                 : _service.Add(first, second);
 
             QuantityResponseDTO response = new QuantityResponseDTO
@@ -259,7 +258,7 @@ namespace QuantityMeasurement.WebAPI.Controllers
                 input.SecondUnit,
                 input.SecondMeasurementType);
 
-            QuantityDTO result = _service.Subtract(first, second);
+            QuantityDTO result = _service.Subtract(first, second, GetUserId());
 
             QuantityResponseDTO response = new QuantityResponseDTO
             {
@@ -310,7 +309,7 @@ namespace QuantityMeasurement.WebAPI.Controllers
                 input.SecondUnit,
                 input.SecondMeasurementType);
 
-            QuantityDTO result = _service.Divide(first, second);
+            QuantityDTO result = _service.Divide(first, second, GetUserId());
 
             QuantityResponseDTO response = new QuantityResponseDTO
             {
