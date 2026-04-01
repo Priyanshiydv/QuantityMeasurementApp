@@ -504,11 +504,16 @@ namespace QuantityMeasurement.WebAPI.Controllers
                 "[Controller] GetMyHistory called.");
 
             int? userId = GetUserId();
+
+            _logger.LogInformation("[Controller] GetMyHistory Userid={Id}", userId);
             if (userId == null)
                 return Unauthorized();
 
             var entities = _repository
                 .GetMeasurementsByUserId(userId.Value);
+
+            _logger.LogInformation("[Controller] GetMyHistory found {Count} records",
+                  entities.Count);
             var response =
                 QuantityResponseDTO.FromEntityList(entities);
 

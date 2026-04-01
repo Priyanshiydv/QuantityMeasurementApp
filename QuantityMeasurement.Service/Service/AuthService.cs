@@ -138,58 +138,82 @@ namespace QuantityMeasurement.Service.Service
 
         // ── Google Login ──────────────────────────────────────
 
-        public async Task<AuthResponseDTO> GoogleLoginAsync(
+       public async Task<AuthResponseDTO> GoogleLoginAsync(
             string googleToken)
         {
             _logger.LogInformation(
                 "[AuthService] Google login attempt.");
 
-            // Validate Google ID token via Google's tokeninfo endpoint
             using var http = new HttpClient();
+
+            // Add authorization header for access token
+            http.DefaultRequestHeaders.Add(
+                "Authorization", $"Bearer {googleToken}");
+
+            // Try userinfo endpoint with access token
             var response = await http.GetAsync(
-                $"https://oauth2.googleapis.com/tokeninfo" +
-                $"?id_token={googleToken}");
+                "https://www.googleapis.com/oauth2/v3/userinfo");
+
+            // If that fails try tokeninfo with id_token
+            if (!response.IsSuccessStatusCode)
+            {
+                http.DefaultRequestHeaders.Clear();
+                response = await http.GetAsync(
+                    $"https://oauth2.googleapis.com/tokeninfo" +
+                    $"?id_token={googleToken}");
+            }
 
             if (!response.IsSuccessStatusCode)
+            {
+                var errorBody = await response.Content
+                    .ReadAsStringAsync();
+                _logger.LogError(
+                    "[AuthService] Google token failed: {Error}",
+                    errorBody);
                 throw new UnauthorizedAccessException(
                     "Invalid Google token.");
+            }
 
             var json = await response.Content.ReadAsStringAsync();
             using var doc = System.Text.Json.JsonDocument.Parse(json);
             var root = doc.RootElement;
 
-            string googleId    = root.GetProperty("sub").GetString()!;
-            string email       = root.GetProperty("email").GetString()!;
-            string name        = root.TryGetProperty("name", out var n)
+            string googleId = root.TryGetProperty("sub", out var sub)
+                ? sub.GetString()! : root.GetProperty("sub").GetString()!;
+            string email    = root.GetProperty("email").GetString()!;
+            string name     = root.TryGetProperty("name", out var n)
                 ? n.GetString() ?? email : email;
+
+            _logger.LogInformation(
+                "[AuthService] Google user: {Email}", email);
 
             // Find existing user or create new one
             var user = await _userRepo.GetByGoogleIdAsync(googleId);
 
             if (user is null)
             {
-                // Auto-register Google user
                 user = new UserEntity
                 {
-                    Username    = name.Replace(" ", "_") + "_" +
-                                  googleId[..6],
-                    Email       = email,
+                    Username     = name.Replace(" ", "_") + "_" +
+                                googleId[..6],
+                    Email        = email,
                     PasswordHash = UserRepository.HashPassword(
-                                  Guid.NewGuid().ToString()),
-                    GoogleId    = googleId,
-                    GoogleEmail = email,
-                    Role        = "User",
-                    CreatedAt   = DateTime.UtcNow,
-                    IsActive    = true
+                                Guid.NewGuid().ToString()),
+                    GoogleId     = googleId,
+                    GoogleEmail  = email,
+                    Role         = "User",
+                    CreatedAt    = DateTime.UtcNow,
+                    IsActive     = true
                 };
                 user = await _userRepo.CreateUserAsync(user);
 
                 _logger.LogInformation(
-                    "[AuthService] Google user auto-registered: {E}",
+                    "[AuthService] Google user registered: {E}",
                     email);
             }
 
-            return await IssueTokensAsync(user, "Google login successful.");
+            return await IssueTokensAsync(
+                user, "Google login successful.");
         }
 
         // ── Private Helpers ───────────────────────────────────
