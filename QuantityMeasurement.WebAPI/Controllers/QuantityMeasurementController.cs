@@ -519,5 +519,54 @@ namespace QuantityMeasurement.WebAPI.Controllers
 
             return Ok(response);
         }
+
+        /// <summary>
+        /// Returns user's history filtered by operation type.
+        /// GET /api/v1/quantities/history/my/operation/{type}
+        /// UC19
+        /// </summary>
+        [HttpGet("history/my/operation/{operationType}")]
+        [Authorize]
+        [SwaggerOperation(
+            Summary     = "Get my history by operation",
+            Description = "Returns logged in user's history filtered by operation")]
+        public IActionResult GetMyHistoryByOperation(string operationType)
+        {
+            int? userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            var entities = _repository
+                .GetMeasurementsByUserId(userId.Value)
+                .Where(e => e.OperationType.ToUpper() ==
+                            operationType.ToUpper())
+                .ToList();
+
+            return Ok(QuantityResponseDTO.FromEntityList(entities));
+        }
+
+        /// <summary>
+        /// Returns user's history filtered by measurement type.
+        /// GET /api/v1/quantities/history/my/measurement/{type}
+        /// UC19
+        /// </summary>
+        [HttpGet("history/my/measurement/{measurementType}")]
+        [Authorize]
+        [SwaggerOperation(
+            Summary     = "Get my history by measurement",
+            Description = "Returns logged in user's history filtered by measurement type")]
+        public IActionResult GetMyHistoryByMeasurement(string measurementType)
+        {
+            int? userId = GetUserId();
+            if (userId == null) return Unauthorized();
+
+            var entities = _repository
+                .GetMeasurementsByUserId(userId.Value)
+                .Where(e => e.MeasurementType != null &&
+                            e.MeasurementType.ToUpper() ==
+                            measurementType.ToUpper())
+                .ToList();
+
+            return Ok(QuantityResponseDTO.FromEntityList(entities));
+        }
     }
 }
