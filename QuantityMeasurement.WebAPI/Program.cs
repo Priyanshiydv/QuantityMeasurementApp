@@ -9,6 +9,7 @@ using QuantityMeasurement.Repository.Context;
 using QuantityMeasurement.WebAPI.Config;
 using QuantityMeasurement.WebAPI.Exceptions;
 using QuantityMeasurement.WebAPI.Filters;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 namespace QuantityMeasurement.WebAPI
 {
@@ -74,18 +75,34 @@ namespace QuantityMeasurement.WebAPI
                 }
                 else
                 {
-                    string? connStr = builder.Configuration
+                    // Check for PostgreSQL first (Render deployment)
+                    string? pgConnStr = builder.Configuration
+                        .GetConnectionString("PostgresConnection");
+
+                    string? sqlConnStr = builder.Configuration
                         .GetConnectionString("DefaultConnection");
 
-                    if (connStr == null)
+                    if (!string.IsNullOrEmpty(pgConnStr))
+                    {
+                        builder.Services
+                            .AddDbContext<QuantityMeasurementDbContext>(
+                                options => options.UseNpgsql(pgConnStr));
+                        Console.WriteLine(
+                            "[Program] Using PostgreSQL Database");
+                    }
+                    else if (!string.IsNullOrEmpty(sqlConnStr))
+                    {
+                        builder.Services
+                            .AddDbContext<QuantityMeasurementDbContext>(
+                                options => options.UseSqlServer(sqlConnStr));
+                        Console.WriteLine(
+                            "[Program] Using SQL Server Database");
+                    }
+                    else
+                    {
                         throw new InvalidOperationException(
-                            "Connection string not found!");
-
-                    builder.Services
-                        .AddDbContext<QuantityMeasurementDbContext>(
-                            options => options.UseSqlServer(connStr));
-
-                    Console.WriteLine("[Program] Using SQL Server Database");
+                            "No database connection string found!");
+                    }
                 }
 
                 // ─── UC18: JWT Authentication ─────────────────
