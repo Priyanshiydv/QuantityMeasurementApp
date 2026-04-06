@@ -227,21 +227,17 @@ namespace QuantityMeasurement.WebAPI
                 // ─── Build App ────────────────────────────────
                 var app = builder.Build();
 
-                // ─── Middleware Pipeline ──────────────────────
-                if (app.Environment.IsDevelopment())
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
                 {
-                    app.UseSwagger();
-                    app.UseSwaggerUI(options =>
-                    {
-                        options.SwaggerEndpoint(
-                            "/swagger/v1/swagger.json",
-                            "Quantity Measurement API v1");
-                        options.RoutePrefix = "swagger";
-                    });
+                    options.SwaggerEndpoint(
+                        "/swagger/v1/swagger.json",
+                        "Quantity Measurement API v1");
+                    options.RoutePrefix = "swagger";
+                });
 
-                    Console.WriteLine(
-                        "[Program] Swagger UI → http://localhost:5092/swagger");
-                }
+                Console.WriteLine(
+                    "[Program] Swagger UI enabled ✓");
 
                 app.UseMiddleware<GlobalExceptionMiddleware>();
                 app.UseCors("AllowAll");
