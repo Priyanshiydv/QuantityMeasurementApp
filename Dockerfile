@@ -6,6 +6,8 @@ COPY QuantityMeasurement.Models/*.csproj QuantityMeasurement.Models/
 COPY QuantityMeasurement.Repository/*.csproj QuantityMeasurement.Repository/
 COPY QuantityMeasurement.Service/*.csproj QuantityMeasurement.Service/
 COPY QuantityMeasurement.WebAPI/*.csproj QuantityMeasurement.WebAPI/
+COPY QuantityMeasurementApp/*.csproj QuantityMeasurementApp/
+COPY QuantityMeasurementApp.Tests/*.csproj QuantityMeasurementApp.Tests/
 
 RUN dotnet restore
 
