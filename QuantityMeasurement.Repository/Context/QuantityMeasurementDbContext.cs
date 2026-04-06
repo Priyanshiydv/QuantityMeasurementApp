@@ -142,6 +142,7 @@ namespace QuantityMeasurement.Repository.Context
                 entity.Property(e => e.GoogleEmail).HasMaxLength(200);
                 entity.HasIndex(e => e.Username).IsUnique();
                 entity.HasIndex(e => e.Email).IsUnique();
+                
             });
 
             Console.WriteLine("[DbContext] Users table configured ✓");
@@ -188,7 +189,7 @@ namespace QuantityMeasurement.Repository.Context
             {
                 if (entity.Entity.Timestamp == default)
                 {
-                    entity.Entity.Timestamp = DateTime.Now;
+                    entity.Entity.Timestamp = DateTime.UtcNow;
                 }
             }
         }

@@ -26,11 +26,14 @@ namespace QuantityMeasurement.WebAPI
                 .Setup()
                 .LoadConfigurationFromFile("nlog.config")
                 .GetCurrentClassLogger();
+                
 
             try
             {
                 logger.Info("[Program] Starting Quantity Measurement WebAPI...");
 
+                AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+                
                 var builder = WebApplication.CreateBuilder(args);
 
                 // ─── NLog ─────────────────────────────────────
