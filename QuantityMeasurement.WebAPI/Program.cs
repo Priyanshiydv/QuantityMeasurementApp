@@ -251,6 +251,23 @@ namespace QuantityMeasurement.WebAPI
                 app.MapControllers();
                 app.UseStaticFiles();
 
+                // Keep alive ping every 14 minutes
+                _ = Task.Run(async () =>
+                {
+                    using var http = new HttpClient();
+                    while (true)
+                    {
+                        await Task.Delay(TimeSpan.FromMinutes(14));
+                        try
+                        {
+                            await http.GetAsync(
+                                "https://quantitymeasurementapp-ly1a.onrender.com/swagger");
+                            Console.WriteLine("[KeepAlive] Ping sent ✓");
+                        }
+                        catch { }
+                    }
+                });
+
                 // ─── Initialize Database ──────────────────────
                 using (var scope = app.Services.CreateScope())
                 {
